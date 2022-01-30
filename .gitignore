@@ -1,0 +1,6 @@
+/.idea/
+/.vscode/
+/bin/
+/obj/
+/db.sqlite
+/Folder.DotSettings.user
