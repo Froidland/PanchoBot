@@ -9,6 +9,7 @@ using PanchoBot.Api.v2;
 namespace PanchoBot.Deprecated;
 
 public static class Commands {
+    [Obsolete("RespondRecentPlay() is deprecated, please use the corresponding method inside Commands.OsuModule.")]
     public static async Task RespondRecentPlay(HttpClient osuClient, MessageCreateEventArgs messageEvent, string apiKey, string userId) {
         var scoreData = await GetRecentScore.SendRequest(osuClient, apiKey, userId);
         if (scoreData is null) {
@@ -64,7 +65,8 @@ public static class Commands {
         // Send message.
         await messageEvent.Message.RespondAsync(embedBuilder.Build());
     }
-
+    
+    [Obsolete("RespondRecentPlay() is deprecated, please use the corresponding method inside Commands.OsuModule.")]
     public static async Task RespondUser(OsuClient osuClient, MessageCreateEventArgs messageEvent, string userId) {
         var userData = osuClient.GetUser(userId);
 
