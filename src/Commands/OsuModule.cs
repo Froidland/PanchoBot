@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
@@ -16,12 +17,12 @@ public class OsuModule : BaseCommandModule {
     [Command("beatmap")]
     [Aliases("map")]
     public async Task GetBeatmap(CommandContext ctx, string mapId) {
-        var beatmapData = Client.GetBeatmap(mapId).Result;
-
         if (mapId is null) {
             await ctx.RespondAsync("Please specify a map id.");
             return;
         }
+        
+        var beatmapData = Client.GetBeatmap(mapId).Result;
 
         if (beatmapData is null) {
             await ctx.RespondAsync("Map not found or the osu! api threw an error.");
@@ -68,24 +69,18 @@ public class OsuModule : BaseCommandModule {
 
     [Command("recentscore")]
     [Aliases("recent", "rs")]
-    public async Task GetRecentScore(CommandContext ctx, string userId) {
+    public async Task GetRecentScore(CommandContext ctx, string username) {
         await ctx.RespondAsync("Not implemented yet!");
+        /*var userId = Client.GetUser(username).Result.Id;
         
-        /*var scoreData = await GetRecentScore.SendRequest(osuClient, apiKey, userId);
+        var responseContent = Client.GetUserScores(userId.ToString(), "recent").Result.Content;
+        
+        await File.WriteAllTextAsync("score.txt", responseContent);
+        Console.WriteLine(responseContent);*/
+
+        /*var scoreData = await Client.GetUserScores(userId, "recent");
         if (scoreData is null) {
             await ctx.RespondAsync("Score not found or the osu! api threw an error.");
-            return;
-        }
-
-        var beatmapData = await GetBeatmap.SendRequest(osuClient, apiKey, scoreData?.BeatmapId);
-        if (beatmapData is null) {
-            await ctx.RespondAsync("Map not found or the osu! api threw an error.");
-            return;
-        }
-
-        var userData = await GetUser.SendRequest(osuClient, apiKey, userId);
-        if (userData is null) {
-            await ctx.RespondAsync("User not found or the osu! api threw an error.");
             return;
         }
 
@@ -124,5 +119,18 @@ public class OsuModule : BaseCommandModule {
 
         // Send message.
         await ctx.RespondAsync(embedBuilder.Build());*/
+    }
+
+    [Command("personalbest")]
+    [Aliases("top", "pb")]
+    public async Task GetPersonalBest(CommandContext ctx, string username) {
+        var userData = Client.GetUser(username).Result;
+
+        var userIdString = userData.Id.ToString();
+        
+        var userScoresData = Client.GetUserScores(userIdString, "best").Result;
+
+        await ctx.RespondAsync($"{userScoresData[0].Beatmapset.Artist} - {userScoresData[0].Beatmapset.Title}\n" +
+                               $"{userScoresData[0].ScoreCount} {userScoresData[0].Accuracy} {userScoresData[0].Pp}");
     }
 }

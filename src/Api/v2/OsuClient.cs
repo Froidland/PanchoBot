@@ -1,5 +1,9 @@
-﻿using System;
+﻿#nullable enable
+using System;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using PanchoBot.Api.v2.Models;
 using RestSharp;
 
@@ -14,16 +18,43 @@ public class OsuClient : IOsuClient {
         }.AddDefaultHeader(KnownHeaders.Accept, "application/json");
     }
 
-    public async Task<User> GetUser(string userId) {
-        var request = new RestRequest($"users/{userId}/osu")
-            .AddQueryParameter("key", "username");
-        
-        return await _client.GetAsync<User>(request);
+    public async Task<User?> GetUser(string username, string type = "username") {
+        var request = new RestRequest($"users/{username}/osu")
+            .AddQueryParameter("key", type);
+
+        try {
+            var response = await _client.GetAsync<User>(request);
+            return response;
+        }
+        catch {
+            return null;
+        }
     }
 
-    public async Task<Beatmap> GetBeatmap(string beatmapId) {
+    public async Task<Beatmap?> GetBeatmap(string beatmapId) {
         var request = new RestRequest($"beatmaps/{beatmapId}");
 
-        return await _client.GetAsync<Beatmap>(request);
+        try {
+            var response = await _client.GetAsync<Beatmap>(request);
+            return response;
+        }
+        catch {
+            return null;
+        }
+    }
+
+    public async Task<Score[]?> GetUserScores(string userId, string type = "recent", string mode = "osu", string includeFails = "1", int limit = 1) {
+        var request = new RestRequest($"users/{userId}/scores/{type}")
+            .AddParameter("mode", mode)
+            .AddParameter("includeFails", includeFails)
+            .AddParameter("limit", limit);
+        
+        try {
+            var response = await _client.GetAsync<Score[]>(request);
+            return response;
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 }

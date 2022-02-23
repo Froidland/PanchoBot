@@ -1,25 +1,29 @@
 using System;
+using System.Text.Json.Serialization;
 
-namespace PanchoBot.Api.v2.Models; 
+namespace PanchoBot.Api.v2.Models;
 
 public record Score {
-    public long Id { get; set; }
-    public long BestId { get; set; }
-    public long UserId { get; set; }
-    public double Accuracy { get; set; }
-    public long ScoreScore { get; set; }
-    public string Username { get; set; }
-    public long Maxcombo { get; set; }
-    public long Count50 { get; set; }
-    public long Count100 { get; set; }
-    public long Count300 { get; set; }
-    public long Countmiss { get; set; }
-    public long Countkatu { get; set; }
-    public long Countgeki { get; set; }
-    public long Perfect { get; set; }
-    public long EnabledMods { get; set; }
-    public DateTimeOffset Date { get; set; }
-    public string Rank { get; set; }
-    public string Pp { get; set; }
-    public long ReplayAvailable { get; set; }
+    [JsonPropertyName("id")] public long Id { get; set; }
+    [JsonPropertyName("user_id")] public long UserId { get; set; }
+    [JsonPropertyName("accuracy")] public double Accuracy { get; set; }
+    [JsonPropertyName("mods")] public string[] Mods { get; set; }
+    [JsonPropertyName("score")] public int ScoreCount { get; set; }
+    [JsonPropertyName("max_combo")] public int MaxCombo { get; set; }
+    [JsonPropertyName("perfect")] public bool Perfect { get; set; }
+    [JsonPropertyName("statistics")] public ScoreStatistics Statistics { get; set; }
+    [JsonPropertyName("rank")] public string Rank { get; set; }
+    [JsonPropertyName("created_at")] public DateTime CreatedAt { get; set; }
+    [JsonPropertyName("best_id")] public ulong BestId { get; set; }
+    [JsonPropertyName("pp")] public float Pp { get; set; }
+    [JsonPropertyName("mode")] public string Mode { get; set; }
+    [JsonPropertyName("mode_int")] public int ModeInt { get; set; }
+    [JsonPropertyName("replay")] public bool Replay { get; set; }
+
+    [JsonPropertyName("current_user_attributes")]
+    public UserScoreAttributes Attributes { get; set; }
+
+    [JsonPropertyName("beatmap")] public Beatmap Beatmap { get; set; }
+    [JsonPropertyName("beatmapset")] public Beatmapset Beatmapset { get; set; }
+    [JsonPropertyName("user")] public User User { get; set; }
 }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace PanchoBot.Api.v2.Models;
 
 public record UserCompact {
-    [JsonPropertyName("id")] public long Id { get; set; }
+    [JsonPropertyName("id")] public int Id { get; set; }
 
     [JsonPropertyName("username")] public string Username { get; set; }
 
