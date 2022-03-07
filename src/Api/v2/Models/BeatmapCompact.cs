@@ -22,7 +22,7 @@ public record BeatmapCompact {
     [JsonPropertyName("version")] public string Version { get; set; }
 
     [JsonPropertyName("beatmapset")] public BeatmapsetCompact? Beatmapset { get; set; }
-    
+
     [JsonPropertyName("checksum")] public string? Checksum { get; set; }
 
     [JsonPropertyName("failtimes")] public Failtimes? Failtimes { get; set; }

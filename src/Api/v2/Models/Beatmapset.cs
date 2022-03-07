@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace PanchoBot.Api.v2.Models; 
+namespace PanchoBot.Api.v2.Models;
 
 public record Beatmapset : BeatmapsetCompact {
     [JsonPropertyName("favourite_count")] public int FavouriteCount { get; set; }

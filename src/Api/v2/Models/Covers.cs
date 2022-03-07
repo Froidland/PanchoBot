@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PanchoBot.Api.v2.Models; 
+namespace PanchoBot.Api.v2.Models;
 
 public record Covers {
     [JsonPropertyName("cover")] public string Cover { get; set; }

@@ -6,7 +6,7 @@ public record BeatmapsetCompact {
     [JsonPropertyName("artist")] public string Artist { get; set; }
     [JsonPropertyName("artist_unicode")] public string ArtistUnicode { get; set; }
     [JsonPropertyName("covers")] public Covers Covers { get; set; }
-    [JsonPropertyName("creator")] public string Creator { get; set; } 
+    [JsonPropertyName("creator")] public string Creator { get; set; }
     [JsonPropertyName("favorite_count")] public int FavouriteCount { get; set; }
     [JsonPropertyName("id")] public int Id { get; set; }
     [JsonPropertyName("nsfw")] public bool Nsfw { get; set; }

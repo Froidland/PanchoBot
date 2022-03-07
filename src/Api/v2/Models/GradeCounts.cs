@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PanchoBot.Api.v2.Models; 
+namespace PanchoBot.Api.v2.Models;
 
 public record GradeCounts {
     [JsonPropertyName("ss")] public int Ss { get; set; }

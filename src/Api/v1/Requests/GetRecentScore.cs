@@ -11,7 +11,7 @@ public static class GetRecentScore {
         var userScoreResponse = await client.GetAsync($"get_user_recent?k={apiKey}&u={userId}&limit=1");
         var userScoreContentString = await userScoreResponse.Content.ReadAsStringAsync();
         var userScoreData = JsonSerializer.Deserialize<UserRecentScore[]>(userScoreContentString);
-        
+
         return userScoreData?.Length == 0 ? null : userScoreData?[0];
     }
 }

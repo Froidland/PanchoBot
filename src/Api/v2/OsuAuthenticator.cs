@@ -1,16 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PanchoBot.Api.v2.Models;
 using RestSharp;
 using RestSharp.Authenticators;
 
-namespace PanchoBot.Api.v2; 
+namespace PanchoBot.Api.v2;
 
 public class OsuAuthenticator : AuthenticatorBase {
     private readonly string _baseUrl;
     private readonly string _clientId;
     private readonly string _clientSecret;
-    
+
     public OsuAuthenticator(string baseUrl, string clientId, string clientSecret) : base("") {
         _baseUrl = baseUrl;
         _clientId = clientId;

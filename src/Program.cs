@@ -7,7 +7,7 @@ using PanchoBot.Api.v2;
 using PanchoBot.Commands;
 using PanchoBot.Database;
 
-namespace PanchoBot; 
+namespace PanchoBot;
 
 public static class Program {
     public static string ApiKey = "f417bb502c5191951befbbfc49099dfea4bc8736";
@@ -42,26 +42,27 @@ public static class Program {
             return;
         }
 
-        if (string.IsNullOrEmpty(databaseIp) || string.IsNullOrEmpty(databaseUsername) || string.IsNullOrEmpty(databasePassword) || string.IsNullOrEmpty(databaseName)) {
+        if (string.IsNullOrEmpty(databaseIp) || string.IsNullOrEmpty(databaseUsername) ||
+            string.IsNullOrEmpty(databasePassword) || string.IsNullOrEmpty(databaseName)) {
             Console.WriteLine("Please specify the following environment variables in a .env file: ");
             Console.WriteLine("DATABASE_IP, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME");
             return;
         }
-        
+
         _osuClient = new OsuClient(osuClientId, osuClientSecret);
 
-        var discordClient = new DiscordClient(new DiscordConfiguration() {
+        var discordClient = new DiscordClient(new DiscordConfiguration {
             Token = discordToken,
             TokenType = TokenType.Bot,
             Intents = DiscordIntents.AllUnprivileged
         });
 
         await DatabaseHandler.Connect(databaseIp, databaseUsername, databasePassword, databaseName);
-        
-        var commands = discordClient.UseCommandsNext(new CommandsNextConfiguration() {
+
+        var commands = discordClient.UseCommandsNext(new CommandsNextConfiguration {
             StringPrefixes = new[] {"_"}
         });
-        
+
         commands.RegisterCommands<OsuModule>();
         commands.RegisterCommands<MiscellaneousModule>();
 

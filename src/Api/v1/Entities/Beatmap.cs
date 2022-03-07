@@ -5,10 +5,10 @@ using System.Text.Json.Serialization;
 namespace PanchoBot.Api.v1.Entities;
 
 public class Beatmap {
-    private int _totalLength;
+    private double _difficultyRating;
     private int _hitLength;
     private string _mode;
-    private double _difficultyRating;
+    private int _totalLength;
 
     [JsonPropertyName("beatmapset_id")] public string BeatmapsetId { get; set; }
 

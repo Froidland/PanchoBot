@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace PanchoBot.Api.v2.Models; 
+namespace PanchoBot.Api.v2.Models;
 
 public record Badge {
     [JsonPropertyName("awarded_at")] public DateTime AwardedAt { get; set; }

@@ -10,10 +10,11 @@ namespace PanchoBot.Commands;
 
 public class OsuModule : BaseCommandModule {
     private static readonly OsuClient Client = Program._osuClient;
+
     [Command("link")]
     public async Task Link(CommandContext ctx, string username) {
         Exception? exception;
-        
+
         var user = await Client.GetUser(username);
         if (user is null) {
             await ctx.Message.RespondAsync("Invalid username provided.");
@@ -29,18 +30,18 @@ public class OsuModule : BaseCommandModule {
                                                $"Error message: {exception.Message}");
                 return;
             }
-            
+
             await ctx.Message.RespondAsync($"User `{username}` linked to discord id `{ctx.Message.Author.Id}`.");
             return;
         }
-        
+
         exception = await DatabaseHandler.AddUser(ctx.Message.Author.Id, user.Id, username);
         if (exception is not null) {
             await ctx.Message.RespondAsync($"Unable to link osu! username `{username}`.\n" +
                                            $"Error message: {exception.Message}");
             return;
         }
-        
+
         await ctx.Message.RespondAsync($"User `{username}` linked to discord id `{ctx.Message.Author.Id}`.");
     }
 
@@ -55,6 +56,7 @@ public class OsuModule : BaseCommandModule {
         }
 
         #region GetBeatmapMessageFormatting
+
         var embedBuilder = new DiscordEmbedBuilder();
 
         var beatmapTotalLengthTimeSpan = new TimeSpan(0, 0, beatmapData.TotalLength);
@@ -86,12 +88,13 @@ public class OsuModule : BaseCommandModule {
             Url = $"https://osu.ppy.sh/users/{beatmapData.Beatmapset?.UserId}",
             IconUrl = $"https://s.ppy.sh/a/{beatmapData.Beatmapset?.UserId}"
         };
+
         #endregion
-        
+
         // Send message.
         await ctx.RespondAsync(embedBuilder.Build());
     }
-    
+
     //TODO: Actually make this work somehow lol.
     [Command("recentscore")]
     [Aliases("recent", "rs")]
@@ -102,14 +105,14 @@ public class OsuModule : BaseCommandModule {
             await ctx.RespondAsync("User invalid or there was an error obtaining the specified user.");
             return;
         }
-        
+
         var scoreData = await Client.GetUserScores(userData.Id, "recent");
 
         if (scoreData?.Length == 0) {
             await ctx.RespondAsync("Score not found or the osu! api threw an error.");
             return;
         }
-        
+
         var beatmapData = scoreData![0].Beatmap!;
 
         var embedBuilder = new DiscordEmbedBuilder {
@@ -156,7 +159,7 @@ public class OsuModule : BaseCommandModule {
             await ctx.Message.RespondAsync("Invalid username.");
             return;
         }
-        
+
         var scoreData = await Client.GetUserScores(userData.Id, "best");
 
         if (scoreData is null) {
@@ -164,10 +167,10 @@ public class OsuModule : BaseCommandModule {
             return;
         }
 
-        await ctx.RespondAsync($"{scoreData[0].Beatmapset!.Artist} - {scoreData[0].Beatmapset!.Title}\n" + 
+        await ctx.RespondAsync($"{scoreData[0].Beatmapset!.Artist} - {scoreData[0].Beatmapset!.Title}\n" +
                                $"{scoreData[0].ScoreCount} {scoreData[0].Accuracy * 100} {scoreData[0].Pp}");
     }
-    
+
     [Command("personalbest")]
     public async Task GetPersonalBest(CommandContext ctx) {
         var user = await DatabaseHandler.GetUser(ctx.Message.Author.Id);

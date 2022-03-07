@@ -1,18 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace PanchoBot.Api.v2.Models;
 
 public record User : UserCompact {
-    private List<ReplaysWatchedCount> _replaysWatchedCounts;
-    private List<string> _profileOrder;
-    private List<string> _playstyle;
-    private List<UserAccountHistory> _accountHistory;
-    private List<Group> _groups;
-    private List<MonthlyPlaycount> _monthlyPlaycounts;
-    private List<UserAchievement> _userAchievements;
-
     [JsonPropertyName("default_group")] public string DefaultGroup { get; set; }
 
     [JsonPropertyName("last_visit")] public string LastVisit { get; set; }
@@ -41,19 +32,11 @@ public record User : UserCompact {
 
     [JsonPropertyName("playmode")] public string Playmode { get; set; }
 
-    [JsonPropertyName("playstyle")]
-    public List<string> Playstyle {
-        get => _playstyle;
-        set => _playstyle = value;
-    }
+    [JsonPropertyName("playstyle")] public List<string> Playstyle { get; set; }
 
     [JsonPropertyName("post_count")] public int PostCount { get; set; }
 
-    [JsonPropertyName("profile_order")]
-    public List<string> ProfileOrder {
-        get => _profileOrder;
-        set => _profileOrder = value;
-    }
+    [JsonPropertyName("profile_order")] public List<string> ProfileOrder { get; set; }
 
     [JsonPropertyName("title")] public object Title { get; set; }
 
@@ -67,11 +50,7 @@ public record User : UserCompact {
 
     [JsonPropertyName("is_restricted")] public bool IsRestricted { get; set; }
 
-    [JsonPropertyName("account_history")]
-    public List<UserAccountHistory> AccountHistory {
-        get => _accountHistory;
-        set => _accountHistory = value;
-    }
+    [JsonPropertyName("account_history")] public List<UserAccountHistory> AccountHistory { get; set; }
 
     [JsonPropertyName("active_tournament_banner")]
     public object ActiveTournamentBanner { get; set; }
@@ -86,20 +65,13 @@ public record User : UserCompact {
     [JsonPropertyName("graveyard_beatmapset_count")]
     public int GraveyardBeatmapsetCount { get; set; }
 
-    [JsonPropertyName("groups")]
-    public List<Group> Groups {
-        get => _groups;
-        set => _groups = value;
-    }
+    [JsonPropertyName("groups")] public List<Group> Groups { get; set; }
 
     [JsonPropertyName("loved_beatmapset_count")]
     public int LovedBeatmapsetCount { get; set; }
 
     [JsonPropertyName("monthly_playcounts")]
-    public List<MonthlyPlaycount> MonthlyPlaycounts {
-        get => _monthlyPlaycounts;
-        set => _monthlyPlaycounts = value;
-    }
+    public List<MonthlyPlaycount> MonthlyPlaycounts { get; set; }
 
     [JsonPropertyName("page")] public Page Page { get; set; }
 
@@ -113,10 +85,7 @@ public record User : UserCompact {
     public int RankedBeatmapsetCount { get; set; }
 
     [JsonPropertyName("replays_watched_counts")]
-    public List<ReplaysWatchedCount> ReplaysWatchedCounts {
-        get => _replaysWatchedCounts;
-        set => _replaysWatchedCounts = value;
-    }
+    public List<ReplaysWatchedCount> ReplaysWatchedCounts { get; set; }
 
     [JsonPropertyName("scores_first_count")]
     public int ScoresFirstCount { get; set; }
@@ -126,10 +95,7 @@ public record User : UserCompact {
     [JsonPropertyName("support_level")] public int SupportLevel { get; set; }
 
     [JsonPropertyName("user_achievements")]
-    public List<UserAchievement> UserAchievements {
-        get => _userAchievements;
-        set => _userAchievements = value;
-    }
+    public List<UserAchievement> UserAchievements { get; set; }
 
     [JsonPropertyName("rank_history")] public RankHistory RankHistory { get; set; }
 }

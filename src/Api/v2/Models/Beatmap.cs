@@ -40,7 +40,7 @@ public record Beatmap : BeatmapCompact {
     [JsonPropertyName("ranked")] public int Ranked { get; set; }
 
     [JsonPropertyName("url")] public string Url { get; set; }
-    
+
     [JsonPropertyName("beatmapset")] public new Beatmapset? Beatmapset { get; set; }
 
     [JsonPropertyName("checksum")] public string? Checksum { get; set; }

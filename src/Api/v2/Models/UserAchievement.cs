@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace PanchoBot.Api.v2.Models; 
+namespace PanchoBot.Api.v2.Models;
 
 public record UserAchievement {
     [JsonPropertyName("achieved_at")] public DateTime AchievedAt { get; set; }

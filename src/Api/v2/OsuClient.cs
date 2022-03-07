@@ -1,9 +1,6 @@
 ﻿#nullable enable
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using PanchoBot.Api.v2.Models;
 using RestSharp;
 
@@ -43,12 +40,13 @@ public class OsuClient : IOsuClient {
         }
     }
 
-    public async Task<Score[]?> GetUserScores(int userId, string type, string mode = "osu", string includeFails = "1", int limit = 1) {
+    public async Task<Score[]?> GetUserScores(int userId, string type, string mode = "osu", string includeFails = "1",
+        int limit = 1) {
         var request = new RestRequest($"users/{userId}/scores/{type}")
             .AddParameter("mode", mode)
             .AddParameter("includeFails", includeFails)
             .AddParameter("limit", limit);
-        
+
         try {
             var response = await _client.GetAsync<Score[]>(request);
             return response;

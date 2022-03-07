@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using PanchoBot.Api.v1.Entities;
 
-namespace PanchoBot.Api.v1.Requests; 
+namespace PanchoBot.Api.v1.Requests;
 
 public static class GetBeatmap {
     public static async Task<Beatmap?> SendRequest(HttpClient client, string apiKey, string beatmapId) {
