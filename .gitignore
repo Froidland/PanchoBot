@@ -4,3 +4,4 @@
 /obj/
 /db.sqlite
 /Folder.DotSettings.user
+/.env

@@ -43,7 +43,7 @@ public class OsuClient : IOsuClient {
         }
     }
 
-    public async Task<Score[]?> GetUserScores(string userId, string type = "recent", string mode = "osu", string includeFails = "1", int limit = 1) {
+    public async Task<Score[]?> GetUserScores(int userId, string type, string mode = "osu", string includeFails = "1", int limit = 1) {
         var request = new RestRequest($"users/{userId}/scores/{type}")
             .AddParameter("mode", mode)
             .AddParameter("includeFails", includeFails)

@@ -15,7 +15,7 @@ public record User : UserCompact {
 
     [JsonPropertyName("default_group")] public string DefaultGroup { get; set; }
 
-    [JsonPropertyName("last_visit")] public DateTime LastVisit { get; set; }
+    [JsonPropertyName("last_visit")] public string LastVisit { get; set; }
 
     [JsonPropertyName("pm_friends_only")] public bool PmFriendsOnly { get; set; }
 
@@ -27,7 +27,7 @@ public record User : UserCompact {
 
     [JsonPropertyName("interests")] public object Interests { get; set; }
 
-    [JsonPropertyName("join_date")] public DateTime JoinDate { get; set; }
+    [JsonPropertyName("join_date")] public string JoinDate { get; set; }
 
     [JsonPropertyName("kudosu")] public Kudosu Kudosu { get; set; }
 

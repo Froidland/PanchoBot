@@ -5,11 +5,11 @@ namespace PanchoBot.Api.v2.Models;
 public record Statistics {
     [JsonPropertyName("level")] public Level Level { get; set; }
 
-    [JsonPropertyName("pp")] public int Pp { get; set; }
+    [JsonPropertyName("pp")] public double Pp { get; set; }
 
     [JsonPropertyName("global_rank")] public int GlobalRank { get; set; }
 
-    [JsonPropertyName("ranked_score")] public int RankedScore { get; set; }
+    [JsonPropertyName("ranked_score")] public ulong RankedScore { get; set; }
 
     [JsonPropertyName("hit_accuracy")] public double HitAccuracy { get; set; }
 
@@ -17,7 +17,7 @@ public record Statistics {
 
     [JsonPropertyName("play_time")] public int PlayTime { get; set; }
 
-    [JsonPropertyName("total_score")] public int TotalScore { get; set; }
+    [JsonPropertyName("total_score")] public ulong TotalScore { get; set; }
 
     [JsonPropertyName("total_hits")] public int TotalHits { get; set; }
 
