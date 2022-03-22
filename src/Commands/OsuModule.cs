@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -9,13 +10,14 @@ using PanchoBot.Database;
 namespace PanchoBot.Commands;
 
 public class OsuModule : BaseCommandModule {
-    private static readonly OsuClient Client = Program._osuClient;
+    private static readonly OsuClient OsuClient = Program.Bot.OsuClient;
 
     [Command("link")]
+    [RequireUserPermissions(Permissions.Administrator)]
     public async Task Link(CommandContext ctx, string username) {
         Exception? exception;
 
-        var user = await Client.GetUser(username);
+        var user = await OsuClient.GetUser(username);
         if (user is null) {
             await ctx.Message.RespondAsync("Invalid username provided.");
             return;
@@ -47,8 +49,9 @@ public class OsuModule : BaseCommandModule {
 
     [Command("beatmap")]
     [Aliases("map")]
-    public async Task GetBeatmap(CommandContext ctx, string mapId) {
-        var beatmapData = await Client.GetBeatmap(mapId);
+    [RequireUserPermissions(Permissions.Administrator)]
+    public async Task GetBeatmap(CommandContext ctx, ulong mapId) {
+        var beatmapData = await OsuClient.GetBeatmap(mapId);
 
         if (beatmapData is null) {
             await ctx.RespondAsync("Map not found or the osu! api threw an error.");
@@ -95,18 +98,18 @@ public class OsuModule : BaseCommandModule {
         await ctx.RespondAsync(embedBuilder.Build());
     }
 
-    //TODO: Actually make this work somehow lol.
     [Command("recentscore")]
     [Aliases("recent", "rs")]
+    [RequireUserPermissions(Permissions.Administrator)]
     public async Task GetRecentScore(CommandContext ctx, string username) {
-        var userData = await Client.GetUser(username);
+        var userData = await OsuClient.GetUser(username);
 
         if (userData is null) {
             await ctx.RespondAsync("User invalid or there was an error obtaining the specified user.");
             return;
         }
 
-        var scoreData = await Client.GetUserScores(userData.Id, "recent");
+        var scoreData = await OsuClient.GetUserScores(userData.Id, "recent");
 
         if (scoreData?.Length == 0) {
             await ctx.RespondAsync("Score not found or the osu! api threw an error.");
@@ -115,52 +118,25 @@ public class OsuModule : BaseCommandModule {
 
         var beatmapData = scoreData![0].Beatmap!;
 
-        var embedBuilder = new DiscordEmbedBuilder {
-            Color = new Optional<DiscordColor>(DiscordColor.Aquamarine),
-            Url = $"https://osu.ppy.sh/beatmaps/{beatmapData.Id}",
-            Title = $"{beatmapData.Beatmapset!.Artist} - {beatmapData.Beatmapset.Title} [{beatmapData.Version}]",
-            // Description (Where most data goes).
-            Description = "**Rank\tScore\tAcc.\tWhen**\n" +
-                          $"{scoreData[0].Rank}\t{scoreData[0].ScoreCount}\tNaN\t{scoreData[0].CreatedAt}\n" +
-                          "**pp/PP\tCombo\tHits**\n" +
-                          $"NaN/NaN\t{scoreData[0].MaxCombo}/{beatmapData.MaxCombo}\t{{{scoreData[0].Statistics!.Count300} / {scoreData[0].Statistics!.Count100} / {scoreData[0].Statistics!.Count50} / {scoreData[0].Statistics!.CountMiss} }}\n" +
-                          "**Beatmap Information**\n" +
-                          $"Length: `{beatmapData.TotalLength}` (`{beatmapData.HitLength}`) " +
-                          $"BPM: `{beatmapData.Bpm}`" +
-                          $"FC: `{beatmapData.MaxCombo}x`\n" +
-                          $"CS: `{beatmapData.Cs}` " +
-                          $"AR: `{beatmapData.Ar}` " +
-                          $"OD: `{beatmapData.Accuracy}` " +
-                          $"HP: `{beatmapData.Drain}` " +
-                          $"Stars: `{beatmapData.DifficultyRating}`",
-            // Thumbnail.
-            Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail {
-                Url = $"https://b.ppy.sh/thumb/{beatmapData.BeatmapsetId}l.jpg"
-            },
-            // Author.
-            Author = new DiscordEmbedBuilder.EmbedAuthor {
-                Name = userData.Username,
-                Url = $"https://osu.ppy.sh/users/{userData.Id}",
-                IconUrl = $"https://s.ppy.sh/a/{userData.Id}"
-            }
-        };
+        //TODO: Create an embed for this
 
-        // Send message.
-        await ctx.RespondAsync(embedBuilder.Build());
+        await ctx.RespondAsync($"{scoreData[0].Beatmapset!.Artist} - {scoreData[0].Beatmapset!.Title}\n" +
+                               $"{scoreData[0].ScoreCount} {scoreData[0].Accuracy * 100} {scoreData[0].Pp}");
     }
 
     //TODO: Make this a pretty embed.
     [Command("personalbest")]
     [Aliases("top", "pb")]
+    [RequireUserPermissions(Permissions.Administrator)]
     public async Task GetPersonalBest(CommandContext ctx, string username) {
-        var userData = await Client.GetUser(username);
+        var userData = await OsuClient.GetUser(username);
 
         if (userData is null) {
             await ctx.Message.RespondAsync("Invalid username.");
             return;
         }
 
-        var scoreData = await Client.GetUserScores(userData.Id, "best");
+        var scoreData = await OsuClient.GetUserScores(userData.Id, "best");
 
         if (scoreData is null) {
             await ctx.Message.RespondAsync("Couldn't find any score data.");
@@ -172,6 +148,7 @@ public class OsuModule : BaseCommandModule {
     }
 
     [Command("personalbest")]
+    [RequireUserPermissions(Permissions.Administrator)]
     public async Task GetPersonalBest(CommandContext ctx) {
         var user = await DatabaseHandler.GetUser(ctx.Message.Author.Id);
 
@@ -181,7 +158,7 @@ public class OsuModule : BaseCommandModule {
             return;
         }
 
-        var scoreData = await Client.GetUserScores(user.OsuId, "best");
+        var scoreData = await OsuClient.GetUserScores(user.OsuId, "best");
 
 
         await ctx.RespondAsync($"{scoreData?[0].Beatmapset!.Artist} - {scoreData?[0].Beatmapset!.Title}\n" +
