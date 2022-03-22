@@ -1,17 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using PanchoBot.Api.v2;
-using PanchoBot.Commands;
 using PanchoBot.Database;
 
 namespace PanchoBot;
 
 public static class Program {
-    public static string ApiKey = "f417bb502c5191951befbbfc49099dfea4bc8736";
-    public static OsuClient _osuClient;
+    public static DiscordBot? Bot;
 
     public static void Main() {
         MainAsync().GetAwaiter().GetResult();
@@ -49,31 +44,9 @@ public static class Program {
             return;
         }
 
-        _osuClient = new OsuClient(osuClientId, osuClientSecret);
-
-        var discordClient = new DiscordClient(new DiscordConfiguration {
-            Token = discordToken,
-            TokenType = TokenType.Bot,
-            Intents = DiscordIntents.AllUnprivileged
-        });
-
         await DatabaseHandler.Connect(databaseIp, databaseUsername, databasePassword, databaseName);
 
-        var commands = discordClient.UseCommandsNext(new CommandsNextConfiguration {
-            StringPrefixes = new[] {"_"}
-        });
-
-        commands.RegisterCommands<OsuModule>();
-        commands.RegisterCommands<MiscellaneousModule>();
-
-        /*discordClient.GuildMemberAdded += async (s, memberJoinEvent) => {
-            if (await DatabaseHandler.GetUser(memberJoinEvent.Member.Id) is not null) {
-                await memberJoinEvent.Member.SendMessageAsync(
-                    $"You are already verified on server {memberJoinEvent.Guild.Name}");
-            }
-        };*/
-
-        await discordClient.ConnectAsync();
-        await Task.Delay(-1);
+        Bot = new DiscordBot();
+        Bot.RunAsync(discordToken, osuClientId, osuClientSecret).GetAwaiter().GetResult();
     }
 }
