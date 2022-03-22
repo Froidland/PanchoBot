@@ -9,8 +9,8 @@ namespace PanchoBot.Database;
 public static class DatabaseHandler {
     private static MySqlConnection? _connection;
 
-    public static async Task Connect(string Ip, string username, string password, string database) {
-        var connectionString = $"Server={Ip};User ID={username};Password={password};Database={database}";
+    public static async Task Connect(string ip, string username, string password, string database) {
+        var connectionString = $"Server={ip};User ID={username};Password={password};Database={database}";
         var connection = new MySqlConnection(connectionString);
 
         try {
@@ -20,6 +20,9 @@ public static class DatabaseHandler {
         }
         catch (MySqlException e) {
             Console.WriteLine(e.Message);
+            await connection.DisposeAsync();
+            _connection = null;
+            return;
         }
 
         _connection = connection;
@@ -39,6 +42,9 @@ public static class DatabaseHandler {
         catch (DbException e) {
             return e;
         }
+        finally {
+            await cmd.DisposeAsync();
+        }
     }
 
     public static async Task<Exception?> UpdateUser(ulong discordId, int osuId, string osuUsername) {
@@ -53,6 +59,9 @@ public static class DatabaseHandler {
         }
         catch (Exception e) {
             return e;
+        }
+        finally {
+            await cmd.DisposeAsync();
         }
     }
 
