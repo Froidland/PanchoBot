@@ -28,7 +28,7 @@ public class OsuClient : IOsuClient {
         }
     }
 
-    public async Task<Beatmap?> GetBeatmap(string beatmapId) {
+    public async Task<Beatmap?> GetBeatmap(ulong beatmapId) {
         var request = new RestRequest($"beatmaps/{beatmapId}");
 
         try {
