@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json.Serialization;
 
 namespace PanchoBot.Api.v2.Models;
@@ -13,7 +12,7 @@ public record Score {
     [JsonPropertyName("perfect")] public bool Perfect { get; set; }
     [JsonPropertyName("statistics")] public ScoreStatistics? Statistics { get; set; }
     [JsonPropertyName("rank")] public string? Rank { get; set; }
-    [JsonPropertyName("created_at")] public DateTime CreatedAt { get; set; }
+    [JsonPropertyName("created_at")] public string CreatedAt { get; set; }
     [JsonPropertyName("best_id")] public ulong BestId { get; set; }
     [JsonPropertyName("pp")] public float Pp { get; set; }
     [JsonPropertyName("mode")] public string? Mode { get; set; }
