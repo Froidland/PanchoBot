@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -6,6 +7,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using PanchoBot.Api.v2;
 using PanchoBot.Database;
+using PanchoBot.Database.Models;
 
 namespace PanchoBot.Commands;
 
@@ -15,36 +17,49 @@ public class OsuModule : BaseCommandModule {
     [Command("link")]
     [RequireUserPermissions(Permissions.Administrator)]
     public async Task Link(CommandContext ctx, string username) {
-        Exception? exception;
+        DbUser? dbUser;
 
         var user = await OsuClient.GetUser(username);
+
         if (user is null) {
-            await ctx.Message.RespondAsync("Invalid username provided.");
+            await ctx.RespondAsync("Unable to get user data. Please try again later.");
             return;
         }
 
-        var dbUser = await DatabaseHandler.GetUser(ctx.Message.Author.Id);
-        if (dbUser is not null) {
-            exception = await DatabaseHandler.UpdateUser(ctx.Message.Author.Id, user.Id, username);
+        if (user.Id == 0) {
+            await ctx.Message.RespondAsync("Invalid username provided. Please try again with an existing username.");
+            return;
+        }
 
-            if (exception is not null) {
-                await ctx.Message.RespondAsync($"Unable to link osu! username `{username}`.\n" +
-                                               $"Error message: {exception.Message}");
+        try {
+            dbUser = await DatabaseHandler.GetUser(ctx.User.Id);
+        }
+        catch (DbException exception) {
+            await ctx.RespondAsync("Unable to query the database at this time. Please try again later.\n" +
+                                   $"Error message: {exception.Message}");
+            return;
+        }
+
+        if (dbUser is null) {
+            var insertedRows = await DatabaseHandler.InsertUserAsync(ctx.User.Id, user.Id, user.Username);
+
+            if (insertedRows == 0) {
+                await ctx.RespondAsync("Unable to link username. Please try again later.");
+
                 return;
             }
 
-            await ctx.Message.RespondAsync($"User `{username}` linked to discord id `{ctx.Message.Author.Id}`.");
+            await ctx.RespondAsync($"User `{username}` successfully linked to discord id `{ctx.User.Id}`.");
+
             return;
         }
 
-        exception = await DatabaseHandler.AddUser(ctx.Message.Author.Id, user.Id, username);
-        if (exception is not null) {
-            await ctx.Message.RespondAsync($"Unable to link osu! username `{username}`.\n" +
-                                           $"Error message: {exception.Message}");
-            return;
+        var updatedRows = await DatabaseHandler.UpdateUserAsync(ctx.User.Id, user.Id, user.Username);
+        if (updatedRows == 0) {
+            await ctx.RespondAsync("Unable to update already linked username. Please try again later.");
         }
 
-        await ctx.Message.RespondAsync($"User `{username}` linked to discord id `{ctx.Message.Author.Id}`.");
+        await ctx.RespondAsync($"User `{user.Username}` successfully updated to discord id `{ctx.User.Id}`.");
     }
 
     [Command("beatmap")]

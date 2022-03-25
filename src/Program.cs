@@ -44,7 +44,7 @@ public static class Program {
             return;
         }
 
-        await DatabaseHandler.Connect(databaseIp, databaseUsername, databasePassword, databaseName);
+        await DatabaseHandler.ConnectAsync(databaseIp, databaseUsername, databasePassword, databaseName);
 
         Bot = new DiscordBot();
         Bot.RunAsync(discordToken, osuClientId, osuClientSecret).GetAwaiter().GetResult();
