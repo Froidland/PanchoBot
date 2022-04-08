@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -10,11 +8,11 @@ using PanchoBot.Api.v2;
 namespace PanchoBot.Commands;
 
 public class TournamentModule : BaseCommandModule {
-    private static readonly OsuClient OsuClient = Program.Bot.OsuClient;
-    
+    private static readonly OsuClient OsuClient = Program.Bot.OsuClient!;
+
     [Command("createtournament")]
     [Aliases("createt", "ct")]
-    [RequireUserPermissions(Permissions.Administrator)]
+    [RequireOwner]
     public async Task CreateTournament(CommandContext ctx, [RemainingText] string tournamentName) {
         DiscordMessage statusMessage;
 
@@ -119,41 +117,29 @@ public class TournamentModule : BaseCommandModule {
         await chatChannel.AddOverwriteAsync(participantRole, deny: Permissions.AccessChannels);
         await statusMessage.ModifyAsync(new Optional<string>(":white_check_mark: Chat channel created!"));
     }
-    
-    [DSharpPlus.CommandsNext.Attributes.Description("Moves all channels from a given category to another one and appends a prefix to the name of each channel.")]
+
+    [Description("Moves all channels from a given category to another one and appends a prefix to the name of each channel.")]
     [Command("archivetournament")]
     [Aliases("archivet", "ac")]
-    [RequireUserPermissions(Permissions.Administrator)]
-    public async Task ArchiveTournament(CommandContext ctx, ulong sourceCategoryId, ulong destinationCategoryId, string channelPrefix) {
+    [RequireOwner]
+    public async Task ArchiveTournament(CommandContext ctx, ulong sourceCategoryId, ulong destinationCategoryId, [RemainingText] string channelPrefix) {
         var source = ctx.Guild.GetChannel(sourceCategoryId);
         int count = 0;
-        
+
         foreach (var channel in source.Children) {
             var currentChannelName = channel.Name;
-            
+
             await channel.ModifyPositionAsync(1, parentId: destinationCategoryId);
 
             // Rate limit hack?
             await Task.Delay(250);
-            
-            await channel.ModifyAsync(model => {
-                model.Name = $"{channelPrefix}-{currentChannelName}";
-            });
+
+            await channel.ModifyAsync(model => { model.Name = $"{channelPrefix}-{currentChannelName}"; });
 
             count++;
         }
 
-        await ctx.RespondAsync($":white_check_mark: Successfully archived {count} channels to category {destinationCategoryId}");
-    }
-
-
-    [Command("formatbeatmap")]
-    [Aliases("fbm")]
-    [RequireUserPermissions(Permissions.Administrator)]
-    public async Task FormatBeatmap(CommandContext ctx, ulong mapId) {
-        var beatmapData = await OsuClient.GetBeatmap(mapId);
-        
-        
-        
+        await ctx.RespondAsync(
+            $":white_check_mark: Successfully archived {count} channels to category {destinationCategoryId}");
     }
 }
