@@ -1,40 +1,36 @@
 ﻿using System;
 using System.Data.Common;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using PanchoBot.Api.v2;
 using PanchoBot.Database;
 using PanchoBot.Database.Models;
+using Serilog;
 
 namespace PanchoBot.Commands;
 
 public class OsuModule : BaseCommandModule {
-    private static readonly OsuClient OsuClient = Program.Bot.OsuClient;
+    private static readonly OsuClient OsuClient = Program.Bot.OsuClient!;
 
     [Command("link")]
-    [RequireUserPermissions(Permissions.Administrator)]
+    [RequireOwner]
     public async Task Link(CommandContext ctx, string username) {
         DbUser? dbUser;
 
         var user = await OsuClient.GetUser(username);
 
         if (user is null) {
-            await ctx.RespondAsync("Unable to get user data. Please try again later.");
-            return;
-        }
-
-        if (user.Id == 0) {
             await ctx.Message.RespondAsync("Invalid username provided. Please try again with an existing username.");
             return;
         }
 
         try {
-            dbUser = await DatabaseHandler.GetUser(ctx.User.Id);
+            dbUser = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
         }
         catch (DbException exception) {
+            Log.Error(exception, "Error when querying the database");
             await ctx.RespondAsync("Unable to query the database at this time. Please try again later.\n" +
                                    $"Error message: {exception.Message}");
             return;
@@ -64,7 +60,7 @@ public class OsuModule : BaseCommandModule {
 
     [Command("beatmap")]
     [Aliases("map")]
-    [RequireUserPermissions(Permissions.Administrator)]
+    [RequireOwner]
     public async Task GetBeatmap(CommandContext ctx, ulong mapId) {
         var beatmapData = await OsuClient.GetBeatmap(mapId);
 
@@ -72,8 +68,6 @@ public class OsuModule : BaseCommandModule {
             await ctx.RespondAsync("Map not found or the osu! api threw an error.");
             return;
         }
-
-        #region GetBeatmapMessageFormatting
 
         var embedBuilder = new DiscordEmbedBuilder();
 
@@ -107,43 +101,63 @@ public class OsuModule : BaseCommandModule {
             IconUrl = $"https://s.ppy.sh/a/{beatmapData.Beatmapset?.UserId}"
         };
 
-        #endregion
-
         // Send message.
         await ctx.RespondAsync(embedBuilder.Build());
     }
 
     [Command("recentscore")]
     [Aliases("recent", "rs")]
-    [RequireUserPermissions(Permissions.Administrator)]
-    public async Task GetRecentScore(CommandContext ctx, string username) {
+    [RequireOwner]
+    public async Task GetRecentScore(CommandContext ctx, string username = "") {
+        if (string.IsNullOrEmpty(username)) {
+            var dbUser = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
+
+            if (dbUser is null) {
+                await ctx.RespondAsync("Please link your account to execute this command without arguments.");
+                return;
+            }
+
+            username = dbUser.OsuUsername;
+        }
+
         var userData = await OsuClient.GetUser(username);
 
+
         if (userData is null) {
-            await ctx.RespondAsync("User invalid or there was an error obtaining the specified user.");
+            await ctx.RespondAsync("Invalid user or there was an error obtaining the specified user.");
             return;
         }
 
         var scoreData = await OsuClient.GetUserScores(userData.Id, "recent");
 
-        if (scoreData?.Length == 0) {
+        if (scoreData is null) {
             await ctx.RespondAsync("Score not found or the osu! api threw an error.");
             return;
         }
 
-        var beatmapData = scoreData![0].Beatmap!;
-
+        if (scoreData.Length == 0) {
+            await ctx.RespondAsync("Score not found or the osu! api threw an error.");
+            return;
+        }
         //TODO: Create an embed for this
 
-        await ctx.RespondAsync($"{scoreData[0].Beatmapset!.Artist} - {scoreData[0].Beatmapset!.Title}\n" +
+        await ctx.RespondAsync($"{scoreData![0].Beatmapset!.Artist} - {scoreData[0].Beatmapset!.Title}\n" +
                                $"{scoreData[0].ScoreCount} {scoreData[0].Accuracy * 100} {scoreData[0].Pp}");
     }
 
     //TODO: Make this a pretty embed.
     [Command("personalbest")]
     [Aliases("top", "pb")]
-    [RequireUserPermissions(Permissions.Administrator)]
-    public async Task GetPersonalBest(CommandContext ctx, string username) {
+    [RequireOwner]
+    public async Task GetPersonalBest(CommandContext ctx, [RemainingText] string username = "") {
+        if (string.IsNullOrEmpty(username)) {
+            var dbQuery = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
+            if (dbQuery is null) {
+                await ctx.RespondAsync("Please link an account to your discord profile or specify a username.");
+                return;
+            }
+        }
+
         var userData = await OsuClient.GetUser(username);
 
         if (userData is null) {
@@ -160,23 +174,5 @@ public class OsuModule : BaseCommandModule {
 
         await ctx.RespondAsync($"{scoreData[0].Beatmapset!.Artist} - {scoreData[0].Beatmapset!.Title}\n" +
                                $"{scoreData[0].ScoreCount} {scoreData[0].Accuracy * 100} {scoreData[0].Pp}");
-    }
-
-    [Command("personalbest")]
-    [RequireUserPermissions(Permissions.Administrator)]
-    public async Task GetPersonalBest(CommandContext ctx) {
-        var user = await DatabaseHandler.GetUser(ctx.Message.Author.Id);
-
-        if (user is null) {
-            await ctx.Message.RespondAsync(
-                "Please link your discord account to a username or explicitly indicate a username with the appropiate command.");
-            return;
-        }
-
-        var scoreData = await OsuClient.GetUserScores(user.OsuId, "best");
-
-
-        await ctx.RespondAsync($"{scoreData?[0].Beatmapset!.Artist} - {scoreData?[0].Beatmapset!.Title}\n" +
-                               $"{scoreData?[0].ScoreCount} {scoreData?[0].Accuracy * 100} {scoreData?[0].Pp}");
     }
 }
