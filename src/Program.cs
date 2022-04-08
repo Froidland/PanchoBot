@@ -1,21 +1,27 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
-using PanchoBot.Database;
+using Serilog;
 
 namespace PanchoBot;
 
 public static class Program {
-    public static DiscordBot? Bot;
+    public static DiscordBot Bot;
 
     public static void Main() {
-        MainAsync().GetAwaiter().GetResult();
-    }
+        Log.Logger = new LoggerConfiguration().MinimumLevel
+            .Debug()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log.log", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
 
-    private static async Task MainAsync() {
-        // Environment variables.
+
         var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
-        DotEnv.Load(envPath);
+        var envExists = DotEnv.Load(envPath);
+
+
+        if (!envExists || !DotEnv.CheckMissingVariables()) {
+            return;
+        }
 
         var osuClientId = Environment.GetEnvironmentVariable("OSU_CLIENT_ID");
         var osuClientSecret = Environment.GetEnvironmentVariable("OSU_CLIENT_SECRET");
@@ -25,28 +31,10 @@ public static class Program {
         var databasePassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
         var databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
 
-        if (string.IsNullOrEmpty(osuClientId) || string.IsNullOrEmpty(osuClientSecret)) {
-            Console.WriteLine("Please specify the following environment variables in a .env file: ");
-            Console.WriteLine("OSU_CLIENT_ID, OSU_CLIENT_SECRET");
-            return;
-        }
-
-        if (string.IsNullOrEmpty(discordToken)) {
-            Console.WriteLine("Please specify the following environment variables in a .env file: ");
-            Console.WriteLine("DISCORD_TOKEN");
-            return;
-        }
-
-        if (string.IsNullOrEmpty(databaseIp) || string.IsNullOrEmpty(databaseUsername) ||
-            string.IsNullOrEmpty(databasePassword) || string.IsNullOrEmpty(databaseName)) {
-            Console.WriteLine("Please specify the following environment variables in a .env file: ");
-            Console.WriteLine("DATABASE_IP, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME");
-            return;
-        }
-
-        await DatabaseHandler.ConnectAsync(databaseIp, databaseUsername, databasePassword, databaseName);
+        var databaseConnectionString =
+            $"Server={databaseIp};User ID={databaseUsername};Password={databasePassword};Database={databaseName}";
 
         Bot = new DiscordBot();
-        Bot.RunAsync(discordToken, osuClientId, osuClientSecret).GetAwaiter().GetResult();
+        Bot.RunAsync(discordToken!, osuClientId!, osuClientSecret!, databaseConnectionString).GetAwaiter().GetResult();
     }
 }
