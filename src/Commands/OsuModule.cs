@@ -5,6 +5,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using PanchoBot.Api.v2;
+using PanchoBot.Api.v2.Models;
 using PanchoBot.Database;
 using PanchoBot.Database.Models;
 using Serilog;
@@ -109,26 +110,33 @@ public class OsuModule : BaseCommandModule {
     [Aliases("recent", "rs")]
     [RequireOwner]
     public async Task GetRecentScore(CommandContext ctx, string username = "") {
-        if (string.IsNullOrEmpty(username)) {
-            var dbUser = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
+        User? userData;
+        int userId = 0;
 
-            if (dbUser is null) {
+        if (string.IsNullOrEmpty(username)) {
+            var dbQuery = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
+
+            if (dbQuery is null) {
                 await ctx.RespondAsync("Please link your account to execute this command without arguments.");
                 return;
             }
 
-            username = dbUser.OsuUsername;
+            userId = dbQuery.OsuId;
         }
 
-        var userData = await OsuClient.GetUser(username);
+        if (userId == 0) {
+            userData = await OsuClient.GetUser(username);
 
+            if (userData is null) {
+                await ctx.RespondAsync("Invalid user or there was an error obtaining the specified user.");
+                return;
+            }
 
-        if (userData is null) {
-            await ctx.RespondAsync("Invalid user or there was an error obtaining the specified user.");
-            return;
+            userId = userData.Id;
         }
 
-        var scoreData = await OsuClient.GetUserScores(userData.Id, "recent");
+
+        var scoreData = await OsuClient.GetUserScores(userId, "recent");
 
         if (scoreData is null) {
             await ctx.RespondAsync("Score not found or the osu! api threw an error.");
@@ -150,22 +158,33 @@ public class OsuModule : BaseCommandModule {
     [Aliases("top", "pb")]
     [RequireOwner]
     public async Task GetPersonalBest(CommandContext ctx, [RemainingText] string username = "") {
+        User? userData;
+        int userId = 0;
+
         if (string.IsNullOrEmpty(username)) {
             var dbQuery = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
+
             if (dbQuery is null) {
                 await ctx.RespondAsync("Please link an account to your discord profile or specify a username.");
                 return;
             }
+
+            userId = dbQuery.OsuId;
         }
 
-        var userData = await OsuClient.GetUser(username);
+        if (userId == 0) {
+            userData = await OsuClient.GetUser(username);
 
-        if (userData is null) {
-            await ctx.Message.RespondAsync("Invalid username.");
-            return;
+            if (userData is null) {
+                await ctx.Message.RespondAsync("Invalid username.");
+                return;
+            }
+
+            userId = userData.Id;
         }
 
-        var scoreData = await OsuClient.GetUserScores(userData.Id, "best");
+
+        var scoreData = await OsuClient.GetUserScores(userId, "best");
 
         if (scoreData is null) {
             await ctx.Message.RespondAsync("Couldn't find any score data.");
