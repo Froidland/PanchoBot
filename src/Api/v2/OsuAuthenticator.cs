@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Text.Json;
+using System.Threading.Tasks;
 using PanchoBot.Api.v2.Models;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -9,6 +11,7 @@ public class OsuAuthenticator : AuthenticatorBase {
     private readonly string _baseUrl;
     private readonly string _clientId;
     private readonly string _clientSecret;
+    private DateTime? _tokenExpirationDate;
 
     public OsuAuthenticator(string baseUrl, string clientId, string clientSecret) : base("") {
         _baseUrl = baseUrl;
@@ -17,11 +20,16 @@ public class OsuAuthenticator : AuthenticatorBase {
     }
 
     protected override async ValueTask<Parameter> GetAuthenticationParameter(string accessToken) {
-        var token = string.IsNullOrEmpty(Token) ? await GetToken() : Token;
+        if (!string.IsNullOrEmpty(Token) || _tokenExpirationDate > DateTime.Now) {
+            return new HeaderParameter(KnownHeaders.Authorization, Token);
+        }
+
+        var token = await GetToken();
+        Token = token;
         return new HeaderParameter(KnownHeaders.Authorization, token);
     }
 
-    public async Task<string> GetToken() {
+    private async Task<string> GetToken() {
         using var client = new RestClient(_baseUrl) {
             Authenticator = new HttpBasicAuthenticator(_clientId, _clientSecret)
         };
@@ -32,8 +40,14 @@ public class OsuAuthenticator : AuthenticatorBase {
             .AddParameter("grant_type", "client_credentials")
             .AddParameter("scope", "public");
 
-        var response = await client.PostAsync<TokenResponse>(request);
+        var response = await client.PostAsync(request);
 
-        return $"{response!.TokenType} {response!.AccessToken}";
+        if (!response.IsSuccessful) {
+            return string.Empty;
+        }
+
+        var responseData = JsonSerializer.Deserialize<TokenResponse>(response.Content!);
+        _tokenExpirationDate = DateTime.Now.AddSeconds(responseData!.ExpiresIn - 3600);
+        return $"{responseData.TokenType} {responseData.AccessToken}";
     }
 }
