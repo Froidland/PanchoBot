@@ -1,7 +1,14 @@
 ﻿namespace PanchoBot.Database.Models;
 
-public record DbUser(ulong DiscordId, int OsuId, string OsuUsername) {
-    public ulong DiscordId { get; set; } = DiscordId;
-    public int OsuId { get; set; } = OsuId;
-    public string OsuUsername { get; set; } = OsuUsername;
+public class DbUser {
+    public DbUser(ulong discordId, int osuId, string osuUsername) {
+        DiscordId = discordId;
+        OsuId = osuId;
+        OsuUsername = osuUsername;
+    }
+
+    public ulong DiscordId { get; }
+    public int OsuId { get; }
+
+    public string OsuUsername { get; }
 }
