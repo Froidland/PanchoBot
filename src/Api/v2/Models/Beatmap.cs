@@ -9,7 +9,7 @@ public record Beatmap : BeatmapCompact {
 
     [JsonPropertyName("ar")] public float Ar { get; set; }
 
-    [JsonPropertyName("bpm")] public float? Bpm { get; set; }
+    [JsonPropertyName("bpm")] public float Bpm { get; set; }
 
     [JsonPropertyName("convert")] public bool Convert { get; set; }
 
