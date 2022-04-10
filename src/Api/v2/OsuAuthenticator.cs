@@ -20,7 +20,7 @@ public class OsuAuthenticator : AuthenticatorBase {
     }
 
     protected override async ValueTask<Parameter> GetAuthenticationParameter(string accessToken) {
-        if (!string.IsNullOrEmpty(Token) || _tokenExpirationDate > DateTime.Now) {
+        if (!string.IsNullOrEmpty(Token) && _tokenExpirationDate > DateTime.Now) {
             return new HeaderParameter(KnownHeaders.Authorization, Token);
         }
 
