@@ -11,7 +11,7 @@ public class OsuAuthenticator : AuthenticatorBase {
     private readonly string _baseUrl;
     private readonly string _clientId;
     private readonly string _clientSecret;
-    private DateTime? _tokenExpirationDate;
+    private long _tokenExpirationTicks;
 
     public OsuAuthenticator(string baseUrl, string clientId, string clientSecret) : base("") {
         _baseUrl = baseUrl;
@@ -20,9 +20,8 @@ public class OsuAuthenticator : AuthenticatorBase {
     }
 
     protected override async ValueTask<Parameter> GetAuthenticationParameter(string accessToken) {
-        if (!string.IsNullOrEmpty(Token) && _tokenExpirationDate > DateTime.Now) {
+        if (!string.IsNullOrEmpty(Token) && _tokenExpirationTicks > DateTime.Now.Ticks)
             return new HeaderParameter(KnownHeaders.Authorization, Token);
-        }
 
         var token = await GetToken();
         Token = token;
@@ -42,12 +41,10 @@ public class OsuAuthenticator : AuthenticatorBase {
 
         var response = await client.PostAsync(request);
 
-        if (!response.IsSuccessful) {
-            return string.Empty;
-        }
+        if (!response.IsSuccessful) return string.Empty;
 
         var responseData = JsonSerializer.Deserialize<TokenResponse>(response.Content!);
-        _tokenExpirationDate = DateTime.Now.AddSeconds(responseData!.ExpiresIn - 3600);
+        _tokenExpirationTicks = DateTime.Now.AddSeconds(responseData!.ExpiresIn - 3600).Ticks;
         return $"{responseData.TokenType} {responseData.AccessToken}";
     }
 }
