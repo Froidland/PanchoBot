@@ -19,9 +19,7 @@ public static class Program {
         var envExists = DotEnv.Load(envPath);
 
 
-        if (!envExists || !DotEnv.CheckMissingVariables()) {
-            return;
-        }
+        if (!envExists || !DotEnv.CheckMissingVariables()) return;
 
         var osuClientId = Environment.GetEnvironmentVariable("OSU_CLIENT_ID");
         var osuClientSecret = Environment.GetEnvironmentVariable("OSU_CLIENT_SECRET");

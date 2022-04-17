@@ -49,37 +49,21 @@ public static class DotEnv {
         var databasePassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
         var databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
 
-        if (string.IsNullOrEmpty(osuClientId)) {
-            list.Add("OSU_CLIENT_ID");
-        }
+        if (string.IsNullOrEmpty(osuClientId)) list.Add("OSU_CLIENT_ID");
 
-        if (string.IsNullOrEmpty(osuClientSecret)) {
-            list.Add("OSU_CLIENT_SECRET");
-        }
+        if (string.IsNullOrEmpty(osuClientSecret)) list.Add("OSU_CLIENT_SECRET");
 
-        if (string.IsNullOrEmpty(discordToken)) {
-            list.Add("DISCORD_TOKEN");
-        }
+        if (string.IsNullOrEmpty(discordToken)) list.Add("DISCORD_TOKEN");
 
-        if (string.IsNullOrEmpty(databaseIp)) {
-            list.Add("DATABASE_IP");
-        }
+        if (string.IsNullOrEmpty(databaseIp)) list.Add("DATABASE_IP");
 
-        if (string.IsNullOrEmpty(databaseUsername)) {
-            list.Add("DATABASE_USERNAME");
-        }
+        if (string.IsNullOrEmpty(databaseUsername)) list.Add("DATABASE_USERNAME");
 
-        if (string.IsNullOrEmpty(databasePassword)) {
-            list.Add("DATABASE_PASSWORD");
-        }
+        if (string.IsNullOrEmpty(databasePassword)) list.Add("DATABASE_PASSWORD");
 
-        if (string.IsNullOrEmpty(databaseName)) {
-            list.Add("DATABASE_NAME");
-        }
+        if (string.IsNullOrEmpty(databaseName)) list.Add("DATABASE_NAME");
 
-        if (list.Count == 0) {
-            return true;
-        }
+        if (list.Count == 0) return true;
 
         Log.Error("Please specify the following environment variables in a .env file: {Variables}", string.Join(", ", list));
         return false;

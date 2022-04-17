@@ -124,7 +124,7 @@ public class TournamentModule : BaseCommandModule {
     [RequireOwner]
     public async Task ArchiveTournament(CommandContext ctx, ulong sourceCategoryId, ulong destinationCategoryId, [RemainingText] string channelPrefix) {
         var source = ctx.Guild.GetChannel(sourceCategoryId);
-        int count = 0;
+        var count = 0;
 
         foreach (var channel in source.Children) {
             var currentChannelName = channel.Name;
