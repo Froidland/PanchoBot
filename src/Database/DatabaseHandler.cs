@@ -42,7 +42,7 @@ public static class DatabaseHandler {
     /// <returns>The amount of rows affected.</returns>
     /// <exception cref="System.Data.Common.DbException">Thrown when executing the sql command fails.</exception>
     public static async Task<int> InsertUserAsync(ulong discordId, int osuId, string osuUsername) {
-        string cmdText =
+        var cmdText =
             "insert into users (discord_id, osu_id, osu_username) values (@discordId, @osuId, @osuUsername)";
         await using var connection = await ConnectAsync(_connectionString);
         await using var cmd = new MySqlCommand(cmdText, connection);
@@ -72,7 +72,7 @@ public static class DatabaseHandler {
     /// <returns>The amount of rows affected.</returns>
     /// <exception cref="System.Data.Common.DbException">Thrown when executing the sql command fails.</exception>
     public static async Task<int> UpdateUserAsync(ulong discordId, int osuId, string osuUsername) {
-        string cmdText =
+        var cmdText =
             "update users set osu_id = @osuId, osu_username = @osuUsername where discord_id = @discordId";
         await using var connection = await ConnectAsync(_connectionString);
         await using var cmd = new MySqlCommand(cmdText, connection);
@@ -101,7 +101,7 @@ public static class DatabaseHandler {
     /// <returns>The data returned by the database if found, otherwise returns null.</returns>
     /// <exception cref="System.Data.Common.DbException">Thrown when executing the sql command fails.</exception>
     public static async Task<DbUser?> SelectUserAsync(ulong discordId) {
-        string cmdText = "select * from users where discord_id = @discordId";
+        var cmdText = "select * from users where discord_id = @discordId";
         await using var connection = await ConnectAsync(_connectionString);
         await using var cmd = new MySqlCommand(cmdText, connection);
 
@@ -111,10 +111,9 @@ public static class DatabaseHandler {
         await using var reader = await cmd.ExecuteReaderAsync();
 
 
-        if (await reader.ReadAsync()) {
+        if (await reader.ReadAsync())
             return new DbUser(reader.GetUInt64("discord_id"), reader.GetInt32("osu_id"),
                 reader.GetString("osu_username"));
-        }
 
         return null;
     }
@@ -126,7 +125,7 @@ public static class DatabaseHandler {
     /// <returns>The amount of rows affected.</returns>
     /// <exception cref="System.Data.Common.DbException">Thrown when executing the sql command fails.</exception>
     public static async Task<int> DeleteUserAsync(ulong discordId) {
-        string cmdText = "delete from users where discord_id = @discordId";
+        var cmdText = "delete from users where discord_id = @discordId";
         await using var connection = await ConnectAsync(_connectionString);
         await using var cmd = new MySqlCommand(cmdText, connection);
 

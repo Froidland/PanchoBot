@@ -33,9 +33,7 @@ public class OsuClient : IOsuClient {
             return null;
         }
 
-        if (!response.IsSuccessful) {
-            return null;
-        }
+        if (!response.IsSuccessful) return null;
 
         Log.Debug("[osu!API] Request sent to {Endpoint} was successful", endpoint);
         return JsonSerializer.Deserialize<User>(response.Content!);
@@ -56,9 +54,7 @@ public class OsuClient : IOsuClient {
             return null;
         }
 
-        if (!response.IsSuccessful) {
-            return null;
-        }
+        if (!response.IsSuccessful) return null;
 
         Log.Debug("[osu!API] Request sent to {Endpoint} was successful", endpoint);
         return JsonSerializer.Deserialize<Beatmap>(response.Content!);
@@ -83,9 +79,7 @@ public class OsuClient : IOsuClient {
             return null;
         }
 
-        if (!response.IsSuccessful) {
-            return null;
-        }
+        if (!response.IsSuccessful) return null;
 
         Log.Debug("[osu!API] Request sent to {Endpoint} was successful", endpoint);
         return JsonSerializer.Deserialize<Score[]>(response.Content!);

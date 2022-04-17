@@ -52,9 +52,7 @@ public class OsuModule : BaseCommandModule {
         }
 
         var updatedRows = await DatabaseHandler.UpdateUserAsync(ctx.User.Id, user.Id, user.Username);
-        if (updatedRows == 0) {
-            await ctx.RespondAsync("Unable to update already linked username. Please try again later.");
-        }
+        if (updatedRows == 0) await ctx.RespondAsync("Unable to update already linked username. Please try again later.");
 
         await ctx.RespondAsync($"User `{user.Username}` successfully updated to discord id `{ctx.User.Id}`.");
     }
@@ -111,7 +109,7 @@ public class OsuModule : BaseCommandModule {
     [RequireOwner]
     public async Task GetRecentScore(CommandContext ctx, string username = "") {
         User? userData;
-        int userId = 0;
+        var userId = 0;
 
         if (string.IsNullOrEmpty(username)) {
             var dbQuery = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
@@ -159,7 +157,7 @@ public class OsuModule : BaseCommandModule {
     [RequireOwner]
     public async Task GetPersonalBest(CommandContext ctx, [RemainingText] string username = "") {
         User? userData;
-        int userId = 0;
+        var userId = 0;
 
         if (string.IsNullOrEmpty(username)) {
             var dbQuery = await DatabaseHandler.SelectUserAsync(ctx.User.Id);
