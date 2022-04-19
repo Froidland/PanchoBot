@@ -20,12 +20,10 @@ public class OsuAuthenticator : AuthenticatorBase {
     }
 
     protected override async ValueTask<Parameter> GetAuthenticationParameter(string accessToken) {
-        if (!string.IsNullOrEmpty(Token) && _tokenExpirationTicks > DateTime.Now.Ticks)
-            return new HeaderParameter(KnownHeaders.Authorization, Token);
+        if (string.IsNullOrEmpty(Token) || _tokenExpirationTicks < DateTime.Now.Ticks)
+            Token = await GetToken();
 
-        var token = await GetToken();
-        Token = token;
-        return new HeaderParameter(KnownHeaders.Authorization, token);
+        return new HeaderParameter(KnownHeaders.Authorization, Token);
     }
 
     private async Task<string> GetToken() {
