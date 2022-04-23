@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using Microsoft.Extensions.Logging;
 using MySqlConnector.Logging;
 using PanchoBot.Api.v2;
@@ -50,8 +51,21 @@ public class DiscordBot {
                 }
                 case 870106375269777418: {
                     if (messageEvent.Channel.Id == 872487113071943711 && !messageEvent.Author.IsCurrent) {
-                        if (messageEvent.Message.Content.ToLower() == "ol")
-                            await messageEvent.Message.RespondAsync("ol");
+                        switch (messageEvent.Message.Content.ToLower()) {
+                            case "ol": {
+                                await messageEvent.Message.RespondAsync("ol");
+                                break;
+                            }
+                            case "adiol": {
+                                await messageEvent.Message.RespondAsync(
+                                    DiscordEmoji.FromGuildEmote(s, 967332372301369366));
+                                break;
+                            }
+                            default: {
+                                await messageEvent.Message.DeleteAsync();
+                                break;
+                            }
+                        }
                     }
 
                     break;
