@@ -50,7 +50,8 @@ public class DiscordBot {
                 }
                 case 870106375269777418: {
                     if (messageEvent.Channel.Id == 872487113071943711 && !messageEvent.Author.IsCurrent) {
-                        await messageEvent.Message.RespondAsync("ol");
+                        if (messageEvent.Message.Content.ToLower() == "ol")
+                            await messageEvent.Message.RespondAsync("ol");
                     }
 
                     break;
