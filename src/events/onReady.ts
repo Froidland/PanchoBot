@@ -11,7 +11,13 @@ export const onReady = async (client: Client) => {
       Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID),
       { body: commandData }
     );
+    logger.info("Registered guild commands successfully!");
+    return;
   }
 
-  logger.info("Registered commands successfully!");
+  await rest.put(Routes.applicationCommands(client.user.id), {
+    body: commandData,
+  });
+  logger.info("Registered global commands successfully!");
+  return;
 };
