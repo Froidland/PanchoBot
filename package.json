@@ -1,0 +1,21 @@
+{
+  "name": "kay-bot",
+  "version": "1.0.0",
+  "description": "A peronal bot made by Pancho with special tournament modifications made for Kay.",
+  "main": "/src/main.ts",
+  "scripts": {
+    "start": "esbuild src/main.ts --bundle --platform=node --packages=external --outfile=app.js && node app.js",
+    "build": "esbuild src/main.ts --bundle --platform=node --packages=external --outfile=app.js"
+  },
+  "keywords": [],
+  "author": "Francisco Hauva <phauva@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.17.11",
+    "prettier": "^2.8.4",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
+  }
+}
