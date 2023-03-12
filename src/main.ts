@@ -1,5 +1,6 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import * as dotenv from "dotenv";
+import { auth } from "osu-api-extended";
 import * as winston from "winston";
 import DailyRotateFile = require("winston-daily-rotate-file");
 import { onInteraction } from "./events/onInteraction";
@@ -74,8 +75,9 @@ export const logger = winston.createLogger({
   });
 
   try {
+    await auth.login(+process.env.OSU_CLIENT_ID, process.env.OSU_CLIENT_SECRET);
     await client.login(process.env.BOT_TOKEN);
   } catch (error) {
-    logger.error(`There was an error while trying to log in. Reason: ${error}`);
+    logger.error(`There was an error while trying to start the bot. Reason: ${error}`);
   }
 })();
