@@ -2,6 +2,8 @@ import { Client, Events, GatewayIntentBits } from "discord.js";
 import * as dotenv from "dotenv";
 import * as winston from "winston";
 import DailyRotateFile = require("winston-daily-rotate-file");
+import { onInteraction } from "./events/onInteraction";
+import { onReady } from "./events/onReady";
 const { combine, timestamp, printf, colorize } = winston.format;
 dotenv.config();
 
@@ -59,13 +61,21 @@ export const logger = winston.createLogger({
   ],
 });
 
-const client = new Client({ intents: GatewayIntentBits.Guilds });
+(async () => {
+  const client = new Client({ intents: GatewayIntentBits.Guilds });
 
-client.once(Events.ClientReady, (client) => {
-  logger.info(`Logged in as ${client.user.tag}`);
-});
+  client.once(Events.ClientReady, async (client) => {
+    logger.info(`Logged in as ${client.user.tag}`);
+    await onReady(client);
+  });
 
-client.login(process.env.BOT_TOKEN).catch((reason) => {
-  logger.error(`There was an error while trying to log in. Reason: ${reason}`);
-  process.exit(1);
-});
+  client.on(Events.InteractionCreate, async (interaction) => {
+    await onInteraction(interaction);
+  });
+
+  try {
+    await client.login(process.env.BOT_TOKEN);
+  } catch (error) {
+    logger.error(`There was an error while trying to log in. Reason: ${error}`);
+  }
+})();

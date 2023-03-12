@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@types/node': ^18.15.0
   discord.js: ^14.7.1
   dotenv: ^16.0.3
   esbuild: ^0.17.11
@@ -9,6 +10,7 @@ specifiers:
   winston-daily-rotate-file: ^4.7.1
 
 dependencies:
+  '@types/node': 18.15.0
   discord.js: 14.7.1
   dotenv: 16.0.3
   esbuild: 0.17.11
