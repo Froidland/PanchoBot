@@ -4,7 +4,9 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { v2 } from "osu-api-extended";
+import { prisma } from "../../database";
 import { Command } from "../../interfaces/command";
+import { logger } from "../../main";
 import { getFlagUrl } from "../../utils";
 
 export const profile: Command = {
@@ -17,30 +19,58 @@ export const profile: Command = {
       option
         .setName("username")
         .setDescription("Username of the user to display the profile of.")
-        .setRequired(true)
     ),
   execute: async (interaction: CommandInteraction) => {
     await interaction.deferReply();
-    const username = interaction.options.get("username").value as string;
 
-    if (!username) {
-      await interaction.editReply({ content: "No username specified." });
+    const usernameOption = interaction.options.get("username", false);
+    let searchParameter: string | number | null;
+
+    // If the option is null, we search for the user_id associated with the users discord_id, otherwise we just use the username option.
+    if (usernameOption === null) {
+      const user = await prisma.user.findUnique({
+        where: {
+          discordId: +interaction.user.id,
+        },
+      });
+
+      if (user === null) {
+        await interaction.editReply({
+          content:
+            "Please link an osu! username in order to use this command with no arguments.",
+        });
+
+        return;
+      }
+
+      searchParameter = user.userId;
+    } else {
+      searchParameter = interaction.options.get("username").value as string;
+    }
+
+    const userDetails = await v2.user.details(
+      searchParameter,
+      "osu",
+      usernameOption === null ? "id" : "username"
+    );
+
+    if (userDetails["error"] === null) {
+      await interaction.editReply({ content: "User not found." });
       return;
     }
 
-    const user = await v2.user.details(username, "osu");
-    const countryFlagUrl = getFlagUrl(user.country_code);
+    const countryFlagUrl = getFlagUrl(userDetails.country_code);
 
-    const acc = user.statistics.hit_accuracy.toFixed(2);
-    const currentLevel = user.statistics.level.current;
-    const currentLevelProgress = user.statistics.level.progress;
+    const acc = userDetails.statistics.hit_accuracy.toFixed(2);
+    const currentLevel = userDetails.statistics.level.current;
+    const currentLevelProgress = userDetails.statistics.level.progress;
 
-    const playCount = user.statistics.play_count;
-    const playTimeHours = (user.statistics.play_time / 3600).toFixed(0);
+    const playCount = userDetails.statistics.play_count;
+    const playTimeHours = (userDetails.statistics.play_time / 3600).toFixed(0);
 
-    const medalCount = user.user_achievements.length;
+    const medalCount = userDetails.user_achievements.length;
 
-    const joinDateString = new Date(user.join_date).toLocaleString(
+    const joinDateString = new Date(userDetails.join_date).toLocaleString(
       new Intl.Locale("es-ES")
     );
 
@@ -51,15 +81,17 @@ export const profile: Command = {
     const embed = new EmbedBuilder()
       .setColor("Green")
       .setAuthor({
-        name: `${user.username}: ${user.statistics.pp.toFixed(2)}pp (#${
-          user.statistics.global_rank
-        } CL${user.statistics.country_rank})`,
-        url: `https://osu.ppy.sh/users/${user.id}`,
+        name: `${userDetails.username}: ${userDetails.statistics.pp.toFixed(
+          2
+        )}pp (#${userDetails.statistics.global_rank} ${
+          userDetails.country_code
+        }${userDetails.statistics.country_rank})`,
+        url: `https://osu.ppy.sh/users/${userDetails.id}`,
         iconURL: countryFlagUrl,
       })
       .setDescription(description)
       .setFooter({ text: `Joined osu! on ${joinDateString}` })
-      .setThumbnail(user.avatar_url);
+      .setThumbnail(userDetails.avatar_url);
 
     await interaction.editReply({ embeds: [embed] });
   },
