@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { auth } from "osu-api-extended";
 import * as winston from "winston";
 import DailyRotateFile = require("winston-daily-rotate-file");
+import { prisma } from "./database";
 import { onInteraction } from "./events/onInteraction";
 import { onReady } from "./events/onReady";
 const { combine, timestamp, printf, colorize } = winston.format;
@@ -75,9 +76,13 @@ export const logger = winston.createLogger({
   });
 
   try {
+    await prisma.$connect();
     await auth.login(+process.env.OSU_CLIENT_ID, process.env.OSU_CLIENT_SECRET);
     await client.login(process.env.BOT_TOKEN);
   } catch (error) {
-    logger.error(`There was an error while trying to start the bot. Reason: ${error}`);
+    logger.error(
+      `There was an error while trying to start the bot. Reason: ${error}`
+    );
+    process.exit(1);
   }
 })();
