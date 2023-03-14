@@ -4,8 +4,7 @@ import { auth } from "osu-api-extended";
 import * as winston from "winston";
 import DailyRotateFile = require("winston-daily-rotate-file");
 import { prisma } from "./database";
-import { onInteraction } from "./events/onInteraction";
-import { onReady } from "./events/onReady";
+import { onInteraction, onMessageCreate, onReady } from "./events";
 const { combine, timestamp, printf, colorize } = winston.format;
 dotenv.config();
 
@@ -64,7 +63,13 @@ export const logger = winston.createLogger({
 });
 
 (async () => {
-  const client = new Client({ intents: GatewayIntentBits.Guilds });
+  const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.MessageContent,
+    ],
+  });
 
   client.once(Events.ClientReady, async (client) => {
     logger.info(`Logged in as ${client.user.tag}`);
@@ -73,6 +78,10 @@ export const logger = winston.createLogger({
 
   client.on(Events.InteractionCreate, async (interaction) => {
     await onInteraction(interaction);
+  });
+
+  client.on(Events.MessageCreate, async (message) => {
+    await onMessageCreate(message);
   });
 
   try {
