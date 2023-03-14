@@ -13,7 +13,7 @@ export const archiveCategory: Command = {
   data: new SlashCommandBuilder()
     .setName("archive-category")
     .setDescription(
-      "Moves text channels from source category to target category and privates them. Optionally adds a prefix to the names."
+      "Moves text channels from source category to target category and privates them by default."
     )
     .addChannelOption((option) =>
       option
