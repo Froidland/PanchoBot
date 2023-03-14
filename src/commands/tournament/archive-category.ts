@@ -1,6 +1,7 @@
 import {
   ChannelType,
   InteractionResponse,
+  OverwriteResolvable,
   PermissionFlagsBits,
   PermissionsBitField,
   SlashCommandBuilder,
@@ -13,7 +14,7 @@ export const archiveCategory: Command = {
   data: new SlashCommandBuilder()
     .setName("archive-category")
     .setDescription(
-      "Moves text channels from source category to target category and privates them by default."
+      "Move text channels from source category to target category and private them by default."
     )
     .addChannelOption((option) =>
       option
@@ -25,8 +26,16 @@ export const archiveCategory: Command = {
     .addChannelOption((option) =>
       option
         .setName("target")
-        .setDescription("Category to archive the source under.")
+        .setDescription("Category to archive the source text channels under.")
         .addChannelTypes(ChannelType.GuildCategory)
+        .setRequired(true)
+    )
+    .addBooleanOption((option) =>
+      option
+        .setName("delete")
+        .setDescription(
+          "Whether the source category gets deleted or not after the process is done."
+        )
         .setRequired(true)
     )
     .addStringOption((option) =>
@@ -35,13 +44,40 @@ export const archiveCategory: Command = {
         .setDescription("String to prefix each channel name with.")
         .setRequired(false)
     )
+    .addRoleOption((option) =>
+      option
+        .setName("view-role")
+        .setDescription(
+          "Role with view-only permissions on the archived channels."
+        )
+        .setRequired(false)
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
-    //TODO: Add option for a view-only role.
+    //TODO: Handle case where the target category doesn't have enough capacity to hold the channels in the source category.
+    //TODO: Please for the love anything, make a nice embed for the interaction response.
     await interaction.deferReply();
     const sourceOption = interaction.options.get("source", true);
     const targetOption = interaction.options.get("target", true);
+    const deleteSourceOption = interaction.options.get("delete", true);
     const prefixOption = interaction.options.get("prefix", false);
+    const viewRoleOption = interaction.options.get("view-role", false);
+
+    let targetChannelPermissions: OverwriteResolvable[] = [
+      {
+        id: interaction.guild.roles.everyone,
+        deny: [PermissionFlagsBits.ViewChannel],
+      },
+    ];
+
+    if (viewRoleOption !== null) {
+      targetChannelPermissions.push({
+        id: viewRoleOption.role.id,
+        allow: [PermissionFlagsBits.ViewChannel],
+        deny: [PermissionFlagsBits.SendMessages],
+      });
+    }
+
     let sourceTextChannelsCount = 0;
 
     const sourceCategoryId = sourceOption.channel.id;
@@ -92,26 +128,20 @@ export const archiveCategory: Command = {
           await channel.edit({
             parent: targetCategoryId,
             name: `${prefixOption.value}-${channel.name}`,
-            permissionOverwrites: [
-              {
-                id: interaction.guild.roles.everyone,
-                deny: [PermissionFlagsBits.ViewChannel],
-              },
-            ],
+            permissionOverwrites: targetChannelPermissions,
           });
           continue;
         }
 
         await channel.edit({
           parent: targetCategoryId,
-          permissionOverwrites: [
-            {
-              id: interaction.guild.roles.everyone,
-              deny: [PermissionFlagsBits.ViewChannel],
-            },
-          ],
+          permissionOverwrites: targetChannelPermissions,
         });
       }
+    }
+
+    if (deleteSourceOption.value === true) {
+      await sourceCategory.delete();
     }
 
     await interaction.editReply({
