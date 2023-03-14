@@ -1,7 +1,10 @@
 import { Message } from "discord.js";
 
 export const onMessageCreate = async (message: Message) => {
-  if (message.channel.id === "872487113071943711" && !message.author.bot) {
+  if (
+    message.channel.id === "872487113071943711" &&
+    message.author.id !== message.client.user.id
+  ) {
     switch (message.content) {
       case "ol":
         await message.reply({
