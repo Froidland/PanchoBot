@@ -83,9 +83,9 @@ export const profile: Command = {
       .setAuthor({
         name: `${userDetails.username}: ${userDetails.statistics.pp.toFixed(
           2
-        )}pp (#${userDetails.statistics.global_rank} ${
+        )}pp (#${userDetails.statistics.global_rank ?? 0} ${
           userDetails.country_code
-        }${userDetails.statistics.country_rank})`,
+        }${userDetails.statistics.country_rank ?? 0})`,
         url: `https://osu.ppy.sh/users/${userDetails.id}`,
         iconURL: countryFlagUrl,
       })
