@@ -19,5 +19,21 @@ export const onReady = async (client: Client) => {
     body: commandData,
   });
   logger.info("Registered global commands successfully!");
-  return;
+
+  // Command deletion.
+  /* 
+  // for guild-based commands
+  await rest
+    .put(
+      Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID),
+      { body: [] }
+    )
+    .then(() => console.log("Successfully deleted all guild commands."))
+    .catch(console.error);
+
+  // for global commands
+  await rest
+    .put(Routes.applicationCommands(client.user.id), { body: [] })
+    .then(() => console.log("Successfully deleted all application commands."))
+    .catch(console.error); */
 };
