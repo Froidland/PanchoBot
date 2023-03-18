@@ -1,7 +1,9 @@
 import { SlashCommandBuilder } from "discord.js";
+import { eq } from "drizzle-orm/expressions";
 import { v2 } from "osu-api-extended";
-import { prisma } from "../../database";
+import { users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
+import { db } from "../../main";
 
 export const link: Command = {
   data: new SlashCommandBuilder()
@@ -16,28 +18,34 @@ export const link: Command = {
         .setRequired(true)
     ),
   execute: async (interaction) => {
+    //TODO: Make an embed for errors.
     await interaction.deferReply({ ephemeral: true });
     const username = interaction.options.get("username", true).value as string;
 
     const user = await v2.user.details(username, "osu");
 
-    await prisma.user.upsert({
-      where: {
-        discordId: +interaction.user.id,
-      },
-      create: {
-        discordId: +interaction.user.id,
-        userId: user.id,
-        username,
-      },
-      update: {
-        userId: user.id,
-        username,
-      },
-    });
+    try {
+      await db
+        .insert(users)
+        .values({
+          discordId: +interaction.user.id,
+          userId: user.id,
+          username: user.username,
+        })
+        .onDuplicateKeyUpdate({
+          set: {
+            userId: user.id,
+            username: user.username,
+          },
+        });
 
-    await interaction.editReply({
-      content: `Linked your discord account to username \`${username}\`.`,
-    });
+      await interaction.editReply({
+        content: `Linked your discord account to username \`${user.username}\`.`,
+      });
+    } catch (error) {
+      await interaction.editReply({
+        content: `Unable to link username in the DB.`,
+      });
+    }
   },
 };

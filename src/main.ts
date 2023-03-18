@@ -1,14 +1,19 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import * as dotenv from "dotenv";
 import { auth } from "osu-api-extended";
+import mysql from "mysql2/promise";
+import { drizzle } from "drizzle-orm/mysql2";
 import * as winston from "winston";
 import DailyRotateFile = require("winston-daily-rotate-file");
-import { prisma } from "./database";
 import { onInteraction, onMessageCreate, onReady } from "./events";
 const { combine, timestamp, printf, colorize } = winston.format;
 dotenv.config();
 
 const logDatePattern = process.env.LOG_DATE_PATTERN ?? "DD-MM-YYYY";
+
+const pool = mysql.createPool(process.env.DATABASE_URL);
+
+export const db = drizzle(pool);
 
 export const logger = winston.createLogger({
   level: "info",
@@ -85,7 +90,6 @@ export const logger = winston.createLogger({
   });
 
   try {
-    await prisma.$connect();
     await auth.login(+process.env.OSU_CLIENT_ID, process.env.OSU_CLIENT_SECRET);
     await client.login(process.env.BOT_TOKEN);
   } catch (error) {

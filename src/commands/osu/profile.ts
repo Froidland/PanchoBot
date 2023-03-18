@@ -3,10 +3,11 @@ import {
   EmbedBuilder,
   SlashCommandBuilder,
 } from "discord.js";
+import { eq } from "drizzle-orm/expressions";
 import { v2 } from "osu-api-extended";
-import { prisma } from "../../database";
+import { users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
-import { logger } from "../../main";
+import { db, logger } from "../../main";
 import { getFlagUrl } from "../../utils";
 
 export const profile: Command = {
@@ -21,6 +22,7 @@ export const profile: Command = {
         .setDescription("Username of the user to display the profile of.")
     ),
   execute: async (interaction: CommandInteraction) => {
+    //TODO: Make an embed for errors.
     await interaction.deferReply();
 
     const usernameOption = interaction.options.get("username", false);
@@ -28,13 +30,12 @@ export const profile: Command = {
 
     // If the option is null, we search for the user_id associated with the users discord_id, otherwise we just use the username option.
     if (usernameOption === null) {
-      const user = await prisma.user.findUnique({
-        where: {
-          discordId: +interaction.user.id,
-        },
-      });
+      const user = await db
+        .select()
+        .from(users)
+        .where(eq(users.discordId, +interaction.user.id));
 
-      if (user === null) {
+      if (user.length === 0 || user[0].userId === null) {
         await interaction.editReply({
           content:
             "Please link an osu! username in order to use this command with no arguments.",
@@ -43,7 +44,7 @@ export const profile: Command = {
         return;
       }
 
-      searchParameter = user.userId;
+      searchParameter = user[0].userId;
     } else {
       searchParameter = interaction.options.get("username").value as string;
     }
@@ -54,7 +55,7 @@ export const profile: Command = {
       usernameOption === null ? "id" : "username"
     );
 
-    if (userDetails["error"] === null) {
+    if (userDetails["error"] !== undefined) {
       await interaction.editReply({ content: "User not found." });
       return;
     }
