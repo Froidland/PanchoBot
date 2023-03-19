@@ -12,7 +12,6 @@
   "author": "Francisco Hauva <phauva@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^4.11.0",
     "@types/node": "^18.15.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
@@ -27,7 +26,6 @@
   },
   "devDependencies": {
     "@types/pg": "^8.6.6",
-    "drizzle-kit": "^0.17.0",
-    "prisma": "^4.11.0"
+    "drizzle-kit": "^0.17.0"
   }
 }
