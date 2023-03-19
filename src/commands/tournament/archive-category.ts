@@ -1,13 +1,10 @@
 import {
   ChannelType,
-  InteractionResponse,
+  EmbedBuilder,
   OverwriteResolvable,
   PermissionFlagsBits,
-  PermissionsBitField,
   SlashCommandBuilder,
 } from "discord.js";
-import { v2 } from "osu-api-extended";
-import { prisma } from "../../database";
 import { Command } from "../../interfaces/command";
 
 export const archiveCategory: Command = {
@@ -54,8 +51,6 @@ export const archiveCategory: Command = {
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
-    //TODO: Handle case where the target category doesn't have enough capacity to hold the channels in the source category.
-    //TODO: Please for the love anything, make a nice embed for the interaction response.
     await interaction.deferReply();
     const sourceOption = interaction.options.get("source", true);
     const targetOption = interaction.options.get("target", true);
@@ -86,8 +81,14 @@ export const archiveCategory: Command = {
     //? Handle case where the source category is the same as the target category.
     if (sourceCategoryId === targetCategoryId) {
       await interaction.editReply({
-        content:
-          "Error: The source category is the same as the target category.",
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(
+              `\`The source category is the same as the target category.\``
+            ),
+        ],
       });
 
       return;
@@ -101,7 +102,9 @@ export const archiveCategory: Command = {
       (channel) => {
         if (
           channel.parent === sourceCategory &&
-          channel.type == ChannelType.GuildText
+          channel.type == ChannelType.GuildText &&
+          channel !== undefined &&
+          channel !== null
         ) {
           //! Read below for the reason to this. tldr: it's fucking stupid.
           sourceTextChannelsCount++;
@@ -113,14 +116,18 @@ export const archiveCategory: Command = {
     //? Handle case where the source category has no channels in it.
     if (sourceTextChannelsCount < 1) {
       await interaction.editReply({
-        content: "Error: The source category has no text channels.",
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(`\`The source category has no text channels.\``),
+        ],
       });
 
       return;
     }
 
     for (const channel of sourceCategoryChannels) {
-      //TODO: Figure this shit out.
       //! idk man this shit is stupid. for some reason the map above is returning some "undefined" channels.
       //! I have no idea what the cause of it is but this solution works to mitigate that :clueless:
       if (channel !== undefined && channel !== null) {

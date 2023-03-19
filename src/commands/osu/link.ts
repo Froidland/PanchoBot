@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
-import { eq } from "drizzle-orm/expressions";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { v2 } from "osu-api-extended";
 import { users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
@@ -18,7 +17,6 @@ export const link: Command = {
         .setRequired(true)
     ),
   execute: async (interaction) => {
-    //TODO: Make an embed for errors.
     await interaction.deferReply({ ephemeral: true });
     const username = interaction.options.get("username", true).value as string;
 
@@ -44,7 +42,12 @@ export const link: Command = {
       });
     } catch (error) {
       await interaction.editReply({
-        content: `Unable to link username in the DB.`,
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(`\`Unable to link username in the DB.\``),
+        ],
       });
     }
   },

@@ -22,7 +22,6 @@ export const profile: Command = {
         .setDescription("Username of the user to display the profile of.")
     ),
   execute: async (interaction: CommandInteraction) => {
-    //TODO: Make an embed for errors.
     await interaction.deferReply();
 
     const usernameOption = interaction.options.get("username", false);
@@ -37,8 +36,14 @@ export const profile: Command = {
 
       if (user.length === 0 || user[0].userId === null) {
         await interaction.editReply({
-          content:
-            "Please link an osu! username in order to use this command with no arguments.",
+          embeds: [
+            new EmbedBuilder()
+              .setColor("Red")
+              .setTitle("Error")
+              .setDescription(
+                `\`Please link an osu! username in order to use this command with no arguments.\``
+              ),
+          ],
         });
 
         return;
@@ -56,7 +61,14 @@ export const profile: Command = {
     );
 
     if (userDetails["error"] !== undefined) {
-      await interaction.editReply({ content: "User not found." });
+      await interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(`\`User not found.\``),
+        ],
+      });
       return;
     }
 
