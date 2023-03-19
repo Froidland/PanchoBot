@@ -82,7 +82,16 @@ export const logger = winston.createLogger({
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
-    await onInteraction(interaction);
+    try {
+      await onInteraction(interaction);
+    } catch (error) {
+      logger.error(error);
+    }
+  });
+
+  client.on(Events.Error, async (error) => {
+    logger.error(error.name + ": " + error.message);
+    logger.error(error.stack);
   });
 
   client.on(Events.MessageCreate, async (message) => {
