@@ -6,7 +6,8 @@
   "scripts": {
     "start": "esbuild src/main.ts --bundle --platform=node --packages=external --outfile=app.js && node app.js",
     "build": "esbuild src/main.ts --bundle --platform=node --packages=external --outfile=app.js",
-    "package": "esbuild src/main.ts --bundle --platform=node --outfile=app.js"
+    "package": "esbuild src/main.ts --bundle --platform=node --outfile=app.js",
+    "generate:sql": "drizzle-kit generate:mysql"
   },
   "keywords": [],
   "author": "Francisco Hauva <phauva@gmail.com>",

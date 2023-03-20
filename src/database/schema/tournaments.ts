@@ -1,16 +1,16 @@
 import {
   bigint,
-  date,
+  InferModel,
   mysqlEnum,
   mysqlTable,
-  serial,
+  primaryKey,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
 import { users } from "./users";
 
 export const tournaments = mysqlTable("tournaments", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).autoincrement(),
   name: varchar("name", { length: 64 }).notNull(),
   acronym: varchar("acronym", { length: 8 }).notNull(),
 
@@ -18,6 +18,8 @@ export const tournaments = mysqlTable("tournaments", {
   schedulesChannelId: bigint("schedules_channel_id", {
     mode: "number",
   }).notNull(),
+  refereeChannelId: bigint("referee_channel_id", { mode: "number" }).notNull(),
+  staffChannelId: bigint("staff_channel_id", { mode: "number" }).notNull(),
   creatorId: bigint("creator_id", { mode: "number" })
     .references(() => users.discordId, {
       onDelete: "no action",
@@ -29,10 +31,15 @@ export const tournaments = mysqlTable("tournaments", {
     "score"
   ),
   scoring: mysqlEnum("scoring", ["v1", "v2", "lazer"]).default("v2").notNull(),
+  type: mysqlEnum("type", ["team_based", "one_vs_one", "battle_royale"])
+    .default("team_based")
+    .notNull(),
 
-  playerRoleId: bigint("player_role_id", { mode: "number" }).notNull(),
+  staffRoleId: bigint("staff_role_id", { mode: "number" }).notNull(),
   refereeRoleId: bigint("referee_role_id", { mode: "number" }).notNull(),
-  type: mysqlEnum("type", ["team_based", "one_vs_one", "battle_royale"]),
+  playerRoleId: bigint("player_role_id", { mode: "number" }).notNull(),
 
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
+
+export type Tournament = InferModel<typeof tournaments, "insert">;

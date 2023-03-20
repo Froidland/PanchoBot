@@ -1,6 +1,7 @@
 import { Command } from "../interfaces/command";
 import { ping } from "./general";
 import { link, profile, unlink } from "./osu";
+import { createTournament } from "./tournament";
 import { archiveCategory } from "./utility";
 
 export const commandList: Command[] = [
@@ -9,4 +10,5 @@ export const commandList: Command[] = [
   link,
   unlink,
   archiveCategory,
+  createTournament,
 ];

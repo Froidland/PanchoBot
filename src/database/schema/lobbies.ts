@@ -10,7 +10,7 @@ import {
 import { tournaments } from "./tournaments";
 
 export const lobbies = mysqlTable("lobbies", {
-  id: bigint("id", { mode: "number" }).autoincrement().primaryKey(),
+  id: bigint("id", { mode: "number" }).autoincrement(),
   tournamentId: bigint("tournament_id", { mode: "number" })
     .notNull()
     .references(() => tournaments.id, {

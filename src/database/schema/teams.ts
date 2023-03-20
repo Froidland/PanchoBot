@@ -10,7 +10,7 @@ import {
 import { users } from "./users";
 
 export const teams = mysqlTable("teams", {
-  id: bigint("id", { mode: "number" }).autoincrement().primaryKey(),
+  id: bigint("id", { mode: "number" }).autoincrement(),
   name: varchar("name", { length: 64 }),
 
   preferredTimezone: mysqlEnum("preferred_timezone", [
