@@ -114,7 +114,7 @@ export const createTournament: Command = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
     await interaction.deferReply();
-    let embedDescription: string;
+    let embedDescription = "";
 
     const name = interaction.options.get("name").value as string;
     const acronym = interaction.options.get("acronym").value as string;
