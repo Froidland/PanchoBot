@@ -5,7 +5,8 @@ import {
   Role,
   SlashCommandBuilder,
 } from "discord.js";
-import { tournaments } from "../../database/schema";
+import { eq } from "drizzle-orm/expressions";
+import { tournaments, User, users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
 import { db } from "../../main";
 
@@ -92,6 +93,7 @@ export const createTournament: Command = {
         .setDescription(
           "The staff channel for the tournament. One will be created if not specified."
         )
+        .addChannelTypes(ChannelType.GuildText)
         .setRequired(false)
     )
     .addChannelOption((option) =>
@@ -100,6 +102,7 @@ export const createTournament: Command = {
         .setDescription(
           "The refeere channel for the tournament. One will be created if not specified."
         )
+        .addChannelTypes(ChannelType.GuildText)
         .setRequired(false)
     )
     .addChannelOption((option) =>
@@ -114,6 +117,27 @@ export const createTournament: Command = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
     await interaction.deferReply();
+
+    const user: User[] = await db
+      .select()
+      .from(users)
+      .where(eq(users.discordId, +interaction.user.id));
+
+    if (user.length < 1) {
+      await interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(
+              `\`You must link your account before attempting to create a tournament.\``
+            ),
+        ],
+      });
+
+      return;
+    }
+
     let embedDescription = "";
 
     const name = interaction.options.get("name").value as string;
