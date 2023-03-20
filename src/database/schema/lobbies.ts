@@ -1,6 +1,7 @@
 import {
   bigint,
   date,
+  InferModel,
   mysqlEnum,
   mysqlTable,
   serial,
@@ -37,3 +38,5 @@ export const lobbies = mysqlTable("lobbies", {
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).onUpdateNow(),
 });
+
+export type Lobby = InferModel<typeof lobbies, "insert">;

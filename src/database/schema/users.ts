@@ -4,6 +4,7 @@ import {
   mysqlTable,
   int,
   timestamp,
+  InferModel,
 } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
@@ -14,3 +15,5 @@ export const users = mysqlTable("users", {
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).onUpdateNow(),
 });
+
+export type User = InferModel<typeof users, "insert">;
