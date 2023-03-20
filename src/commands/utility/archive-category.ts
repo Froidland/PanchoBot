@@ -53,9 +53,10 @@ export const archiveCategory: Command = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
     await interaction.deferReply();
-    const sourceOption = interaction.options.get("source", true);
-    const targetOption = interaction.options.get("target", true);
-    const deleteSourceOption = interaction.options.get("delete", true);
+    const sourceOption = interaction.options.get("source");
+    const targetOption = interaction.options.get("target");
+    const deleteSourceOption = interaction.options.get("delete");
+    
     const prefixOption = interaction.options.get("prefix", false);
     const viewRoleOption = interaction.options.get("view-role", false);
 
