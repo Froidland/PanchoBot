@@ -236,7 +236,7 @@ export const createTournament: Command = {
 
     const embed = new EmbedBuilder()
       .setColor("Green")
-      .setTitle("Successfully created the tournament.")
+      .setTitle("Tournament successfully created.")
       .setDescription(embedDescription);
 
     await interaction.editReply({
