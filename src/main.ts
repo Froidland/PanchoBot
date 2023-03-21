@@ -82,7 +82,19 @@ export const logger = winston.createLogger({
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
-    await onInteraction(interaction);
+    try {
+      await onInteraction(interaction);
+    } catch (error) {
+      logger.error(`InteractionError: ${error}`);
+    }
+  });
+
+  client.on(Events.Error, async (error) => {
+    logger.error(error.stack);
+
+    if (error.name == "ConnectTimeoutError") {
+      process.exit(1);
+    }
   });
 
   client.on(Events.MessageCreate, async (message) => {

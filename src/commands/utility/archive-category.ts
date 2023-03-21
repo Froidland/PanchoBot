@@ -1,13 +1,11 @@
 import {
   ChannelType,
-  InteractionResponse,
+  EmbedBuilder,
   OverwriteResolvable,
   PermissionFlagsBits,
-  PermissionsBitField,
   SlashCommandBuilder,
+  TextChannel,
 } from "discord.js";
-import { v2 } from "osu-api-extended";
-import { prisma } from "../../database";
 import { Command } from "../../interfaces/command";
 
 export const archiveCategory: Command = {
@@ -54,12 +52,11 @@ export const archiveCategory: Command = {
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
-    //TODO: Handle case where the target category doesn't have enough capacity to hold the channels in the source category.
-    //TODO: Please for the love anything, make a nice embed for the interaction response.
     await interaction.deferReply();
-    const sourceOption = interaction.options.get("source", true);
-    const targetOption = interaction.options.get("target", true);
-    const deleteSourceOption = interaction.options.get("delete", true);
+    const sourceOption = interaction.options.get("source");
+    const targetOption = interaction.options.get("target");
+    const deleteSourceOption = interaction.options.get("delete");
+    
     const prefixOption = interaction.options.get("prefix", false);
     const viewRoleOption = interaction.options.get("view-role", false);
 
@@ -78,66 +75,87 @@ export const archiveCategory: Command = {
       });
     }
 
-    let sourceTextChannelsCount = 0;
-
-    const sourceCategoryId = sourceOption.channel.id;
-    const targetCategoryId = targetOption.channel.id;
+    const sourceCategory = await interaction.guild.channels.fetch(
+      sourceOption.channel.id
+    );
+    const targetCategory = await interaction.guild.channels.fetch(
+      targetOption.channel.id
+    );
 
     //? Handle case where the source category is the same as the target category.
-    if (sourceCategoryId === targetCategoryId) {
+    if (sourceCategory.id === targetCategory.id) {
       await interaction.editReply({
-        content:
-          "Error: The source category is the same as the target category.",
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(
+              `\`The source category is the same as the target category.\``
+            ),
+        ],
       });
 
       return;
     }
 
-    const sourceCategory = await interaction.guild.channels.fetch(
-      sourceCategoryId
-    );
-
-    const sourceCategoryChannels = interaction.guild.channels.cache.map(
-      (channel) => {
-        if (
-          channel.parent === sourceCategory &&
-          channel.type == ChannelType.GuildText
-        ) {
-          //! Read below for the reason to this. tldr: it's fucking stupid.
-          sourceTextChannelsCount++;
-          return channel;
-        }
+    const sourceCategoryChannels: TextChannel[] = [];
+    let targetCategoryChannelCount = 0;
+    for (const [_, channel] of interaction.guild.channels.cache) {
+      if (
+        channel.parent === sourceCategory &&
+        channel.type == ChannelType.GuildText
+      ) {
+        sourceCategoryChannels.push(channel);
       }
-    );
+
+      if (channel.parent === targetCategory) {
+        targetCategoryChannelCount++;
+      }
+    }
 
     //? Handle case where the source category has no channels in it.
-    if (sourceTextChannelsCount < 1) {
+    if (sourceCategoryChannels.length < 1) {
       await interaction.editReply({
-        content: "Error: The source category has no text channels.",
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(`\`The source category has no text channels.\``),
+        ],
+      });
+
+      return;
+    }
+
+    if (sourceCategoryChannels.length + targetCategoryChannelCount > 50) {
+      await interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(
+              `\`The target category doesn't have enough space to hold all the text channels in the source category.\``
+            ),
+        ],
       });
 
       return;
     }
 
     for (const channel of sourceCategoryChannels) {
-      //TODO: Figure this shit out.
-      //! idk man this shit is stupid. for some reason the map above is returning some "undefined" channels.
-      //! I have no idea what the cause of it is but this solution works to mitigate that :clueless:
-      if (channel !== undefined && channel !== null) {
-        if (prefixOption) {
-          await channel.edit({
-            parent: targetCategoryId,
-            name: `${prefixOption.value}-${channel.name}`,
-            permissionOverwrites: targetChannelPermissions,
-          });
-          continue;
-        }
-
+      if (prefixOption) {
         await channel.edit({
-          parent: targetCategoryId,
+          parent: targetCategory.id,
+          name: `${prefixOption.value}-${channel.name}`,
           permissionOverwrites: targetChannelPermissions,
         });
+        continue;
       }
+
+      await channel.edit({
+        parent: targetCategory.id,
+        permissionOverwrites: targetChannelPermissions,
+      });
     }
 
     if (deleteSourceOption.value === true) {

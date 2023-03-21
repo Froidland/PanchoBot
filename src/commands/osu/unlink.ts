@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
-import { v2 } from "osu-api-extended";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
 import { db } from "../../main";
@@ -12,7 +11,6 @@ export const unlink: Command = {
       "Unlinks any osu! profile associated with your discord account."
     ),
   execute: async (interaction) => {
-    //TODO: Make an embed for errors.
     await interaction.deferReply({ ephemeral: true });
 
     const { username } = (
@@ -32,8 +30,16 @@ export const unlink: Command = {
 
     if (result[0].affectedRows === 0) {
       await interaction.editReply({
-        content: "There is no osu! username linked to your discord account.",
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Error")
+            .setDescription(
+              `\`There is no osu! username linked to your discord account.\``
+            ),
+        ],
       });
+
       return;
     }
 

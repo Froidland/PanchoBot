@@ -1,6 +1,7 @@
 import {
   bigint,
   date,
+  InferModel,
   mysqlEnum,
   mysqlTable,
   serial,
@@ -10,7 +11,7 @@ import {
 import { users } from "./users";
 
 export const teams = mysqlTable("teams", {
-  id: bigint("id", { mode: "number" }).autoincrement().primaryKey(),
+  id: bigint("id", { mode: "number" }).autoincrement(),
   name: varchar("name", { length: 64 }),
 
   preferredTimezone: mysqlEnum("preferred_timezone", [
@@ -52,3 +53,5 @@ export const teams = mysqlTable("teams", {
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).onUpdateNow(),
 });
+
+export type Team = InferModel<typeof teams, "insert">;

@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "86b9062a-45e8-4e7a-828e-19e820f1f9ce",
+  "id": "bf3dde14-913d-46c4-b5c7-462455d04831",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "lobbies_to_teams": {
@@ -50,7 +50,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "cascade"
         },
         "lobbies_to_teams_team_id_teams_id_fk": {
@@ -63,7 +63,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "cascade"
         }
       },
@@ -115,7 +115,7 @@
           "columnsTo": [
             "discord_id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "cascade"
         },
         "users_to_teams_team_id_teams_id_fk": {
@@ -128,7 +128,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "cascade"
         }
       },
@@ -140,8 +140,8 @@
         "id": {
           "name": "id",
           "type": "bigint",
-          "primaryKey": true,
-          "notNull": true,
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": true
         },
         "tournament_id": {
@@ -228,8 +228,8 @@
         "id": {
           "name": "id",
           "type": "bigint",
-          "primaryKey": true,
-          "notNull": true,
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": true
         },
         "name": {
@@ -294,9 +294,9 @@
         "id": {
           "name": "id",
           "type": "bigint",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": true
         },
         "name": {
           "name": "name",
@@ -326,6 +326,20 @@
           "notNull": true,
           "autoincrement": false
         },
+        "referee_channel_id": {
+          "name": "referee_channel_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "staff_channel_id": {
+          "name": "staff_channel_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "creator_id": {
           "name": "creator_id",
           "type": "bigint",
@@ -349,8 +363,16 @@
           "autoincrement": false,
           "default": "'v2'"
         },
-        "player_role_id": {
-          "name": "player_role_id",
+        "type": {
+          "name": "type",
+          "type": "enum('team_based','one_vs_one','battle_royale')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'team_based'"
+        },
+        "staff_role_id": {
+          "name": "staff_role_id",
           "type": "bigint",
           "primaryKey": false,
           "notNull": true,
@@ -363,11 +385,11 @@
           "notNull": true,
           "autoincrement": false
         },
-        "type": {
-          "name": "type",
-          "type": "enum('team_based','one_vs_one','battle_royale')",
+        "player_role_id": {
+          "name": "player_role_id",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {

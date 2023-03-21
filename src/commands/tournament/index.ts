@@ -1,1 +1,1 @@
-export * from "./archive-category";
+export * from "./create-tournament";
