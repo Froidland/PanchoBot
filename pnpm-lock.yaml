@@ -11,7 +11,7 @@ specifiers:
   mysql2: ^3.2.0
   osu-api-extended: ^2.5.21
   prettier: ^2.8.4
-  typescript: ^4.9.5
+  typescript: ^5.0.2
   winston: ^3.8.2
   winston-daily-rotate-file: ^4.7.1
 
@@ -24,7 +24,7 @@ dependencies:
   mysql2: 3.2.0
   osu-api-extended: 2.5.21
   prettier: 2.8.4
-  typescript: 4.9.5
+  typescript: 5.0.2
   winston: 3.8.2
   winston-daily-rotate-file: 4.7.1_winston@3.8.2
 
@@ -1314,9 +1314,9 @@ packages:
     resolution: {integrity: sha512-dzlvlNlt6AXU7EBSfpAscydQ7gXB+pPGsPnfJnZpiNJBDj7IaJzQlBZYGdEi4R9HmPdBv2XmWJ6YUtoTa7lmCw==}
     dev: true
 
-  /typescript/4.9.5:
-    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
-    engines: {node: '>=4.2.0'}
+  /typescript/5.0.2:
+    resolution: {integrity: sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==}
+    engines: {node: '>=12.20'}
     hasBin: true
     dev: false
 
