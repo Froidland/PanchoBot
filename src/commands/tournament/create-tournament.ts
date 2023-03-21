@@ -114,9 +114,57 @@ export const createTournament: Command = {
         .addChannelTypes(ChannelType.GuildText)
         .setRequired(false)
     )
+    .addChannelOption((option) =>
+      option
+        .setName("parent-category")
+        .setDescription(
+          "The category under which the created channels will be placed."
+        )
+        .addChannelTypes(ChannelType.GuildCategory)
+        .setRequired(false)
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
     await interaction.deferReply();
+
+    const parentCategory = interaction.options.get("parent-category")?.channel ?? null;
+
+    if (parentCategory !== null) {
+      let createdChannelsCount = 0;
+      let parentChannelsCount = 0;
+
+      if (interaction.options.get("staff-channel") === null) {
+        createdChannelsCount++;
+      }
+
+      if (interaction.options.get("referee-channel") === null) {
+        createdChannelsCount++;
+      }
+      if (interaction.options.get("schedules-channel") === null) {
+        createdChannelsCount++;
+      }
+
+      for (const [_, channel] of interaction.guild.channels.cache) {
+        if (channel.parent === parentCategory) {
+          parentChannelsCount++;
+        }
+      }
+
+      if (parentChannelsCount + createdChannelsCount > 50) {
+        await interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setColor("Red")
+              .setTitle("Error")
+              .setDescription(
+                `\`The parent category doesn't have enough space to hold all the text channels that have to be created.\``
+              ),
+          ],
+        });
+
+        return;
+      }
+    }
 
     const user: User[] = await db
       .select()
@@ -179,6 +227,7 @@ export const createTournament: Command = {
       interaction.options.get("staff-channel")?.channel ??
       (await interaction.guild.channels.create({
         name: "staff",
+        parent: parentCategory.id ?? null,
         permissionOverwrites: [
           {
             id: interaction.guild.roles.everyone,
@@ -199,6 +248,7 @@ export const createTournament: Command = {
       interaction.options.get("referee-channel")?.channel ??
       (await interaction.guild.channels.create({
         name: "referee",
+        parent: parentCategory.id ?? null,
         permissionOverwrites: [
           {
             id: interaction.guild.roles.everyone,
@@ -219,6 +269,7 @@ export const createTournament: Command = {
       interaction.options.get("schedules-channel")?.channel ??
       (await interaction.guild.channels.create({
         name: "schedules",
+        parent: parentCategory.id ?? null,
         permissionOverwrites: [
           {
             id: interaction.guild.roles.everyone,
