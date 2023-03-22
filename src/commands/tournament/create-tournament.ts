@@ -5,8 +5,6 @@ import {
   Role,
   SlashCommandBuilder,
 } from "discord.js";
-import { eq } from "drizzle-orm/expressions";
-import { tournaments, User, users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
 import { db } from "../../main";
 
@@ -127,7 +125,8 @@ export const createTournament: Command = {
   execute: async (interaction) => {
     await interaction.deferReply();
 
-    const parentCategory = interaction.options.get("parent-category")?.channel ?? null;
+    const parentCategory =
+      interaction.options.get("parent-category")?.channel ?? null;
 
     if (parentCategory !== null) {
       let createdChannelsCount = 0;
@@ -166,10 +165,11 @@ export const createTournament: Command = {
       }
     }
 
-    const user: User[] = await db
-      .select()
-      .from(users)
-      .where(eq(users.discordId, +interaction.user.id));
+    const user = await db
+      .selectFrom("users")
+      .selectAll()
+      .where("discord_id", "=", +interaction.user.id)
+      .execute();
 
     if (user.length < 1) {
       await interaction.editReply({
@@ -293,21 +293,24 @@ export const createTournament: Command = {
       }));
     embedDescription += `• **Schedules channel:** ${schedulesChannel}\n`;
 
-    await db.insert(tournaments).values({
-      name,
-      acronym,
-      winCondition,
-      scoring,
-      type: tournamentType,
-      staffRoleId: +staffRole.id,
-      refereeRoleId: +refereeRole.id,
-      playerRoleId: +playerRole.id,
-      creatorId: +interaction.user.id,
-      serverId: +interaction.guild.id,
-      staffChannelId: +staffChannel.id,
-      refereeChannelId: +refereeChannel.id,
-      schedulesChannelId: +schedulesChannel.id,
-    });
+    const result = await db
+      .insertInto("tournaments")
+      .values({
+        name,
+        acronym,
+        win_condition: winCondition,
+        scoring,
+        type: tournamentType,
+        staff_role_id: +staffRole.id,
+        referee_role_id: +refereeRole.id,
+        player_role_id: +playerRole.id,
+        creator_id: +interaction.user.id,
+        server_id: +interaction.guild.id,
+        staff_channel_id: +staffChannel.id,
+        referee_channel_id: +refereeChannel.id,
+        schedules_channel_id: +schedulesChannel.id,
+      })
+      .executeTakeFirst();
 
     const embed = new EmbedBuilder()
       .setColor("Green")

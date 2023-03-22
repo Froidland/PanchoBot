@@ -1,5 +1,4 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
 import { db } from "../../main";
 import { eq } from "drizzle-orm/expressions";
@@ -13,22 +12,13 @@ export const unlink: Command = {
   execute: async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
 
-    const { username } = (
-      await db
-        .select({ username: users.username })
-        .from(users)
-        .where(eq(users.discordId, +interaction.user.id))
-    )[0];
+    const user = await db
+      .selectFrom("users")
+      .selectAll()
+      .where("discord_id", "=", +interaction.user.id)
+      .executeTakeFirst();
 
-    const result = await db
-      .update(users)
-      .set({
-        userId: null,
-        username: null,
-      })
-      .where(eq(users.discordId, +interaction.user.id));
-
-    if (result[0].affectedRows === 0) {
+    if (user === undefined || user.user_id === null) {
       await interaction.editReply({
         embeds: [
           new EmbedBuilder()
@@ -43,8 +33,17 @@ export const unlink: Command = {
       return;
     }
 
+    await db
+      .updateTable("users")
+      .set({
+        user_id: null,
+        username: null,
+      })
+      .where("discord_id", "=", +interaction.user.id)
+      .execute();
+
     await interaction.editReply({
-      content: `Unlinked osu! username \`${username}\` from your discord account.`,
+      content: `Unlinked osu! username \`${user.username}\` from your discord account.`,
     });
   },
 };

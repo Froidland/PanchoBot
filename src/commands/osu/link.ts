@@ -1,6 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { v2 } from "osu-api-extended";
-import { users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
 import { db } from "../../main";
 
@@ -24,18 +23,17 @@ export const link: Command = {
 
     try {
       await db
-        .insert(users)
+        .insertInto("users")
         .values({
-          discordId: +interaction.user.id,
-          userId: user.id,
+          discord_id: +interaction.user.id,
+          user_id: user.id,
           username: user.username,
         })
         .onDuplicateKeyUpdate({
-          set: {
-            userId: user.id,
-            username: user.username,
-          },
-        });
+          user_id: user.id,
+          username: user.username,
+        })
+        .execute();
 
       await interaction.editReply({
         content: `Linked your discord account to username \`${user.username}\`.`,

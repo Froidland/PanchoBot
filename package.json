@@ -1,5 +1,5 @@
 {
-  "name": "kay-bot",
+  "name": "panchobot",
   "version": "1.0.0",
   "description": "A peronal bot made by Pancho with special tournament modifications made for Kay.",
   "main": "/src/main.ts",
@@ -7,7 +7,7 @@
     "start": "esbuild src/main.ts --bundle --platform=node --packages=external --outfile=app.js && node app.js",
     "build": "esbuild src/main.ts --bundle --platform=node --packages=external --outfile=app.js",
     "package": "esbuild src/main.ts --bundle --platform=node --outfile=app.js",
-    "generate:sql": "drizzle-kit generate:mysql"
+    "introspect": "kysely-codegen"
   },
   "keywords": [],
   "author": "Francisco Hauva <phauva@gmail.com>",
@@ -16,8 +16,8 @@
     "@types/node": "^18.15.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
-    "drizzle-orm": "^0.22.0",
     "esbuild": "^0.17.11",
+    "kysely": "^0.23.5",
     "mysql2": "^3.2.0",
     "osu-api-extended": "^2.5.21",
     "prettier": "^2.8.4",
@@ -27,6 +27,6 @@
   },
   "devDependencies": {
     "@types/pg": "^8.6.6",
-    "drizzle-kit": "^0.17.0"
+    "kysely-codegen": "^0.10.0"
   }
 }

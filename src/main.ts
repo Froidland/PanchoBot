@@ -1,19 +1,30 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import * as dotenv from "dotenv";
 import { auth } from "osu-api-extended";
-import mysql from "mysql2/promise";
-import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2";
 import * as winston from "winston";
 import DailyRotateFile = require("winston-daily-rotate-file");
 import { onInteraction, onMessageCreate, onReady } from "./events";
+import { Kysely, MysqlDialect } from "kysely";
+import { DB } from "kysely-codegen";
 const { combine, timestamp, printf, colorize } = winston.format;
 dotenv.config();
 
 const logDatePattern = process.env.LOG_DATE_PATTERN ?? "DD-MM-YYYY";
 
-const pool = mysql.createPool(process.env.DATABASE_URL);
+const pool = mysql.createPool({
+  host: process.env.DATABASE_HOST ?? "localhost",
+  port: +(process.env.DATABASE_PORT ?? 3306),
+  user: process.env.DATABASE_USER ?? null,
+  password: process.env.DATABASE_PASSWORD ?? null,
+  database: process.env.DATABASE_DB ?? null,
+});
 
-export const db = drizzle(pool);
+export const db = new Kysely<DB>({
+  dialect: new MysqlDialect({
+    pool,
+  }),
+});
 
 export const logger = winston.createLogger({
   level: "info",

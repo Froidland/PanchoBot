@@ -3,9 +3,7 @@ import {
   EmbedBuilder,
   SlashCommandBuilder,
 } from "discord.js";
-import { eq } from "drizzle-orm/expressions";
 import { v2 } from "osu-api-extended";
-import { users } from "../../database/schema";
 import { Command } from "../../interfaces/command";
 import { db, logger } from "../../main";
 import { getFlagUrl } from "../../utils";
@@ -30,11 +28,12 @@ export const profile: Command = {
     // If the option is null, we search for the user_id associated with the users discord_id, otherwise we just use the username option.
     if (usernameOption === null) {
       const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.discordId, +interaction.user.id));
+        .selectFrom("users")
+        .selectAll()
+        .where("discord_id", "=", +interaction.user.id)
+        .executeTakeFirst();
 
-      if (user.length === 0 || user[0].userId === null) {
+      if (user === undefined || user.user_id === null) {
         await interaction.editReply({
           embeds: [
             new EmbedBuilder()
@@ -49,7 +48,7 @@ export const profile: Command = {
         return;
       }
 
-      searchParameter = user[0].userId;
+      searchParameter = user.user_id;
     } else {
       searchParameter = interaction.options.get("username").value as string;
     }
