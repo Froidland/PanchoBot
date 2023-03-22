@@ -227,7 +227,7 @@ export const createTournament: Command = {
       interaction.options.get("staff-channel")?.channel ??
       (await interaction.guild.channels.create({
         name: "staff",
-        parent: parentCategory.id ?? null,
+        parent: parentCategory?.id ?? null,
         permissionOverwrites: [
           {
             id: interaction.guild.roles.everyone,
@@ -248,7 +248,7 @@ export const createTournament: Command = {
       interaction.options.get("referee-channel")?.channel ??
       (await interaction.guild.channels.create({
         name: "referee",
-        parent: parentCategory.id ?? null,
+        parent: parentCategory?.id ?? null,
         permissionOverwrites: [
           {
             id: interaction.guild.roles.everyone,
@@ -269,7 +269,7 @@ export const createTournament: Command = {
       interaction.options.get("schedules-channel")?.channel ??
       (await interaction.guild.channels.create({
         name: "schedules",
-        parent: parentCategory.id ?? null,
+        parent: parentCategory?.id ?? null,
         permissionOverwrites: [
           {
             id: interaction.guild.roles.everyone,
