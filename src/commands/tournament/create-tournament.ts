@@ -27,7 +27,7 @@ export const createTournament: Command = {
         .setName("acronym")
         .setDescription("The acronym for the tournament. (Max. 8 characters, will be transformed to uppercase.)")
         .setRequired(true)
-        .setMaxLength(8)
+        .setMaxLength(16)
     )
     .addStringOption((option) =>
       option

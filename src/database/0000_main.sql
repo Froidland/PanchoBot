@@ -36,7 +36,7 @@ CREATE TABLE `teams` (
 CREATE TABLE `tournaments` (
 	`id` varchar(24) PRIMARY KEY,
 	`name` varchar(64) NOT NULL,
-	`acronym` varchar(8) NOT NULL,
+	`acronym` varchar(16) NOT NULL,
 	`server_id` bigint NOT NULL,
 	`schedules_channel_id` bigint NOT NULL,
 	`referee_channel_id` bigint NOT NULL,
