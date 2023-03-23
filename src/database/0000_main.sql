@@ -16,7 +16,7 @@ CREATE TABLE `lobbies` (
 	`id` bigint AUTO_INCREMENT PRIMARY KEY,
 	`tournament_id` bigint NOT NULL,
 	`named_id` varchar(16) NOT NULL,
-	`schedule` date NOT NULL,
+	`schedule` timestamp NOT NULL,
 	`status` enum('pending','done') NOT NULL DEFAULT 'pending',
 	`stage` enum('groups','qualifiers','round_64','round_32','round_16','quarterfinals','semifinals','finals','grandfinals') NOT NULL,
 	`mp_link` varchar(256),
