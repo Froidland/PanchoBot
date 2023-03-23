@@ -1,7 +1,7 @@
 {
   "name": "panchobot",
   "version": "1.0.0",
-  "description": "A peronal bot made by Pancho with special tournament modifications made for Kay.",
+  "description": "A peronal bot made by Pancho with special tournament modifications.",
   "main": "/src/main.ts",
   "scripts": {
     "start": "esbuild src/main.ts --bundle --platform=node --packages=external --outfile=app.js && node app.js",
