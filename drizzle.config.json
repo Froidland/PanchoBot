@@ -1,4 +1,0 @@
-{
-  "out": "./src/database/migrations-folder",
-  "schema": "./src/database/schema"
-}
