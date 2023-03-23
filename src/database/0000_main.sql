@@ -1,20 +1,20 @@
 CREATE TABLE `lobbies_to_teams` (
-	`lobby_id` bigint NOT NULL,
-	`team_id` bigint NOT NULL,
+	`lobby_id` varchar(23) NOT NULL,
+	`team_id` varchar(24) NOT NULL,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `users_to_teams` (
 	`user_id` bigint NOT NULL,
-	`team_id` bigint NOT NULL,
+	`team_id` varchar(24) NOT NULL,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `lobbies` (
-	`id` bigint AUTO_INCREMENT PRIMARY KEY,
-	`tournament_id` bigint NOT NULL,
+	`id` varchar(24) PRIMARY KEY,
+	`tournament_id` varchar(24) NOT NULL,
 	`named_id` varchar(16) NOT NULL,
 	`schedule` timestamp NOT NULL,
 	`status` enum('pending','done') NOT NULL DEFAULT 'pending',
@@ -25,7 +25,7 @@ CREATE TABLE `lobbies` (
 );
 
 CREATE TABLE `teams` (
-	`id` bigint AUTO_INCREMENT PRIMARY KEY,
+	`id` varchar(24) PRIMARY KEY,
 	`name` varchar(64) NOT NULL,
 	`preferred_timezone` enum('-12UTC','-11UTC','-10UTC','-9UTC','-8UTC','-7UTC','-6UTC','-5UTC','-4UTC','-3UTC','-2UTC','-1UTC','0UTC','1UTC','2UTC','3UTC','4UTC','5UTC','6UTC','7UTC','8UTC','9UTC','10UTC','11UTC','12UTC') NOT NULL,
 	`captain_id` bigint NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `teams` (
 );
 
 CREATE TABLE `tournaments` (
-	`id` bigint AUTO_INCREMENT PRIMARY KEY,
+	`id` varchar(24) PRIMARY KEY,
 	`name` varchar(64) NOT NULL,
 	`acronym` varchar(8) NOT NULL,
 	`server_id` bigint NOT NULL,

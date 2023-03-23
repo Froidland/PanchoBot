@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import { Command } from "../../interfaces/command";
 import { db } from "../../main";
+import { createId } from "@paralleldrive/cuid2";
 
 export const createTournament: Command = {
   data: new SlashCommandBuilder()
@@ -24,7 +25,7 @@ export const createTournament: Command = {
     .addStringOption((option) =>
       option
         .setName("acronym")
-        .setDescription("The acronym for the tournament. (Max. 8 characters)")
+        .setDescription("The acronym for the tournament. (Max. 8 characters, will be transformed to uppercase.)")
         .setRequired(true)
         .setMaxLength(8)
     )
@@ -124,6 +125,7 @@ export const createTournament: Command = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   execute: async (interaction) => {
     await interaction.deferReply();
+    const id = createId();
 
     let isStaffChannelUsed = false;
     let isRefereeChannelUsed = false;
@@ -299,10 +301,15 @@ export const createTournament: Command = {
       }
     }
 
-    let embedDescription = "";
-
     const name = interaction.options.get("name").value as string;
-    const acronym = interaction.options.get("acronym").value as string;
+    const acronym = interaction.options.get("acronym").value.toString().toUpperCase();
+
+    let embedDescription = `**- ID:** \`${id}\`\n`;
+    embedDescription += `**- Name:** \`${name}\`\n`;
+    embedDescription += `**- Acronym:** \`${acronym}\`\n`;
+    embedDescription += `**- Owner:** \`${interaction.user.tag}\`\n`;
+    embedDescription += "-------------------------------------------\n";
+
     const winCondition = interaction.options.get("win-condition").value as
       | "score"
       | "acc"
@@ -486,9 +493,12 @@ export const createTournament: Command = {
       embedDescription += `:yellow_circle: **Schedules channel:** Used ${schedulesChannel}\n`;
     }
 
-    const result = await db
+    // Insert the tournament into the database.
+
+    await db
       .insertInto("tournaments")
       .values({
+        id,
         name,
         acronym,
         win_condition: winCondition,
