@@ -25,7 +25,9 @@ export const createTournament: Command = {
     .addStringOption((option) =>
       option
         .setName("acronym")
-        .setDescription("The acronym for the tournament. (Max. 8 characters, will be transformed to uppercase.)")
+        .setDescription(
+          "The acronym for the tournament. (Max. 16 characters, will be transformed to uppercase.)"
+        )
         .setRequired(true)
         .setMaxLength(16)
     )
@@ -302,7 +304,10 @@ export const createTournament: Command = {
     }
 
     const name = interaction.options.get("name").value as string;
-    const acronym = interaction.options.get("acronym").value.toString().toUpperCase();
+    const acronym = interaction.options
+      .get("acronym")
+      .value.toString()
+      .toUpperCase();
 
     let embedDescription = `**- ID:** \`${id}\`\n`;
     embedDescription += `**- Name:** \`${name}\`\n`;
@@ -518,7 +523,8 @@ export const createTournament: Command = {
     const embed = new EmbedBuilder()
       .setColor("Green")
       .setTitle("Tournament successfully created.")
-      .setDescription(embedDescription);
+      .setDescription(embedDescription)
+      .setTimestamp(new Date());
 
     await interaction.editReply({
       embeds: [embed],
