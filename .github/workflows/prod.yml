@@ -27,7 +27,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
     - run: pnpm install --no-frozen-lockfile
-    - run: rm -rf /home/pancho/PanchoBot/node_modules
-    - run: cp -uaR . /home/pancho/PanchoBot
+    - run: sudo rm -rf /home/pancho/PanchoBot/node_modules
+    - run: sudo cp -uaR . /home/pancho/PanchoBot
     - run: screen -X -S panchobot quit
     - run: screen -dmS panchobot bash -c "cd /home/pancho/PanchoBot && pnpm run start"
