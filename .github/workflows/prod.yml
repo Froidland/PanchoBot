@@ -24,7 +24,6 @@ jobs:
     - run: sudo rm -rf /home/pancho/PanchoBot/node_modules
     - run: sudo rm -rf /home/pancho/PanchoBot/src
     - run: sudo cp -uaR . /home/pancho/PanchoBot
-    - run: cd /home/pancho/PanchoBot
-    - run: pnpm install --no-frozen-lockfile
-    - run: pnpm run build
-    - run: pm2 restart ecosystem.config.js
+    - run: cd /home/pancho/PanchoBot && pnpm install --no-frozen-lockfile
+    - run: cd /home/pancho/PanchoBot && pnpm run build
+    - run: cd /home/pancho/PanchoBot && pm2 restart ecosystem.config.js
