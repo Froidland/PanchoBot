@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
 		name: "panchobot",
     script: 'app.js',
-		cwd: "/home/pancho/panchobot",
+		cwd: "/home/pancho/PanchoBot",
     watch: false
   }],
 };
