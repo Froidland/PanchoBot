@@ -21,15 +21,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
-    - run: pnpm install --no-frozen-lockfile
     - run: sudo rm -rf /home/pancho/PanchoBot/node_modules
+    - run: sudo rm -rf /home/pancho/PanchoBot/src
     - run: sudo cp -uaR . /home/pancho/PanchoBot
-    - run: screen -X -S panchobot quit
-      continue-on-error: true
-    - run: cd /home/pancho/PanchoBot && pnpm run build
-    - run: screen -dmS panchobot node app.js
+    - run: cd /home/pancho/PanchoBot
+    - run: pnpm install --no-frozen-lockfile
+    - run: pnpm run build
+    - run: pm2 restart ecosystem.config.js
