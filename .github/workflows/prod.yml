@@ -10,7 +10,6 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-    if: github.ref == 'refs/heads/dev'
     strategy:
       matrix:
         node-version: [18.x]
