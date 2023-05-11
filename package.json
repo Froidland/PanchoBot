@@ -15,7 +15,7 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.0",
     "@types/node": "^18.15.5",
-    "discord.js": "^14.8.0",
+    "discord.js": "^14.11.0",
     "dotenv": "^16.0.3",
     "esbuild": "^0.17.12",
     "kysely": "^0.23.5",
