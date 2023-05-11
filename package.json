@@ -14,19 +14,19 @@
   "license": "MIT",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.0",
-    "@types/node": "^18.15.5",
     "discord.js": "^14.11.0",
     "dotenv": "^16.0.3",
-    "esbuild": "^0.17.12",
+    "esbuild": "^0.17.18",
     "kysely": "^0.23.5",
-    "mysql2": "^3.2.0",
-    "osu-api-extended": "^2.5.22",
-    "prettier": "^2.8.6",
-    "typescript": "^5.0.2",
+    "mysql2": "^3.3.0",
+    "osu-api-extended": "^2.5.30",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
+    "@types/node": "^20.1.2",
     "@types/pg": "^8.6.6",
     "kysely-codegen": "^0.10.0"
   }
