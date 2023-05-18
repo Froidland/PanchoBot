@@ -47,8 +47,8 @@ jobs:
 
       - name: Log into Docker and upload image
         env: 
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker push ${{secrets.DOCKER_USERNAME}}/panchobot
@@ -59,14 +59,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH into Vultr VPS, pull docker image and run the image
+      - name: SSH into VPS, pull docker image and run the image
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.PROD_SSH_HOST }}
           username: ${{ secrets.PROD_SSH_USER }}
           key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
           script: |
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
             docker kill $(docker ps -q)
             docker system prune --all --force
             docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
