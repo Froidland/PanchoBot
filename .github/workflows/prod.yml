@@ -2,9 +2,8 @@ name: Node.js CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
-    workflow_dispatch:
+    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
