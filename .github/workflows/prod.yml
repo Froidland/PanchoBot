@@ -31,22 +31,22 @@ jobs:
       - name: Build
         run: pnpm run build
 
-    deploy:
-      needs: [ build ]
-      if: false
-      runs-on: self-hosted
+  deploy:
+    needs: [ build ]
+    if: false
+    runs-on: self-hosted
 
-      steps:
-        - name: SSH into Vultr VPS, pull docker image and run the image
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.VULTR_IP_ADDRESS }}
-            username: ${{ secrets.VULTR_USERNAME }}
-            password: ${{ secrets.VULTR_PASSWORD }}
-            script: |
-              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-              docker kill $(docker ps -q)
-              docker system prune --all --force
-              docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
-              docker run --rm -d ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
+    steps:
+      - name: SSH into Vultr VPS, pull docker image and run the image
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VULTR_IP_ADDRESS }}
+          username: ${{ secrets.VULTR_USERNAME }}
+          password: ${{ secrets.VULTR_PASSWORD }}
+          script: |
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker kill $(docker ps -q)
+            docker system prune --all --force
+            docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
+            docker run --rm -d ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
     
