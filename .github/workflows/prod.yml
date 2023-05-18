@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: 'Production'
     defaults:
       run:
         working-directory: .
@@ -56,6 +54,8 @@ jobs:
 
   deploy:
     needs: [ build, build-docker-image ]
+    environment:
+      name: 'Production'
     runs-on: ubuntu-latest
 
     steps:
