@@ -64,9 +64,9 @@ jobs:
         with:
           host: ${{ secrets.PROD_SSH_HOST }}
           username: ${{ secrets.PROD_SSH_USER }}
-          key: ${{ secrets.PROD_SSH_PRIVATE_KEY}}
+          key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
           script: |
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker kill $(docker ps -q)
             docker system prune --all --force
             docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
