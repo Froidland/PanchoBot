@@ -1,25 +1,36 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CD
+name: Node.js CI/CD Pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - main
+    workflow_dispatch:
 
 jobs:
   build:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    runs-on: ubuntu-latest
+    environment:
+      name: 'Production'
+    defaults:
+      run:
+        working-directory: .
 
     steps:
-    - uses: actions/checkout@v3
-    - run: sudo rm -rf /home/pancho/PanchoBot/node_modules
-    - run: sudo rm -rf /home/pancho/PanchoBot/src
-    - run: sudo cp -uaR . /home/pancho/PanchoBot
-    - run: cd /home/pancho/PanchoBot && pnpm install --no-frozen-lockfile
-    - run: cd /home/pancho/PanchoBot && pnpm run build
-    - run: cd /home/pancho/PanchoBot && pm2 restart ecosystem.config.js
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+          pnpm install
+
+      - name: Build
+        run: pnpm run build     
+
+      # - name: Run tests
+      #   run: pnpm test
