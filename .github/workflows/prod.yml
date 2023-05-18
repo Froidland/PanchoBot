@@ -25,7 +25,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
           pnpm install
 
       - name: Build
@@ -70,6 +69,7 @@ jobs:
             docker kill $(docker ps -q)
             docker system prune --all --force
             docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
-            docker run --env-file ./secrets/panchobot_secrets --rm -d ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
+            pwd
+            docker run --rm -d --env-file ./secrets/panchobot_secrets ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
 
     
