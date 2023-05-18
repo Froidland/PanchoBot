@@ -34,15 +34,15 @@ jobs:
   deploy:
     needs: [ build ]
     if: false
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: SSH into Vultr VPS, pull docker image and run the image
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.VULTR_IP_ADDRESS }}
-          username: ${{ secrets.VULTR_USERNAME }}
-          password: ${{ secrets.VULTR_PASSWORD }}
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_PRIVATE_KEY}}
           script: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             docker kill $(docker ps -q)
