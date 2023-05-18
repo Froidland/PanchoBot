@@ -71,6 +71,6 @@ jobs:
             docker system prune --all --force
             docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
             pwd
-            docker run --rm -d --env-file ./secrets/panchobot_secrets ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
+            docker run --rm --env-file ./secrets/panchobot_secrets ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
 
     
