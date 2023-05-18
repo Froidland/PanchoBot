@@ -31,8 +31,31 @@ jobs:
       - name: Build
         run: pnpm run build
 
-  deploy:
+  build-docker-image:
     needs: [ build ]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build docker image
+        run: docker build -t ${{secrets.DOCKER_USERNAME}}/panchobot .
+
+      - name: Log into Docker and upload image
+        env: 
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker push ${{secrets.DOCKER_USERNAME}}/panchobot
+
+
+  deploy:
+    needs: [ build, build-docker-image ]
     if: false
     runs-on: ubuntu-latest
 
