@@ -68,7 +68,8 @@ jobs:
           script: |
             echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
             docker stop PanchoBot
+            docker rm PanchoBot
             docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
-            docker run --rm -d --network=host --name PanchoBot --env-file ${{ secrets.SECRET_PATH }} ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
+            docker run --restart=always -d --network=host --name PanchoBot --env-file ${{ secrets.SECRET_PATH }} ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
 
     
