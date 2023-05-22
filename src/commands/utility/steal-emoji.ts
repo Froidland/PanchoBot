@@ -52,11 +52,11 @@ export const stealEmoji: Command = {
 
 		const emojiAttachment = Buffer.from(await emojiResponse.arrayBuffer());
 
-		await interaction.guild.emojis.create({
+		const createdEmojji = await interaction.guild.emojis.create({
 			name: emojiName || name,
 			attachment: emojiAttachment,
 		});
 
-		await interaction.editReply("Emoji added.");
+		await interaction.editReply(`Added emoji ${createdEmojji}`);
 	},
 };
