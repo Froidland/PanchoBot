@@ -11,5 +11,5 @@ export const commandList: Command[] = [
 	unlink,
 	archiveCategory,
 	createTournament,
-	stealEmoji
+	stealEmoji,
 ];
