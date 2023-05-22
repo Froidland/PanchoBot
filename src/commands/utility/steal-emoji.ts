@@ -5,7 +5,7 @@ export const stealEmoji: Command = {
 	data: new SlashCommandBuilder()
 		.setName("steal-emoji")
 		.setDescription(
-			"Fetches an emoji from another server and adds it to this one."
+			"Fetches an emoji from another server and adds it to the one where the command was executed."
 		)
 		.addStringOption((option) =>
 			option
