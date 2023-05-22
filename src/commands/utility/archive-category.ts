@@ -50,7 +50,8 @@ export const archiveCategory: Command = {
         )
         .setRequired(false)
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+		.setDMPermission(false),
   execute: async (interaction) => {
     await interaction.deferReply();
     const sourceOption = interaction.options.get("source");

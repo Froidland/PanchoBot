@@ -58,6 +58,7 @@ export const createLobby: Command = {
           }
         )
         .setRequired(true)
-    ),
+    )
+		.setDMPermission(false),
   execute: async (interaction) => {},
 };

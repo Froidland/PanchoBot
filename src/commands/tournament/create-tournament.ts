@@ -124,7 +124,8 @@ export const createTournament: Command = {
         .addChannelTypes(ChannelType.GuildCategory)
         .setRequired(false)
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+		.setDMPermission(false),
   execute: async (interaction) => {
     await interaction.deferReply();
     const id = createId();

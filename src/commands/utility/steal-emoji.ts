@@ -20,7 +20,8 @@ export const stealEmoji: Command = {
 				.setMinLength(2)
 				.setRequired(false)
 		)
-		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
