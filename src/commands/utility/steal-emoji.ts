@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { Command } from "../../interfaces/command";
 
 export const stealEmoji: Command = {
@@ -12,7 +12,8 @@ export const stealEmoji: Command = {
 				.setName("emoji")
 				.setDescription("Emoji to steal.")
 				.setRequired(true)
-		),
+		)
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
