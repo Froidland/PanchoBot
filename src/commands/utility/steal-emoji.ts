@@ -13,12 +13,22 @@ export const stealEmoji: Command = {
 				.setDescription("Emoji to steal.")
 				.setRequired(true)
 		)
+		.addStringOption((option) =>
+			option
+				.setName("name")
+				.setDescription("Name of the emoji.")
+				.setMinLength(2)
+				.setRequired(false)
+		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
 		const emojiOption = interaction.options.get("emoji");
 		const emoji = emojiOption.value as string;
+
+		const emojiNameOption = interaction.options.get("name");
+		const emojiName = emojiNameOption?.value as string;
 
 		const emojiRegex = /<?(a)?:?(\w{2,32}):(\d{17,19})>?/;
 		const match = emoji.match(emojiRegex);
@@ -43,7 +53,7 @@ export const stealEmoji: Command = {
 		const emojiAttachment = Buffer.from(await emojiResponse.arrayBuffer());
 
 		await interaction.guild.emojis.create({
-			name,
+			name: emojiName || name,
 			attachment: emojiAttachment,
 		});
 
