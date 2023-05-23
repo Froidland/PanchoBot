@@ -33,6 +33,10 @@ export const onMessageCreate = async (message: Message) => {
 				await message.delete();
 				break;
 			case "1104239309806125158":
+				if (!translationWhitelist.includes(message.author.id)) {
+					return;
+				}
+
 				const translation = await getTranslation(message.content);
 
 				if (translation) {
@@ -61,7 +65,7 @@ async function getTranslation(message: string) {
 	);
 
 	if (!translationResponse.ok) {
-		return "Failed to translate message.";
+		return null;
 	}
 
 	const translation = (await translationResponse.json()) as Translation;
@@ -72,3 +76,9 @@ async function getTranslation(message: string) {
 
 	return translation.translations[0].text;
 }
+
+const translationWhitelist = [
+	"329379151364751360",
+	"292478478295498762",
+	"278368808627077120",
+];
