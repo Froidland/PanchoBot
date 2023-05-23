@@ -20,7 +20,8 @@ export const stealEmoji: Command = {
 				.setMinLength(2)
 				.setRequired(false)
 		)
-		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+		.setDMPermission(false),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
@@ -52,11 +53,11 @@ export const stealEmoji: Command = {
 
 		const emojiAttachment = Buffer.from(await emojiResponse.arrayBuffer());
 
-		const createdEmojji = await interaction.guild.emojis.create({
+		const createdEmoji = await interaction.guild.emojis.create({
 			name: emojiName || name,
 			attachment: emojiAttachment,
 		});
 
-		await interaction.editReply(`Added emoji ${createdEmojji}`);
+		await interaction.editReply(`Added emoji ${createdEmoji}`);
 	},
 };
