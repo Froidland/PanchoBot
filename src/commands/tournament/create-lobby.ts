@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { Command } from "../../interfaces/command";
 
 export const createLobby: Command = {
@@ -60,5 +60,5 @@ export const createLobby: Command = {
 				.setRequired(true)
 		)
 		.setDMPermission(false),
-	execute: async (interaction) => {},
+	execute: async (interaction: CommandInteraction) => {},
 };

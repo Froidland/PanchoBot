@@ -1,5 +1,6 @@
 import {
 	ChannelType,
+	CommandInteraction,
 	EmbedBuilder,
 	PermissionFlagsBits,
 	Role,
@@ -126,7 +127,7 @@ export const createTournament: Command = {
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.setDMPermission(false),
-	execute: async (interaction) => {
+	execute: async (interaction: CommandInteraction) => {
 		await interaction.deferReply();
 		const id = createId();
 

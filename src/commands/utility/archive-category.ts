@@ -1,5 +1,6 @@
 import {
 	ChannelType,
+	CommandInteraction,
 	EmbedBuilder,
 	OverwriteResolvable,
 	PermissionFlagsBits,
@@ -52,7 +53,7 @@ export const archiveCategory: Command = {
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.setDMPermission(false),
-	execute: async (interaction) => {
+	execute: async (interaction: CommandInteraction) => {
 		await interaction.deferReply();
 		const sourceOption = interaction.options.get("source");
 		const targetOption = interaction.options.get("target");
