@@ -5,7 +5,7 @@ import { db, logger } from "../../main";
 export const coinflip: Command = {
 	data: new SlashCommandBuilder()
 		.setName("coinflip")
-		.setDescription("Flip a coin.")
+		.setDescription("Flip a coin and bet on the outcome.")
 		.addStringOption((option) =>
 			option
 				.setName("side")
