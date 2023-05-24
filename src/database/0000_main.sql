@@ -55,6 +55,7 @@ CREATE TABLE `users` (
 	`discord_id` bigint PRIMARY KEY NOT NULL,
 	`user_id` int,
 	`username` varchar(32),
+	`money` bigint NOT NULL DEFAULT 0,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP
 );
