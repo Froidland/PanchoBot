@@ -1,4 +1,5 @@
 import { Command } from "../interfaces/command";
+import { coinflip } from "./games";
 import { ping } from "./general";
 import { link, profile, unlink } from "./osu";
 import { createTournament } from "./tournament";
@@ -12,4 +13,5 @@ export const commandList: Command[] = [
 	archiveCategory,
 	createTournament,
 	stealEmoji,
+	coinflip,
 ];
