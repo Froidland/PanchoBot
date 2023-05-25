@@ -43,35 +43,23 @@ export const coinflip: Command = {
 		const coin = Math.random() < 0.5 ? "heads" : "tails";
 
 		try {
-			if (side === coin) {
-				await db
-					.updateTable("users")
-					.set({
-						money: Math.ceil(user.money * 1.1 + 100),
-					})
-					.execute();
-
-				await interaction.editReply(
-					`The coin landed on ${coin}. You win!. You now have ${Math.ceil(
-						user.money * 1.1 + 100
-					)} coins.`
-				);
-
-				return;
-			}
+			const newMoneyValue =
+				side === coin
+					? Math.ceil(user.money * 1.1 + 100)
+					: Math.ceil(user.money * 0.75);
 
 			await db
 				.updateTable("users")
 				.set({
-					money: Math.ceil(user.money * 0.75),
+					money: newMoneyValue,
 				})
+				.where("discord_id", "=", +interaction.user.id)
 				.execute();
 
-			await interaction.editReply(
-				`The coin landed on ${coin}. You lose. You now have ${Math.ceil(
-					user.money * 0.75
-				)} coins.`
-			);
+				await interaction.editReply(
+					`The coin landed on ${coin}. You ${side === coin ? "win!" : "lose"}. You now have ${newMoneyValue} coins.`
+				);
+
 		} catch (error) {
 			logger.error(error);
 			await interaction.editReply("An error occurred.");
