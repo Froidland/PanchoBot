@@ -1,5 +1,6 @@
 import { Command } from "../interfaces/command";
 import { coinflip } from "./currency";
+import { balance } from "./currency/balance";
 import { ping } from "./general";
 import { link, profile, unlink } from "./osu";
 import { createTournament } from "./tournament";
@@ -14,4 +15,5 @@ export const commandList: Command[] = [
 	createTournament,
 	stealEmoji,
 	coinflip,
+	balance,
 ];
