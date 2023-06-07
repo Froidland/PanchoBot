@@ -1,5 +1,5 @@
 import { Command } from "../interfaces/command";
-import { coinflip } from "./games";
+import { coinflip } from "./currency";
 import { ping } from "./general";
 import { link, profile, unlink } from "./osu";
 import { createTournament } from "./tournament";
