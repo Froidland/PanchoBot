@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@paralleldrive/cuid2':
-    specifier: ^2.2.0
-    version: 2.2.0
+    specifier: ^2.2.1
+    version: 2.2.1
   discord.js:
     specifier: ^14.11.0
     version: 14.11.0
@@ -325,8 +325,8 @@ packages:
     resolution: {integrity: sha512-ilHEACi9DwqJB0pw7kv+Apvh50jiiSyR/cQ3y4W7lOR5mhvn/50FLUfsnfJz0BDZtl/RR16kXvptiv6q1msYZg==}
     dev: false
 
-  /@paralleldrive/cuid2@2.2.0:
-    resolution: {integrity: sha512-CVQDpPIUHrUGGLdrMGz1NmqZvqmsB2j2rCIQEu1EvxWjlFh4fhvEGmgR409cY20/67/WlJsggenq0no3p3kYsw==}
+  /@paralleldrive/cuid2@2.2.1:
+    resolution: {integrity: sha512-GJhHYlMhyT2gWemDL7BGMWfTNhspJKkikLKh9wAy3z4GTTINvTYALkUd+eGQK7aLeVkVzPuSA0VCT3H5eEWbbw==}
     dependencies:
       '@noble/hashes': 1.3.0
     dev: false
