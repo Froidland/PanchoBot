@@ -20,8 +20,8 @@ dependencies:
     specifier: ^3.3.2
     version: 3.3.2
   osu-api-extended:
-    specifier: ^2.7.0
-    version: 2.7.0
+    specifier: ^2.7.5
+    version: 2.7.5
   prettier:
     specifier: ^2.8.8
     version: 2.8.8
@@ -453,11 +453,6 @@ packages:
       text-hex: 1.0.0
     dev: false
 
-  /define-lazy-prop@2.0.0:
-    resolution: {integrity: sha512-Ds09qNh8yw3khSjiJjiUInaGX9xlqZDY7JVryGxdxV7NPeuqQfplOpQ66yJFZut3jLa5zOwkXw1g9EI2uKh4Og==}
-    engines: {node: '>=8'}
-    dev: false
-
   /denque@2.1.0:
     resolution: {integrity: sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==}
     engines: {node: '>=0.10'}
@@ -593,12 +588,6 @@ packages:
     resolution: {integrity: sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==}
     dev: false
 
-  /is-docker@2.2.1:
-    resolution: {integrity: sha512-F+i2BKsFrH66iaUFc0woD8sLy8getkwTwtOBjvs56Cx4CgJDeKQeqfz8wAYiSb8JOprWhHH5p77PbmYCvvUuXQ==}
-    engines: {node: '>=8'}
-    hasBin: true
-    dev: false
-
   /is-number@7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
@@ -610,13 +599,6 @@ packages:
   /is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
-    dev: false
-
-  /is-wsl@2.2.0:
-    resolution: {integrity: sha512-fKzAra0rGJUUBwGBgNkHZuToZcn+TtXHpeCgmkMJMMYx1sQDYaCSyjJBSCa2nH1DGm7s3n1oBnohoVTBaN7Lww==}
-    engines: {node: '>=8'}
-    dependencies:
-      is-docker: 2.2.1
     dev: false
 
   /kuler@2.0.0:
@@ -772,21 +754,11 @@ packages:
       fn.name: 1.1.0
     dev: false
 
-  /open@8.4.2:
-    resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      define-lazy-prop: 2.0.0
-      is-docker: 2.2.1
-      is-wsl: 2.2.0
-    dev: false
-
-  /osu-api-extended@2.7.0:
-    resolution: {integrity: sha512-wOsjD3WdKeoxa/tGp/C6d8Al0meix/p6Xpm+QG3iQwwh678bw6Y8GLkyziaATRbpYQvcdAf7yx70S30Ep86Kuw==}
+  /osu-api-extended@2.7.5:
+    resolution: {integrity: sha512-J3aIQEEgQtEVaEa6FCeY03EZNnM0XRB/1IQ7n9mnEMVzn3KZfGFVVE14IkYosBt2JKq42c8EIC57CR2RGAmbnw==}
     dependencies:
       lzma-native: 8.0.6
       node-osr: 1.2.1
-      open: 8.4.2
     dev: false
 
   /peek-readable@5.0.0:
