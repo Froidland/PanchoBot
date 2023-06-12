@@ -22,7 +22,7 @@
     "osu-api-extended": "^2.7.0",
     "prettier": "^2.8.8",
     "typescript": "^5.0.4",
-    "winston": "^3.8.2",
+    "winston": "^3.9.0",
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
