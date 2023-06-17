@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { ApplicationFlagsBitField, Client, Events } from "discord.js";
 import * as dotenv from "dotenv";
 import { auth } from "osu-api-extended";
 import mysql from "mysql2";
@@ -79,12 +79,13 @@ export const logger = winston.createLogger({
 });
 
 (async () => {
+	const appFlags = new ApplicationFlagsBitField();
+	appFlags.add(32768); // GatewayGuildMembersLimited
+	appFlags.add(524288); // GatewayMessageContentLimited 
+	appFlags.add(8192); // GatewayPresenceLimited 
+
 	const client = new Client({
-		intents: [
-			GatewayIntentBits.Guilds,
-			GatewayIntentBits.GuildMessages,
-			GatewayIntentBits.MessageContent,
-		],
+		intents: appFlags,
 	});
 
 	client.once(Events.ClientReady, async (client) => {
