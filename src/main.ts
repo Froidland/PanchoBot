@@ -1,7 +1,7 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import * as dotenv from "dotenv";
 import { auth } from "osu-api-extended";
-import logger from "./utils/logger"
+import logger from "./utils/logger";
 import { onInteraction, onMessageCreate, onReady } from "./events";
 dotenv.config();
 
@@ -40,7 +40,11 @@ dotenv.config();
 	});
 
 	try {
-		await auth.login(+process.env.OSU_CLIENT_ID, process.env.OSU_CLIENT_SECRET);
+		await auth.login(
+			+process.env.OSU_CLIENT_ID,
+			process.env.OSU_CLIENT_SECRET,
+			["public"]
+		);
 		await client.login(process.env.BOT_TOKEN);
 	} catch (error) {
 		logger.error(
