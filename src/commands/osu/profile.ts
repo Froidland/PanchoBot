@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { v2 } from "osu-api-extended";
 import { Command } from "../../interfaces/command";
-import { db, logger } from "../../main";
+import db from "../../db";
 import { getFlagUrl } from "../../utils";
 
 export const profile: Command = {

@@ -1,6 +1,6 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { Command } from "../../interfaces/command";
-import { db } from "../../main";
+import db from "../../db";
 
 export const balance: Command = {
 	data: new SlashCommandBuilder()

@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { v2 } from "osu-api-extended";
 import { Command } from "../../interfaces/command";
-import { db } from "../../main";
+import db from "../../db";
 
 export const link: Command = {
 	data: new SlashCommandBuilder()

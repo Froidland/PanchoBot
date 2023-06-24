@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { Command } from "../../interfaces/command";
-import { db, logger } from "../../main";
+import db from "../../db";
+import logger from "../../utils/logger";
 
 export const coinflip: Command = {
 	data: new SlashCommandBuilder()

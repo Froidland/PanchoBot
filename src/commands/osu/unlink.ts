@@ -1,7 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "../../interfaces/command";
-import { db } from "../../main";
-import { eq } from "drizzle-orm/expressions";
+import db from "../../db";
 
 export const unlink: Command = {
 	data: new SlashCommandBuilder()
