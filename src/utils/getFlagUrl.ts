@@ -1,7 +1,7 @@
-export function getFlagUrl(code: string, width?: number) {
+export function getFlagUrl(countryCode: string, width?: number) {
 	if (!width) {
-		return `https://osuflags.omkserver.nl/${code}.png`;
+		return `https://osuflags.omkserver.nl/${countryCode}.png`;
 	}
 
-	return `https://osuflags.omkserver.nl/${code}-${width}.png`;
+	return `https://osuflags.omkserver.nl/${countryCode}-${width}.png`;
 }
