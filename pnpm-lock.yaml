@@ -21,8 +21,8 @@ dependencies:
     specifier: ^0.23.5
     version: 0.23.5
   mysql2:
-    specifier: ^3.4.0
-    version: 3.4.0
+    specifier: ^3.4.3
+    version: 3.4.3
   osu-api-extended:
     specifier: ^2.7.51
     version: 2.7.51
@@ -633,8 +633,8 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: false
 
-  /mysql2@3.4.0:
-    resolution: {integrity: sha512-l952dVcdWVfEIIxMQ1PNSPHYY2htylG7H9ahrQe9lIgDpEMg3hB0S88OhC/loNSZpV8OcywSjgOzjSjEUiuwiQ==}
+  /mysql2@3.4.3:
+    resolution: {integrity: sha512-pgXnfmZlJ2JnJk9A5z3tnJcG4w8ly/AbVsVsgcavhiOQ7VQpxMwmIyR2CTNxNLKQWQUdD5QOkKkY1DdoRDgSnA==}
     engines: {node: '>= 8.0'}
     dependencies:
       denque: 2.1.0
