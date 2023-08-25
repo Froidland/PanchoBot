@@ -6,32 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3.5.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3.6.0
-        with:
-          node-version: 18.x
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 8.5.1
-          run_install: true
-
-      - name: Build
-        run: pnpm run build
-
   build-docker-image:
-    needs: [ build ]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -54,7 +29,7 @@ jobs:
 
 
   deploy:
-    needs: [ build, build-docker-image ]
+    needs: [ build-docker-image ]
     environment:
       name: 'Production'
     runs-on: ubuntu-latest
