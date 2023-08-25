@@ -8,3 +8,6 @@ The main branch is hosted 24/7 and if you want to invite it the url is [this one
 I will probably be adding more information to this readme since if you are seeing this, I made the bot public.
 
 Have a nice day! o/
+
+# Disclaimer (sort of)
+The dev branch of this bot (*which contained all the tournament management code*) has been moved to [this repo](https://github.com/Froidland/otm-bot).
