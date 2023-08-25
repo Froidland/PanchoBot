@@ -1,9 +1,7 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import * as dotenv from "dotenv";
 import { auth } from "osu-api-extended";
 import logger from "./utils/logger";
 import { onInteraction, onMessageCreate, onReady } from "./events";
-dotenv.config();
 
 (async () => {
 	const client = new Client({

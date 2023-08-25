@@ -1,24 +1,17 @@
-# Base image
-FROM node:20
+FROM node:20-alpine
 
-# Set the working directory
-WORKDIR /
+WORKDIR /home/node/panchobot
 
-# Copy package.json and package-lock.json
-COPY package*.json .
+COPY package.json .
 
-# Install pnpm
+COPY pnpm-lock.yaml .
+
 RUN npm install -g pnpm
 
-# Install dependencies
 RUN pnpm install
 
-# Copy the rest of the source code
 COPY . .
 
-# Build the TypeScript project
 RUN pnpm run build
 
-
-# Specify the command to run the built project
-CMD ["node", "app.js"]
+CMD ["npm", "run", "start"]

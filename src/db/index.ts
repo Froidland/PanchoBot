@@ -1,8 +1,6 @@
 import { Kysely, MysqlDialect } from "kysely";
 import mysql from "mysql2";
 import { DB } from "./schema";
-import * as dotenv from "dotenv";
-dotenv.config();
 
 const pool = mysql.createPool({
 	host: process.env.DATABASE_HOST ?? "localhost",
