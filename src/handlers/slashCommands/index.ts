@@ -1,8 +1,8 @@
-import { Command } from "../../interfaces/command.js";
-import { archiveCategory } from "./archiveCategory.js";
-import { addEmoji } from "./addEmoji.js";
+import { Command } from "../../interfaces/command";
+import { archiveCategory } from "./archiveCategory";
+import { addEmoji } from "./addEmoji";
 
-export * from "./archiveCategory.js";
-export * from "./addEmoji.js";
+export * from "./archiveCategory";
+export * from "./addEmoji";
 
-export const _commandList: Command[] = [archiveCategory, addEmoji]
+export const slashCommandList: Command[] = [archiveCategory, addEmoji]

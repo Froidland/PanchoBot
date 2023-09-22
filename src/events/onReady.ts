@@ -1,10 +1,10 @@
 import { Client, REST, Routes } from "discord.js";
-import { _commandList } from "../handlers/slashCommands";
+import { slashCommandList } from "../handlers";
 import logger from "../utils/logger";
 
 export const onReady = async (client: Client) => {
 	const rest = new REST().setToken(process.env.BOT_TOKEN);
-	const commandData = _commandList.map((command) => command.data.toJSON());
+	const commandData = slashCommandList.map((command) => command.data.toJSON());
 
 	if (process.env.DEV_GUILD_ID) {
 		await rest.put(
