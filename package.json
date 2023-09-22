@@ -27,6 +27,7 @@
 	"devDependencies": {
 		"@types/node": "^20.3.1",
 		"@types/pg": "^8.10.2",
+		"cross-env": "^7.0.3",
 		"dotenv": "^16.3.1",
 		"eslint": "^8.47.0",
 		"eslint-plugin-import": "^2.28.1",
