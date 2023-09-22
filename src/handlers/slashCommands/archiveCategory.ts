@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 	TextChannel,
 } from "discord.js";
-import { Command } from "../../interfaces/command";
+import { Command } from "../../interfaces";
 
 export const archiveCategory: Command = {
 	data: new SlashCommandBuilder()

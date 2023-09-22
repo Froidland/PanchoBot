@@ -1,11 +1,15 @@
-import { CommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import {
+	CommandInteraction,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
+} from "discord.js";
 import { Command } from "../../interfaces/command";
 
-export const stealEmoji: Command = {
+export const addEmoji: Command = {
 	data: new SlashCommandBuilder()
-		.setName("steal-emoji")
+		.setName("add-emoji")
 		.setDescription(
-			"Fetches an emoji from another server and adds it to the one where the command was executed."
+			"Adds the first specified emoji to the server where the command is executed."
 		)
 		.addStringOption((option) =>
 			option
