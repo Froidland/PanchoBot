@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^20.6.3
     version: 20.6.3
   '@types/pg':
-    specifier: ^8.10.2
-    version: 8.10.2
+    specifier: ^8.10.3
+    version: 8.10.3
   cross-env:
     specifier: ^7.0.3
     version: 7.0.3
@@ -499,8 +499,8 @@ packages:
   /@types/node@20.6.3:
     resolution: {integrity: sha512-HksnYH4Ljr4VQgEy2lTStbCKv/P590tmPe5HqOnv9Gprffgv5WXAY+Y5Gqniu0GGqeTCUdBnzC3QSrzPkBkAMA==}
 
-  /@types/pg@8.10.2:
-    resolution: {integrity: sha512-MKFs9P6nJ+LAeHLU3V0cODEOgyThJ3OAnmOlsZsxux6sfQs3HRXR5bBn7xG5DjckEFhTAxsXi7k7cd0pCMxpJw==}
+  /@types/pg@8.10.3:
+    resolution: {integrity: sha512-BACzsw64lCZesclRpZGu55tnqgFAYcrCBP92xLh1KLypZLCOsvJTSTgaoFVTy3lCys/aZTQzfeDxtjwrvdzL2g==}
     dependencies:
       '@types/node': 20.6.3
       pg-protocol: 1.6.0
