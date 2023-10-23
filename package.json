@@ -15,7 +15,7 @@
 	"dependencies": {
 		"@paralleldrive/cuid2": "^2.2.2",
 		"discord.js": "^14.13.0",
-		"esbuild": "^0.19.3",
+		"esbuild": "^0.19.5",
 		"kysely": "^0.26.3",
 		"mysql2": "^3.6.1",
 		"osu-api-extended": "^2.7.67",
