@@ -81,7 +81,7 @@ export const addEmoji: SlashCommand = {
 
 		try {
 			const createdEmoji = await interaction.guild.emojis.create({
-				name: name,
+				name: emojiName || name,
 				attachment: emojiAttachment,
 			});
 
