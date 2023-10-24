@@ -3,9 +3,9 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import { Command } from "../../interfaces/command";
+import { SlashCommand } from "../../interfaces/slashCommand";
 
-export const addEmoji: Command = {
+export const addEmoji: SlashCommand = {
 	data: new SlashCommandBuilder()
 		.setName("add-emoji")
 		.setDescription(

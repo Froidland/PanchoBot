@@ -5,7 +5,7 @@ import {
 	SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
 
-export interface Command {
+export interface SlashCommand {
 	data:
 		| Omit<SlashCommandBuilder, "addSubcommandGroup" | "addSubcommand">
 		| SlashCommandSubcommandsOnlyBuilder;
