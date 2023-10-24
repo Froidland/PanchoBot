@@ -4,12 +4,12 @@ const { combine, timestamp, printf, colorize } = winston.format;
 const logDatePattern = process.env.LOG_DATE_PATTERN ?? "DD-MM-YYYY";
 
 export const logger = winston.createLogger({
-	level: "info",
+	level: process.env.NODE_ENV === "development" ? "debug" : "info",
 	format: combine(
 		timestamp(),
 		printf(({ timestamp, level, message }) => {
 			return `${timestamp} [${level}] ${message}`;
-		})
+		}),
 	),
 	transports: [
 		new DailyRotateFile({
@@ -25,7 +25,7 @@ export const logger = winston.createLogger({
 				timestamp(),
 				printf(({ timestamp, level, message }) => {
 					return `${timestamp} [${level}] ${message}`;
-				})
+				}),
 			),
 		}),
 		new DailyRotateFile({
@@ -40,7 +40,7 @@ export const logger = winston.createLogger({
 				timestamp(),
 				printf(({ timestamp, level, message }) => {
 					return `${timestamp} [${level}] ${message}`;
-				})
+				}),
 			),
 		}),
 		new winston.transports.Console({
@@ -49,7 +49,7 @@ export const logger = winston.createLogger({
 				colorize(),
 				printf(({ timestamp, level, message }) => {
 					return `${timestamp} [${level}] ${message}`;
-				})
+				}),
 			),
 		}),
 	],

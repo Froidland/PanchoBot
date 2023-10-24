@@ -1,19 +1,34 @@
-import { Kysely, MysqlDialect } from "kysely";
-import mysql from "mysql2";
-import { DB } from "./schema";
+import { PrismaClient } from "@prisma/client";
 
-const pool = mysql.createPool({
-	host: process.env.DATABASE_HOST ?? "localhost",
-	port: +(process.env.DATABASE_PORT ?? 3306),
-	user: process.env.DATABASE_USER ?? null,
-	password: process.env.DATABASE_PASSWORD ?? null,
-	database: process.env.DATABASE_DB ?? null,
-});
+function getPrismaClient() {
+	if (process.env.NODE_ENV === "development") {
+		const client = new PrismaClient({
+			log: [
+				{
+					level: "query",
+					emit: "event",
+				},
+				{
+					level: "info",
+					emit: "event",
+				},
+				{
+					level: "warn",
+					emit: "event",
+				},
+				{
+					level: "error",
+					emit: "event",
+				},
+			],
+		});
 
-export const db = new Kysely<DB>({
-	dialect: new MysqlDialect({
-		pool,
-	}),
-});
+		return client;
+	}
+
+	return new PrismaClient();
+}
+
+const db = getPrismaClient();
 
 export default db;

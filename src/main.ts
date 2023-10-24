@@ -1,23 +1,23 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import { auth } from "osu-api-extended";
 import logger from "./utils/logger";
 import { onInteraction, onMessageCreate, onReady } from "./events";
+import db from "./db";
+
+export const discordClient = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+	],
+});
 
 (async () => {
-	const client = new Client({
-		intents: [
-			GatewayIntentBits.Guilds,
-			GatewayIntentBits.GuildMessages,
-			GatewayIntentBits.MessageContent,
-		],
-	});
-
-	client.once(Events.ClientReady, async (client) => {
+	discordClient.once(Events.ClientReady, async (client) => {
 		logger.info(`Logged in as ${client.user.tag}`);
 		await onReady(client);
 	});
 
-	client.on(Events.InteractionCreate, async (interaction) => {
+	discordClient.on(Events.InteractionCreate, async (interaction) => {
 		try {
 			await onInteraction(interaction);
 		} catch (error) {
@@ -25,7 +25,7 @@ import { onInteraction, onMessageCreate, onReady } from "./events";
 		}
 	});
 
-	client.on(Events.Error, async (error) => {
+	discordClient.on(Events.Error, async (error) => {
 		logger.error(error.stack);
 
 		if (error.name == "ConnectTimeoutError") {
@@ -33,20 +33,37 @@ import { onInteraction, onMessageCreate, onReady } from "./events";
 		}
 	});
 
-	client.on(Events.MessageCreate, async (message) => {
+	discordClient.on(Events.MessageCreate, async (message) => {
 		await onMessageCreate(message);
 	});
 
+	if (process.env.NODE_ENV === "development") {
+		logger.info("Using PrismaClient with logging enabled.");
+
+		db.$on("info", (e) => {
+			logger.debug(e.message);
+		});
+
+		db.$on("warn", (e) => {
+			logger.warn(e.message);
+		});
+
+		db.$on("query", (e) => {
+			logger.debug(e.duration + "ms " + e.query);
+		});
+
+		db.$on("error", (e) => {
+			logger.error(e.message);
+		});
+	}
+
 	try {
-		await auth.login(
-			+process.env.OSU_CLIENT_ID,
-			process.env.OSU_CLIENT_SECRET,
-			["public"]
-		);
-		await client.login(process.env.BOT_TOKEN);
+		await discordClient.login(process.env.BOT_TOKEN);
+
+		await db.$connect();
 	} catch (error) {
 		logger.error(
-			`There was an error while trying to start the bot. Reason: ${error}`
+			`There was an error while trying to start the bot. Reason: ${error}`,
 		);
 		process.exit(1);
 	}

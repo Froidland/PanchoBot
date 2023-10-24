@@ -1,28 +1,30 @@
 import {
 	CommandInteraction,
+	EmbedBuilder,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
 import { SlashCommand } from "../../interfaces/slashCommand";
+import { logger } from "../../utils";
 
 export const addEmoji: SlashCommand = {
 	data: new SlashCommandBuilder()
 		.setName("add-emoji")
 		.setDescription(
-			"Adds the first specified emoji to the server where the command is executed."
+			"Adds the first specified emoji to the server where the command is executed.",
 		)
 		.addStringOption((option) =>
 			option
 				.setName("emoji")
 				.setDescription("Emoji to steal.")
-				.setRequired(true)
+				.setRequired(true),
 		)
 		.addStringOption((option) =>
 			option
 				.setName("name")
 				.setDescription("Name of the emoji.")
 				.setMinLength(2)
-				.setRequired(false)
+				.setRequired(false),
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions)
 		.setDMPermission(false),
@@ -43,7 +45,15 @@ export const addEmoji: SlashCommand = {
 		const match = emoji.match(emojiRegex);
 
 		if (!match) {
-			await interaction.editReply("Invalid emoji.");
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("Invalid emoji."),
+				],
+			});
+
 			return;
 		}
 
@@ -55,17 +65,47 @@ export const addEmoji: SlashCommand = {
 		const emojiResponse = await fetch(url);
 
 		if (!emojiResponse.ok) {
-			await interaction.editReply("Failed to fetch emoji.");
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("Failed to fetch emoji."),
+				],
+			});
+
 			return;
 		}
 
 		const emojiAttachment = Buffer.from(await emojiResponse.arrayBuffer());
 
-		const createdEmoji = await interaction.guild.emojis.create({
-			name: emojiName || name,
-			attachment: emojiAttachment,
-		});
+		try {
+			const createdEmoji = await interaction.guild.emojis.create({
+				name: name,
+				attachment: emojiAttachment,
+			});
 
-		await interaction.editReply(`Added emoji ${createdEmoji}`);
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Green")
+						.setTitle("Success")
+						.setDescription(`Added emoji ${createdEmoji}.`),
+				],
+			});
+		} catch (error) {
+			logger.error(error);
+
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription(
+							"An error ocurred while trying to add the emoji. Please try again later.",
+						),
+				],
+			});
+		}
 	},
 };

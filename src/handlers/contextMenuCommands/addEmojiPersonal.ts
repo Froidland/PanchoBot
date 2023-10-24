@@ -6,11 +6,13 @@ import {
 	MessageContextMenuCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
+import { discordClient } from "../../main";
+import db from "../../db";
 import { logger } from "../../utils";
 
-export const addEmoji: ContextMenuCommand = {
+export const addEmojiPersonal: ContextMenuCommand = {
 	data: new ContextMenuCommandBuilder()
-		.setName("Add emoji")
+		.setName("Add emoji (personal)")
 		.setType(ApplicationCommandType.Message)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions)
 		.setDMPermission(false),
@@ -19,13 +21,38 @@ export const addEmoji: ContextMenuCommand = {
 
 		interaction = interaction as MessageContextMenuCommandInteraction;
 
-		if (!interaction.guildId) {
+		const user = await db.user.findFirst({
+			where: {
+				discord_id: interaction.user.id,
+			},
+		});
+
+		if (!user || !user.personal_server_id) {
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
 						.setColor("Red")
 						.setTitle("Error")
-						.setDescription("This command can only be used in a server."),
+						.setDescription(
+							"You must set a personal server in order to use this command.",
+						),
+				],
+			});
+
+			return;
+		}
+
+		const guild = await discordClient.guilds.fetch(user.personal_server_id);
+
+		if (guild.ownerId !== interaction.user.id) {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription(
+							"You must be the owner of the personal server in order to use this command.",
+						),
 				],
 			});
 
@@ -71,7 +98,7 @@ export const addEmoji: ContextMenuCommand = {
 		const emojiAttachment = Buffer.from(await emojiResponse.arrayBuffer());
 
 		try {
-			const createdEmoji = await interaction.guild.emojis.create({
+			const createdEmoji = await guild.emojis.create({
 				name: name,
 				attachment: emojiAttachment,
 			});
@@ -81,7 +108,9 @@ export const addEmoji: ContextMenuCommand = {
 					new EmbedBuilder()
 						.setColor("Green")
 						.setTitle("Success")
-						.setDescription(`Added emoji ${createdEmoji}.`),
+						.setDescription(
+							`Added emoji ${createdEmoji} to your personal server.`,
+						),
 				],
 			});
 		} catch (error) {
