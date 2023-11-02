@@ -103,6 +103,10 @@ export const addEmojiPersonal: ContextMenuCommand = {
 				attachment: emojiAttachment,
 			});
 
+			logger.info(
+				`user ${interaction.user.id} added emoji ${createdEmoji.id} to personal guild ${guild.id}`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()

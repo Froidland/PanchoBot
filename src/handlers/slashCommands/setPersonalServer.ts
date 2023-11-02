@@ -56,6 +56,10 @@ export const setPersonalServer: SlashCommand = {
 				},
 			});
 
+			logger.info(
+				`user ${userId} (${interaction.user.globalName}) set personal server to ${interaction.guildId}`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()

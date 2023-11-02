@@ -76,6 +76,10 @@ export const addEmoji: ContextMenuCommand = {
 				attachment: emojiAttachment,
 			});
 
+			logger.info(
+				`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guildId}`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
