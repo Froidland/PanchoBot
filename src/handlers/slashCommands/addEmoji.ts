@@ -1,6 +1,7 @@
 import {
 	CommandInteraction,
 	EmbedBuilder,
+	GuildEmoji,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -78,9 +79,10 @@ export const addEmoji: SlashCommand = {
 		}
 
 		const emojiAttachment = Buffer.from(await emojiResponse.arrayBuffer());
+		let createdEmoji: GuildEmoji;
 
 		try {
-			const createdEmoji = await interaction.guild.emojis.create({
+			createdEmoji = await interaction.guild.emojis.create({
 				name: emojiName || name,
 				attachment: emojiAttachment,
 			});
@@ -88,15 +90,6 @@ export const addEmoji: SlashCommand = {
 			logger.info(
 				`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guildId}`,
 			);
-
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder()
-						.setColor("Green")
-						.setTitle("Success")
-						.setDescription(`Added emoji ${createdEmoji}.`),
-				],
-			});
 		} catch (error) {
 			logger.error(error);
 
@@ -110,6 +103,17 @@ export const addEmoji: SlashCommand = {
 						),
 				],
 			});
+
+			return;
 		}
+
+		await interaction.editReply({
+			embeds: [
+				new EmbedBuilder()
+					.setColor("Green")
+					.setTitle("Success")
+					.setDescription(`Added emoji ${createdEmoji}.`),
+			],
+		});
 	},
 };

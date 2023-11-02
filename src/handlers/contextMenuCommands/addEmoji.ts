@@ -3,6 +3,7 @@ import {
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
 	EmbedBuilder,
+	GuildEmoji,
 	MessageContextMenuCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
@@ -69,9 +70,10 @@ export const addEmoji: ContextMenuCommand = {
 		}
 
 		const emojiAttachment = Buffer.from(await emojiResponse.arrayBuffer());
+		let createdEmoji: GuildEmoji;
 
 		try {
-			const createdEmoji = await interaction.guild.emojis.create({
+			createdEmoji = await interaction.guild.emojis.create({
 				name: name,
 				attachment: emojiAttachment,
 			});
@@ -79,15 +81,6 @@ export const addEmoji: ContextMenuCommand = {
 			logger.info(
 				`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guildId}`,
 			);
-
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder()
-						.setColor("Green")
-						.setTitle("Success")
-						.setDescription(`Added emoji ${createdEmoji}.`),
-				],
-			});
 		} catch (error) {
 			logger.error(error);
 
@@ -101,6 +94,17 @@ export const addEmoji: ContextMenuCommand = {
 						),
 				],
 			});
+
+			return;
 		}
+
+		await interaction.editReply({
+			embeds: [
+				new EmbedBuilder()
+					.setColor("Green")
+					.setTitle("Success")
+					.setDescription(`Added emoji ${createdEmoji}.`),
+			],
+		});
 	},
 };

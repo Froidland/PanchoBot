@@ -59,17 +59,6 @@ export const setPersonalServer: SlashCommand = {
 			logger.info(
 				`user ${userId} (${interaction.user.globalName}) set personal server to ${interaction.guildId}`,
 			);
-
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder()
-						.setColor("Green")
-						.setTitle("Success")
-						.setDescription(
-							"The current server has been set as your personal server.",
-						),
-				],
-			});
 		} catch (error) {
 			logger.error(error);
 
@@ -83,6 +72,19 @@ export const setPersonalServer: SlashCommand = {
 						),
 				],
 			});
+
+			return;
 		}
+
+		await interaction.editReply({
+			embeds: [
+				new EmbedBuilder()
+					.setColor("Green")
+					.setTitle("Success")
+					.setDescription(
+						"The current server has been set as your personal server.",
+					),
+			],
+		});
 	},
 };
