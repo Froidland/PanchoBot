@@ -14,7 +14,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"@paralleldrive/cuid2": "^2.2.2",
-		"@prisma/client": "5.4.2",
+		"@prisma/client": "5.5.2",
 		"discord.js": "^14.13.0",
 		"prettier": "^3.0.3",
 		"typescript": "^5.2.2",
@@ -22,7 +22,7 @@
 		"winston-daily-rotate-file": "^4.7.1"
 	},
 	"devDependencies": {
-		"@types/node": "^20.8.8",
+		"@types/node": "^20.8.10",
 		"@types/pg": "^8.10.7",
 		"cross-env": "^7.0.3",
 		"dotenv": "^16.3.1",
@@ -30,7 +30,7 @@
 		"eslint-plugin-import": "^2.29.0",
 		"eslint-plugin-n": "^16.2.0",
 		"eslint-plugin-promise": "^6.1.1",
-		"prisma": "^5.4.2",
+		"prisma": "^5.5.2",
 		"ts-node": "^10.9.1"
 	},
 	"prettier": {
