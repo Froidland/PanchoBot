@@ -5,42 +5,43 @@ import logger from "../utils/logger";
 export const onReady = async (client: Client) => {
 	const rest = new REST().setToken(process.env.BOT_TOKEN);
 	const slashCommandsData = slashCommandList.map((command) =>
-		command.data.toJSON()
+		command.data.toJSON(),
 	);
 	const contextMenuCommandsData = contextMenuCommandList.map((command) =>
-		command.data.toJSON()
+		command.data.toJSON(),
 	);
 
 	if (process.env.DEV_GUILD_ID) {
-		await rest.put(
-			Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID),
-			{ body: [...slashCommandsData, ...contextMenuCommandsData] }
-		);
+		try {
+			await rest.put(
+				Routes.applicationGuildCommands(
+					client.user.id,
+					process.env.DEV_GUILD_ID,
+				),
+				{ body: [...slashCommandsData, ...contextMenuCommandsData] },
+			);
+		} catch (error) {
+			logger.error(
+				`Unable to register guild commands for guild ${process.env.DEV_GUILD_ID}: ${error}`,
+			);
 
-		logger.info("Registered guild commands successfully!");
+			process.exit(1);
+		}
+
+		logger.info(`Registered commands for guild ${process.env.DEV_GUILD_ID}`);
 
 		return;
 	}
 
-	await rest.put(Routes.applicationCommands(client.user.id), {
-		body: [...slashCommandsData, ...contextMenuCommandsData],
-	});
-	logger.info("Registered global commands successfully!");
+	try {
+		await rest.put(Routes.applicationCommands(client.user.id), {
+			body: [...slashCommandsData, ...contextMenuCommandsData],
+		});
+	} catch (error) {
+		logger.error(`Unable to register global commands: ${error}`);
 
-	// Command deletion.
-	/* 
-  // for guild-based commands
-  await rest
-    .put(
-      Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID),
-      { body: [] }
-    )
-    .then(() => console.log("Successfully deleted all guild commands."))
-    .catch(console.error);
+		process.exit(1);
+	}
 
-  // for global commands
-  await rest
-    .put(Routes.applicationCommands(client.user.id), { body: [] })
-    .then(() => console.log("Successfully deleted all application commands."))
-    .catch(console.error); */
+	logger.info("Registered global commands successfully");
 };
