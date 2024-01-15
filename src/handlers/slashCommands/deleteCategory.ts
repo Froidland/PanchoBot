@@ -19,7 +19,8 @@ export const deleteCategory: SlashCommand = {
 				.addChannelTypes(ChannelType.GuildCategory)
 				.setRequired(true),
 		)
-		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+		.setDMPermission(false),
 	execute: async (interaction: ChatInputCommandInteraction) => {
 		await interaction.deferReply();
 
