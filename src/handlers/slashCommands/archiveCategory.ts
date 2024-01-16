@@ -171,7 +171,7 @@ export const archiveCategory: SlashCommand = {
 
 		for (const channel of sourceChannels.values()) {
 			const channelName = prefixOption
-				? `${prefixOption} ${channel.name}`
+				? `${prefixOption}-${channel.name}`
 				: channel.name;
 
 			try {
