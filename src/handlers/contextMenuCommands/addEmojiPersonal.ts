@@ -29,6 +29,10 @@ export const addEmojiPersonal: ContextMenuCommand = {
 		});
 
 		if (!user || !user.personal_server_id) {
+			logger.error(
+				`user ${interaction.user.id} failed to add emoji to personal server: user doesn't have a personal server`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -46,6 +50,10 @@ export const addEmojiPersonal: ContextMenuCommand = {
 		const guild = await discordClient.guilds.fetch(user.personal_server_id);
 
 		if (guild.ownerId !== interaction.user.id) {
+			logger.error(
+				`user ${interaction.user.id} failed to add emoji to personal server ${user.personal_server_id} in guild ${interaction.guildId}: user is not the owner of the personal server`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -109,7 +117,9 @@ export const addEmojiPersonal: ContextMenuCommand = {
 				`user ${interaction.user.id} added emoji ${createdEmoji.id} to personal guild ${guild.id}`,
 			);
 		} catch (error) {
-			logger.error(error);
+			logger.error(
+				`user ${interaction.user.id} failed to add emoji to personal guild ${user.personal_server_id} in guild ${interaction.guildId}: ${error}`,
+			);
 
 			await interaction.editReply({
 				embeds: [

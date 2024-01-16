@@ -41,11 +41,15 @@ export const deleteCategory: SlashCommand = {
 		for (const channel of categoryChildrenChannels.values()) {
 			try {
 				await channel.delete();
+
+				logger.info(
+					`user ${interaction.user.id} deleted channel ${channel.id} in guild ${interaction.guildId}`,
+				);
 			} catch (error) {
 				failedDeletionIds.push(channel.id);
 
 				logger.error(
-					`failed to delete channel ${channel.id} in guild ${interaction.guildId}: ${error}`,
+					`user ${interaction.user.id} failed to delete channel ${channel.id} in guild ${interaction.guildId}: ${error}`,
 				);
 
 				continue;
@@ -53,6 +57,10 @@ export const deleteCategory: SlashCommand = {
 		}
 
 		if (failedDeletionIds.length === categoryChildrenChannels.size) {
+			logger.info(
+				`user ${interaction.user.id} failed to delete category ${categoryChannel.id} in guild ${interaction.guildId}`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -64,14 +72,14 @@ export const deleteCategory: SlashCommand = {
 				],
 			});
 
-			logger.info(
-				`user ${interaction.user.id} failed to delete category ${categoryChannel.id} in guild ${interaction.guildId}`,
-			);
-
 			return;
 		}
 
 		if (failedDeletionIds.length > 0) {
+			logger.info(
+				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} (${categoryChildrenChannels.size - failedDeletionIds.length} channels) in guild ${interaction.guildId}`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -84,16 +92,20 @@ export const deleteCategory: SlashCommand = {
 				],
 			});
 
-			logger.info(
-				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} in guild ${interaction.guildId}`,
-			);
-
 			return;
 		}
 
 		try {
 			await categoryChannel.delete();
 		} catch (error) {
+			logger.error(
+				`failed to delete category ${categoryChannel.id} in guild ${interaction.guildId}: ${error}`,
+			);
+
+			logger.info(
+				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels) in guild ${interaction.guildId}`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -105,16 +117,12 @@ export const deleteCategory: SlashCommand = {
 				],
 			});
 
-			logger.error(
-				`failed to delete category ${categoryChannel.id} in guild ${interaction.guildId}: ${error}`,
-			);
-
-			logger.info(
-				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} in guild ${interaction.guildId}`,
-			);
-
 			return;
 		}
+
+		logger.info(
+			`user ${interaction.user.id} deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels) in guild ${interaction.guildId}`,
+		);
 
 		await interaction.editReply({
 			embeds: [
@@ -124,9 +132,5 @@ export const deleteCategory: SlashCommand = {
 					.setDescription("The category and all its channels were deleted."),
 			],
 		});
-
-		logger.info(
-			`user ${interaction.user.id} deleted category ${categoryChannel.id} in guild ${interaction.guildId}`,
-		);
 	},
 };

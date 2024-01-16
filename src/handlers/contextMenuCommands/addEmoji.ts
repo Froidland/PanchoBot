@@ -21,6 +21,10 @@ export const addEmoji: ContextMenuCommand = {
 		interaction = interaction as MessageContextMenuCommandInteraction;
 
 		if (!interaction.guildId) {
+			logger.error(
+				`user ${interaction.user.id} failed to add emoji: executed outside of a guild`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -57,6 +61,10 @@ export const addEmoji: ContextMenuCommand = {
 		const emojiResponse = await fetch(url);
 
 		if (!emojiResponse.ok) {
+			logger.error(
+				`user ${interaction.user.id} failed to fetch emoji in guild ${interaction.guildId}: ${emojiResponse.statusText}`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -77,12 +85,10 @@ export const addEmoji: ContextMenuCommand = {
 				name: name,
 				attachment: emojiAttachment,
 			});
-
-			logger.info(
-				`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guildId}`,
-			);
 		} catch (error) {
-			logger.error(error);
+			logger.error(
+				`user ${interaction.user.id} failed to add emoji to guild ${interaction.guildId}: ${error}`,
+			);
 
 			await interaction.editReply({
 				embeds: [
@@ -97,6 +103,10 @@ export const addEmoji: ContextMenuCommand = {
 
 			return;
 		}
+
+		logger.info(
+			`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guildId}`,
+		);
 
 		await interaction.editReply({
 			embeds: [

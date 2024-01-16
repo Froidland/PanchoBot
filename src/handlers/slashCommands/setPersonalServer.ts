@@ -15,6 +15,10 @@ export const setPersonalServer: SlashCommand = {
 
 		//? Will never happen becuase the command doesn't exist on DMs.
 		if (!interaction.guildId) {
+			logger.error(
+				`user ${interaction.user.id} failed to set personal server: executed outside of a guild`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -28,6 +32,10 @@ export const setPersonalServer: SlashCommand = {
 		}
 
 		if (interaction.guild.ownerId !== userId) {
+			logger.error(
+				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guildId}: user is not the owner of the server`,
+			);
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -55,12 +63,10 @@ export const setPersonalServer: SlashCommand = {
 					personal_server_id: interaction.guildId,
 				},
 			});
-
-			logger.info(
-				`user ${userId} (${interaction.user.globalName}) set personal server to ${interaction.guildId}`,
-			);
 		} catch (error) {
-			logger.error(error);
+			logger.error(
+				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guildId}: ${error}`,
+			);
 
 			await interaction.editReply({
 				embeds: [
@@ -75,6 +81,10 @@ export const setPersonalServer: SlashCommand = {
 
 			return;
 		}
+
+		logger.info(
+			`user ${userId} (${interaction.user.globalName}) set personal server to ${interaction.guildId}`,
+		);
 
 		await interaction.editReply({
 			embeds: [
