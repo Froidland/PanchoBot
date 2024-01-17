@@ -238,6 +238,10 @@ export const archiveCategory: SlashCommand = {
 
 				return;
 			}
+
+			logger.info(
+				`(/${interaction.commandName}) user ${interaction.user.id} deleted category ${sourceOption.id} in guild ${interaction.guild.id}`,
+			);
 		}
 
 		logger.info(
