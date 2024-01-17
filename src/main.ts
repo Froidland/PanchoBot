@@ -1,5 +1,5 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import logger from "./utils/logger";
+import { logger } from "./utils/logger";
 import { onInteraction, onMessageCreate, onReady } from "./events";
 import db from "./db";
 
@@ -12,48 +12,97 @@ export const discordClient = new Client({
 });
 
 (async () => {
-	discordClient.once(Events.ClientReady, async (client) => {
-		logger.info(`Logged in as ${client.user.tag}`);
-		await onReady(client);
+	discordClient.once(Events.ClientReady, (client) => {
+		logger.info({
+			type: "system",
+			commandName: null,
+			userId: null,
+			guildId: null,
+			message: `logged in as ${client.user.tag}`,
+		});
+
+		onReady(client);
 	});
 
 	discordClient.on(Events.InteractionCreate, async (interaction) => {
 		try {
 			await onInteraction(interaction);
 		} catch (error) {
-			logger.error(`InteractionError: ${error}`);
+			logger.error({
+				type: "system",
+				commandName: null,
+				userId: interaction.user.id,
+				guildId: interaction.guild?.id || null,
+				message: `InteractionError: ${error}`,
+			});
 		}
 	});
 
 	discordClient.on(Events.Error, async (error) => {
-		logger.error(error.stack);
+		logger.error({
+			type: "system",
+			commandName: null,
+			userId: null,
+			guildId: null,
+			message: `DiscordError: ${error}`,
+		});
 
 		if (error.name == "ConnectTimeoutError") {
 			process.exit(1);
 		}
 	});
 
-	discordClient.on(Events.MessageCreate, async (message) => {
-		await onMessageCreate(message);
+	discordClient.on(Events.MessageCreate, (message) => {
+		onMessageCreate(message);
 	});
 
 	if (process.env.NODE_ENV === "development") {
-		logger.info("Using PrismaClient with logging enabled.");
+		logger.info({
+			type: "system",
+			commandName: null,
+			userId: null,
+			guildId: null,
+			message: "using PrismaClient with logging enabled",
+		});
 
 		db.$on("info", (e) => {
-			logger.debug(e.message);
+			logger.debug({
+				type: "prisma-info",
+				commandName: null,
+				userId: null,
+				guildId: null,
+				message: e.message,
+			});
 		});
 
 		db.$on("warn", (e) => {
-			logger.warn(e.message);
+			logger.warn({
+				type: "prisma-warning",
+				commandName: null,
+				userId: null,
+				guildId: null,
+				message: e.message,
+			});
 		});
 
 		db.$on("query", (e) => {
-			logger.debug(e.duration + "ms " + e.query);
+			logger.debug({
+				type: "prisma-query",
+				commandName: null,
+				userId: null,
+				guildId: null,
+				message: `${e.duration}ms ${e.query}`,
+			});
 		});
 
 		db.$on("error", (e) => {
-			logger.error(e.message);
+			logger.error({
+				type: "prisma-error",
+				commandName: null,
+				userId: null,
+				guildId: null,
+				message: e.message,
+			});
 		});
 	}
 
@@ -62,9 +111,14 @@ export const discordClient = new Client({
 
 		await db.$connect();
 	} catch (error) {
-		logger.error(
-			`There was an error while trying to start the bot. Reason: ${error}`,
-		);
+		logger.error({
+			type: "system",
+			commandName: null,
+			userId: null,
+			guildId: null,
+			message: `error while trying to start the bot: ${error}`,
+		});
+
 		process.exit(1);
 	}
 })();

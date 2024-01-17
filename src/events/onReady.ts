@@ -1,6 +1,6 @@
 import { Client, REST, Routes } from "discord.js";
 import { slashCommandList, contextMenuCommandList } from "../handlers";
-import logger from "../utils/logger";
+import { logger } from "../utils/logger";
 
 export const onReady = async (client: Client) => {
 	const rest = new REST().setToken(process.env.BOT_TOKEN);
@@ -21,14 +21,24 @@ export const onReady = async (client: Client) => {
 				{ body: [...slashCommandsData, ...contextMenuCommandsData] },
 			);
 		} catch (error) {
-			logger.error(
-				`Unable to register guild commands for guild ${process.env.DEV_GUILD_ID}: ${error}`,
-			);
+			logger.error({
+				type: "system",
+				commandName: null,
+				userId: null,
+				guildId: null,
+				message: `unable to register guild commands for guild ${process.env.DEV_GUILD_ID}: ${error}`,
+			});
 
 			process.exit(1);
 		}
 
-		logger.info(`Registered commands for guild ${process.env.DEV_GUILD_ID}`);
+		logger.info({
+			type: "system",
+			commandName: null,
+			userId: null,
+			guildId: null,
+			message: `registered commands for guild ${process.env.DEV_GUILD_ID} (${slashCommandList.length} slash, ${contextMenuCommandList.length} context menu)`,
+		});
 
 		return;
 	}
@@ -38,10 +48,22 @@ export const onReady = async (client: Client) => {
 			body: [...slashCommandsData, ...contextMenuCommandsData],
 		});
 	} catch (error) {
-		logger.error(`Unable to register global commands: ${error}`);
+		logger.error({
+			type: "system",
+			commandName: null,
+			userId: null,
+			guildId: null,
+			message: `unable to register global commands: ${error}`,
+		});
 
 		process.exit(1);
 	}
 
-	logger.info("Registered global commands successfully");
+	logger.info({
+		type: "system",
+		commandName: null,
+		userId: null,
+		guildId: null,
+		message: `registered global commands (${slashCommandList.length} slash, ${contextMenuCommandList.length} context menu)`,
+	});
 };

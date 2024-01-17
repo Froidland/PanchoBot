@@ -81,9 +81,13 @@ export const archiveCategory: SlashCommand = {
 		}
 
 		if (sourceOption.id === targetOption.id) {
-			logger.error(
-				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: source and target are the same`,
-			);
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `failed to archive category ${sourceOption.id} to ${targetOption.id}: source and target are the same`,
+			});
 
 			await interaction.editReply({
 				embeds: [
@@ -103,9 +107,13 @@ export const archiveCategory: SlashCommand = {
 		try {
 			guildChannels = await interaction.guild.channels.fetch();
 		} catch (error) {
-			logger.error(
-				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
-			);
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `failed to fetch channels: ${error}`,
+			});
 
 			await interaction.editReply({
 				embeds: [
@@ -130,9 +138,13 @@ export const archiveCategory: SlashCommand = {
 		);
 
 		if (sourceChannels.size < 1) {
-			logger.error(
-				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: source category has no channels`,
-			);
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `failed to archive category ${sourceOption.id} to ${targetOption.id}: source category has no channels`,
+			});
 
 			await interaction.editReply({
 				embeds: [
@@ -149,9 +161,13 @@ export const archiveCategory: SlashCommand = {
 		}
 
 		if (sourceChannels.size + targetChannels.size > 50) {
-			logger.error(
-				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: target category would exceed channel limit`,
-			);
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `failed to archive category ${sourceOption.id} to ${targetOption.id}: target category would exceed channel limit`,
+			});
 
 			await interaction.editReply({
 				embeds: [
@@ -181,23 +197,35 @@ export const archiveCategory: SlashCommand = {
 					permissionOverwrites: targetChannelPermissions,
 				});
 			} catch (error) {
-				logger.error(
-					`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
-				);
+				logger.error({
+					type: "slash-command",
+					commandName: interaction.commandName,
+					userId: interaction.user.id,
+					guildId: interaction.guild.id,
+					message: `failed to edit channel ${channel.id}: ${error}`,
+				});
 
 				failedChannels.push(channel);
 				continue;
 			}
 
-			logger.info(
-				`(/${interaction.commandName}) user ${interaction.user.id} archived channel ${channel.id} to ${targetOption.id} in guild ${interaction.guild.id}`,
-			);
+			logger.info({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `edited channel ${channel.id}`,
+			});
 		}
 
 		if (failedChannels.length > 0) {
-			logger.error(
-				`(/${interaction.commandName}) user ${interaction.user.id} partially archived category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${failedChannels.length} channels failed`,
-			);
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `partially archived category ${sourceOption.id} to ${targetOption.id}: ${failedChannels.length} channels failed`,
+			});
 
 			await interaction.editReply({
 				embeds: [
@@ -221,9 +249,21 @@ export const archiveCategory: SlashCommand = {
 
 				await sourceChannel.delete();
 			} catch (error) {
-				logger.error(
-					`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
-				);
+				logger.error({
+					type: "slash-command",
+					commandName: interaction.commandName,
+					userId: interaction.user.id,
+					guildId: interaction.guild.id,
+					message: `failed to delete category ${sourceOption.id}: ${error}`,
+				});
+
+				logger.info({
+					type: "slash-command",
+					commandName: interaction.commandName,
+					userId: interaction.user.id,
+					guildId: interaction.guild.id,
+					message: `partially archived category ${sourceOption.id} to ${targetOption.id}`,
+				});
 
 				await interaction.editReply({
 					embeds: [
@@ -239,14 +279,22 @@ export const archiveCategory: SlashCommand = {
 				return;
 			}
 
-			logger.info(
-				`(/${interaction.commandName}) user ${interaction.user.id} deleted category ${sourceOption.id} in guild ${interaction.guild.id}`,
-			);
+			logger.info({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `deleted category ${sourceOption.id}`,
+			});
 		}
 
-		logger.info(
-			`(/${interaction.commandName}) user ${interaction.user.id} archived category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}`,
-		);
+		logger.info({
+			type: "slash-command",
+			commandName: interaction.commandName,
+			userId: interaction.user.id,
+			guildId: interaction.guild.id,
+			message: `archived category ${sourceOption.id} to ${targetOption.id}`,
+		});
 
 		await interaction.editReply({
 			embeds: [

@@ -1,58 +1,34 @@
-import DailyRotateFile = require("winston-daily-rotate-file");
 import * as winston from "winston";
-const { combine, timestamp, printf, colorize } = winston.format;
-const logDatePattern = process.env.LOG_DATE_PATTERN ?? "DD-MM-YYYY";
+const { prettyPrint, combine, json, timestamp } = winston.format;
+import { WinstonTransport as AxiomTransport } from "@axiomhq/winston";
 
 export const logger = winston.createLogger({
 	level: process.env.NODE_ENV === "development" ? "debug" : "info",
-	format: combine(
-		timestamp(),
-		printf(({ timestamp, level, message }) => {
-			return `${timestamp} [${level}] ${message}`;
-		}),
-	),
+	format: combine(json(), prettyPrint(), timestamp()),
 	transports: [
-		new DailyRotateFile({
-			filename: "panchobot-error-%DATE%",
-			extension: ".log",
-			dirname: "logs",
-			datePattern: logDatePattern,
-			zippedArchive: true,
-			maxSize: "20m",
-			maxFiles: "14d",
-			level: "error",
-			format: combine(
-				timestamp(),
-				printf(({ timestamp, level, message }) => {
-					return `${timestamp} [${level}] ${message}`;
-				}),
-			),
-		}),
-		new DailyRotateFile({
-			filename: "panchobot-main-%DATE%",
-			extension: ".log",
-			dirname: "logs",
-			datePattern: logDatePattern,
-			zippedArchive: true,
-			maxSize: "20m",
-			maxFiles: "14d",
-			format: combine(
-				timestamp(),
-				printf(({ timestamp, level, message }) => {
-					return `${timestamp} [${level}] ${message}`;
-				}),
-			),
-		}),
 		new winston.transports.Console({
-			format: winston.format.combine(
-				timestamp(),
-				colorize(),
-				printf(({ timestamp, level, message }) => {
-					return `${timestamp} [${level}] ${message}`;
-				}),
-			),
+			format: combine(json(), prettyPrint(), timestamp()),
 		}),
 	],
 });
 
-export default logger;
+if (process.env.AXIOM_DATASET && process.env.AXIOM_TOKEN) {
+	const axiomTransport = new AxiomTransport({
+		dataset: process.env.AXIOM_DATASET,
+		token: process.env.AXIOM_TOKEN,
+		format: combine(json(), prettyPrint(), timestamp()),
+	});
+
+	logger.add(axiomTransport);
+
+	logger.exceptions.handle(axiomTransport);
+	logger.rejections.handle(axiomTransport);
+
+	logger.info({
+		type: "system",
+		name: null,
+		user: null,
+		guild: null,
+		message: "added Axiom transport",
+	});
+}

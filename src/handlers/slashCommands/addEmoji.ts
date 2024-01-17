@@ -45,6 +45,14 @@ export const addEmoji: SlashCommand = {
 		const match = emoji.match(emojiRegex);
 
 		if (!match) {
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `invalid emoji provided: ${emoji}`,
+			});
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -65,9 +73,13 @@ export const addEmoji: SlashCommand = {
 		const emojiResponse = await fetch(url);
 
 		if (!emojiResponse.ok) {
-			logger.error(
-				`(/${interaction.commandName}) user ${interaction.user.id} failed to add emoji to guild ${interaction.guild.id}: ${emojiResponse.statusText}`,
-			);
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `failed to fetch emoji: ${emojiResponse.statusText}`,
+			});
 
 			await interaction.editReply({
 				embeds: [
@@ -90,9 +102,13 @@ export const addEmoji: SlashCommand = {
 				attachment: emojiAttachment,
 			});
 		} catch (error) {
-			logger.error(
-				`(/${interaction.commandName}) user ${interaction.user.id} failed to add emoji to guild ${interaction.guild.id}: ${error}`,
-			);
+			logger.error({
+				type: "slash-command",
+				commandName: interaction.commandName,
+				userId: interaction.user.id,
+				guildId: interaction.guild.id,
+				message: `failed to add emoji: ${error}`,
+			});
 
 			await interaction.editReply({
 				embeds: [
@@ -108,9 +124,13 @@ export const addEmoji: SlashCommand = {
 			return;
 		}
 
-		logger.info(
-			`(/${interaction.commandName}) user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guild.id}`,
-		);
+		logger.info({
+			type: "slash-command",
+			commandName: interaction.commandName,
+			userId: interaction.user.id,
+			guildId: interaction.guild.id,
+			message: `added emoji ${createdEmoji.id}`,
+		});
 
 		await interaction.editReply({
 			embeds: [
