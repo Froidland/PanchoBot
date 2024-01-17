@@ -56,7 +56,7 @@ export const addEmoji: ContextMenuCommand = {
 
 		if (!emojiResponse.ok) {
 			logger.error(
-				`(${interaction.commandName} menu)user ${interaction.user.id} failed to fetch emoji in guild ${interaction.guild.id}: ${emojiResponse.statusText}`,
+				`(${interaction.commandName} menu) user ${interaction.user.id} failed to fetch emoji in guild ${interaction.guild.id}: ${emojiResponse.statusText}`,
 			);
 
 			await interaction.editReply({
@@ -81,7 +81,7 @@ export const addEmoji: ContextMenuCommand = {
 			});
 		} catch (error) {
 			logger.error(
-				`(${interaction.commandName} (menu))user ${interaction.user.id} failed to add emoji to guild ${interaction.guild.id}: ${error}`,
+				`(${interaction.commandName} menu) user ${interaction.user.id} failed to add emoji to guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({
@@ -99,7 +99,7 @@ export const addEmoji: ContextMenuCommand = {
 		}
 
 		logger.info(
-			`(${interaction.commandName} (menu))user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guild.id}`,
+			`(${interaction.commandName} menu) user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guild.id}`,
 		);
 
 		await interaction.editReply({
