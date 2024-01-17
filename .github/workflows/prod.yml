@@ -2,7 +2,7 @@ name: Node.js CI/CD Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -20,18 +20,17 @@ jobs:
         run: docker build -t ${{secrets.DOCKER_USERNAME}}/panchobot .
 
       - name: Log into Docker and upload image
-        env: 
+        env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker push ${{secrets.DOCKER_USERNAME}}/panchobot
 
-
   deploy:
-    needs: [ build-docker-image ]
+    needs: [build-docker-image]
     environment:
-      name: 'Production'
+      name: "Production"
     runs-on: ubuntu-latest
 
     steps:
@@ -46,6 +45,4 @@ jobs:
             docker stop PanchoBot
             docker rm PanchoBot
             docker pull ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
-            docker run --restart=always -d --network=host --name PanchoBot --env-file ${{ secrets.SECRET_PATH }} ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
-
-    
+            docker run --restart=always -d --network=host --name ${{ secrets.CONTAINER_NAME }} --env-file ${{ secrets.SECRET_PATH }} ${{ secrets.DOCKER_USERNAME }}/panchobot:latest
