@@ -28,11 +28,9 @@ export const deleteCategory: SlashCommand = {
 
 		const categoryOption = interaction.options.getChannel("category");
 
-		const categoryChannel = await interaction.guild.channels.fetch(
-			categoryOption.id,
-		);
-
 		const guildChannels = await interaction.guild.channels.fetch();
+
+		const categoryChannel = guildChannels.get(categoryOption.id);
 
 		const categoryChildrenChannels = guildChannels.filter(
 			(channel) => channel.parentId === categoryChannel.id,
