@@ -13,7 +13,7 @@ import { logger } from "../../utils";
 
 export const archiveCategory: SlashCommand = {
 	data: new SlashCommandBuilder()
-		.setName("archive-category")
+		.setName("${interaction.commandName}")
 		.setDescription(
 			"Move text channels from source category to target category and private them by default.",
 		)
@@ -82,7 +82,7 @@ export const archiveCategory: SlashCommand = {
 
 		if (sourceOption.id === targetOption.id) {
 			logger.error(
-				`user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: source and target are the same`,
+				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: source and target are the same`,
 			);
 
 			await interaction.editReply({
@@ -104,7 +104,7 @@ export const archiveCategory: SlashCommand = {
 			guildChannels = await interaction.guild.channels.fetch();
 		} catch (error) {
 			logger.error(
-				`user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
+				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({
@@ -131,7 +131,7 @@ export const archiveCategory: SlashCommand = {
 
 		if (sourceChannels.size < 1) {
 			logger.error(
-				`user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: source category has no channels`,
+				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: source category has no channels`,
 			);
 
 			await interaction.editReply({
@@ -150,7 +150,7 @@ export const archiveCategory: SlashCommand = {
 
 		if (sourceChannels.size + targetChannels.size > 50) {
 			logger.error(
-				`user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: target category would exceed channel limit`,
+				`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: target category would exceed channel limit`,
 			);
 
 			await interaction.editReply({
@@ -182,16 +182,21 @@ export const archiveCategory: SlashCommand = {
 				});
 			} catch (error) {
 				logger.error(
-					`user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
+					`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
 				);
 
 				failedChannels.push(channel);
+				continue;
 			}
+
+			logger.info(
+				`(/${interaction.commandName}) user ${interaction.user.id} archived channel ${channel.id} to ${targetOption.id} in guild ${interaction.guild.id}`,
+			);
 		}
 
 		if (failedChannels.length > 0) {
 			logger.error(
-				`user ${interaction.user.id} partially archived category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${failedChannels.length} channels failed`,
+				`(/${interaction.commandName}) user ${interaction.user.id} partially archived category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${failedChannels.length} channels failed`,
 			);
 
 			await interaction.editReply({
@@ -217,7 +222,7 @@ export const archiveCategory: SlashCommand = {
 				await sourceChannel.delete();
 			} catch (error) {
 				logger.error(
-					`user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
+					`(/${interaction.commandName}) user ${interaction.user.id} failed to archive category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}: ${error}`,
 				);
 
 				await interaction.editReply({
@@ -236,7 +241,7 @@ export const archiveCategory: SlashCommand = {
 		}
 
 		logger.info(
-			`user ${interaction.user.id} archived category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}`,
+			`(/${interaction.commandName}) user ${interaction.user.id} archived category ${sourceOption.id} to ${targetOption.id} in guild ${interaction.guild.id}`,
 		);
 
 		await interaction.editReply({

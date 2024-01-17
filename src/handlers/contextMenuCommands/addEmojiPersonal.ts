@@ -39,7 +39,7 @@ export const addEmojiPersonal: ContextMenuCommand = {
 
 		if (!user || !user.personal_server_id) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to personal server: user doesn't have a personal server`,
+				`(${interaction.commandName} menu) user ${interaction.user.id} failed to add emoji to personal server: user doesn't have a personal server`,
 			);
 
 			await interaction.editReply({
@@ -58,7 +58,7 @@ export const addEmojiPersonal: ContextMenuCommand = {
 
 		if (interaction.guild.id !== interaction.user.id) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to personal server ${user.personal_server_id} in guild ${interaction.guild.id}: user is not the owner of the personal server`,
+				`(${interaction.commandName} menu) user ${interaction.user.id} failed to add emoji to personal server ${user.personal_server_id} in guild ${interaction.guild.id}: user is not the owner of the personal server`,
 			);
 
 			await interaction.editReply({
@@ -121,11 +121,11 @@ export const addEmojiPersonal: ContextMenuCommand = {
 			});
 
 			logger.info(
-				`user ${interaction.user.id} added emoji ${createdEmoji.id} to personal guild ${interaction.guild.id}`,
+				`(${interaction.commandName} menu) user ${interaction.user.id} added emoji ${createdEmoji.id} to personal guild ${interaction.guild.id}`,
 			);
 		} catch (error) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to personal guild ${user.personal_server_id} in guild ${interaction.guild.id}: ${error}`,
+				`(${interaction.commandName} menu) user ${interaction.user.id} failed to add emoji to personal guild ${user.personal_server_id} in guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({

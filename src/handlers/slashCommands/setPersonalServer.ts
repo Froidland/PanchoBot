@@ -13,7 +13,7 @@ export const setPersonalServer: SlashCommand = {
 
 		if (interaction.guild.ownerId !== interaction.user.id) {
 			logger.error(
-				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guild.id}: user is not the owner of the server`,
+				`(/${interaction.commandName}) user ${interaction.user.id} failed to set personal server in guild ${interaction.guild.id}: user is not the owner of the server`,
 			);
 
 			await interaction.editReply({
@@ -45,7 +45,7 @@ export const setPersonalServer: SlashCommand = {
 			});
 		} catch (error) {
 			logger.error(
-				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guild.id}: ${error}`,
+				`(/${interaction.commandName}) user ${interaction.user.id} failed to set personal server in guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({
@@ -63,7 +63,7 @@ export const setPersonalServer: SlashCommand = {
 		}
 
 		logger.info(
-			`user ${interaction.user.id} (${interaction.user.globalName}) set personal server to ${interaction.guild.id}`,
+			`(/${interaction.commandName}) user ${interaction.user.id} (${interaction.user.globalName}) set personal server to ${interaction.guild.id}`,
 		);
 
 		await interaction.editReply({
