@@ -18,7 +18,18 @@ export const addEmoji: ContextMenuCommand = {
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
-		interaction = interaction as MessageContextMenuCommandInteraction;
+		if (!(interaction instanceof MessageContextMenuCommandInteraction)) {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("This command can only be used on messages."),
+				],
+			});
+
+			return;
+		}
 
 		if (!interaction.guildId) {
 			logger.error(

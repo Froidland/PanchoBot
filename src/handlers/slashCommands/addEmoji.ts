@@ -1,4 +1,5 @@
 import {
+	ChatInputCommandInteraction,
 	CommandInteraction,
 	EmbedBuilder,
 	GuildEmoji,
@@ -29,14 +30,12 @@ export const addEmoji: SlashCommand = {
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions)
 		.setDMPermission(false),
-	execute: async (interaction: CommandInteraction) => {
+	execute: async (interaction: ChatInputCommandInteraction) => {
 		await interaction.deferReply();
 
-		const emojiOption = interaction.options.get("emoji");
-		const emoji = emojiOption.value as string;
+		const emoji = interaction.options.getString("emoji");
 
-		const emojiNameOption = interaction.options.get("name");
-		const emojiName = emojiNameOption?.value as string;
+		const emojiName = interaction.options.getString("name", false);
 
 		// Regex for matching custom discord emoji
 		// First capture group is for animated emojis (whether it has an "a" in front of it or not)
