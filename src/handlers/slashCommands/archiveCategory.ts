@@ -13,7 +13,7 @@ import { logger } from "../../utils";
 
 export const archiveCategory: SlashCommand = {
 	data: new SlashCommandBuilder()
-		.setName("${interaction.commandName}")
+		.setName("archive-category")
 		.setDescription(
 			"Move text channels from source category to target category and private them by default.",
 		)
