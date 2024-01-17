@@ -31,23 +31,6 @@ export const addEmoji: ContextMenuCommand = {
 			return;
 		}
 
-		if (!interaction.guildId) {
-			logger.error(
-				`user ${interaction.user.id} failed to add emoji: executed outside of a guild`,
-			);
-
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder()
-						.setColor("Red")
-						.setTitle("Error")
-						.setDescription("This command can only be used in a server."),
-				],
-			});
-
-			return;
-		}
-
 		const emojiRegex = /<?(a)?:?(\w{2,32}):(\d{17,19})>?/; // Example: <:pepega:123456789012345678>
 		const match = interaction.targetMessage.content.match(emojiRegex);
 
@@ -73,7 +56,7 @@ export const addEmoji: ContextMenuCommand = {
 
 		if (!emojiResponse.ok) {
 			logger.error(
-				`user ${interaction.user.id} failed to fetch emoji in guild ${interaction.guildId}: ${emojiResponse.statusText}`,
+				`user ${interaction.user.id} failed to fetch emoji in guild ${interaction.guild.id}: ${emojiResponse.statusText}`,
 			);
 
 			await interaction.editReply({
@@ -98,7 +81,7 @@ export const addEmoji: ContextMenuCommand = {
 			});
 		} catch (error) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to guild ${interaction.guildId}: ${error}`,
+				`user ${interaction.user.id} failed to add emoji to guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({
@@ -116,7 +99,7 @@ export const addEmoji: ContextMenuCommand = {
 		}
 
 		logger.info(
-			`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guildId}`,
+			`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guild.id}`,
 		);
 
 		await interaction.editReply({

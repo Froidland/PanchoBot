@@ -66,7 +66,7 @@ export const addEmoji: SlashCommand = {
 
 		if (!emojiResponse.ok) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to guild ${interaction.guildId}: ${emojiResponse.statusText}`,
+				`user ${interaction.user.id} failed to add emoji to guild ${interaction.guild.id}: ${emojiResponse.statusText}`,
 			);
 
 			await interaction.editReply({
@@ -91,7 +91,7 @@ export const addEmoji: SlashCommand = {
 			});
 		} catch (error) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to guild ${interaction.guildId}: ${error}`,
+				`user ${interaction.user.id} failed to add emoji to guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({
@@ -109,7 +109,7 @@ export const addEmoji: SlashCommand = {
 		}
 
 		logger.info(
-			`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guildId}`,
+			`user ${interaction.user.id} added emoji ${createdEmoji.id} to guild ${interaction.guild.id}`,
 		);
 
 		await interaction.editReply({

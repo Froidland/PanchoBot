@@ -11,29 +11,9 @@ export const setPersonalServer: SlashCommand = {
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
-		const userId = interaction.user.id;
-
-		//? Will never happen becuase the command doesn't exist on DMs.
-		if (!interaction.guildId) {
+		if (interaction.guild.ownerId !== interaction.user.id) {
 			logger.error(
-				`user ${interaction.user.id} failed to set personal server: executed outside of a guild`,
-			);
-
-			await interaction.editReply({
-				embeds: [
-					new EmbedBuilder()
-						.setColor("Red")
-						.setTitle("Error")
-						.setDescription("This command can only be used in a server."),
-				],
-			});
-
-			return;
-		}
-
-		if (interaction.guild.ownerId !== userId) {
-			logger.error(
-				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guildId}: user is not the owner of the server`,
+				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guild.id}: user is not the owner of the server`,
 			);
 
 			await interaction.editReply({
@@ -57,15 +37,15 @@ export const setPersonalServer: SlashCommand = {
 				},
 				create: {
 					discord_id: interaction.user.id,
-					personal_server_id: interaction.guildId,
+					personal_server_id: interaction.guild.id,
 				},
 				update: {
-					personal_server_id: interaction.guildId,
+					personal_server_id: interaction.guild.id,
 				},
 			});
 		} catch (error) {
 			logger.error(
-				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guildId}: ${error}`,
+				`user ${interaction.user.id} failed to set personal server in guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({
@@ -83,7 +63,7 @@ export const setPersonalServer: SlashCommand = {
 		}
 
 		logger.info(
-			`user ${userId} (${interaction.user.globalName}) set personal server to ${interaction.guildId}`,
+			`user ${interaction.user.id} (${interaction.user.globalName}) set personal server to ${interaction.guild.id}`,
 		);
 
 		await interaction.editReply({

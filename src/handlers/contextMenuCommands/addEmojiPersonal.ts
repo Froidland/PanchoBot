@@ -7,7 +7,6 @@ import {
 	MessageContextMenuCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
-import { discordClient } from "../../main";
 import db from "../../db";
 import { logger } from "../../utils";
 
@@ -15,8 +14,7 @@ export const addEmojiPersonal: ContextMenuCommand = {
 	data: new ContextMenuCommandBuilder()
 		.setName("Add emoji (personal)")
 		.setType(ApplicationCommandType.Message)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions)
-		.setDMPermission(false),
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
@@ -58,11 +56,9 @@ export const addEmojiPersonal: ContextMenuCommand = {
 			return;
 		}
 
-		const guild = await discordClient.guilds.fetch(user.personal_server_id);
-
-		if (guild.ownerId !== interaction.user.id) {
+		if (interaction.guild.id !== interaction.user.id) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to personal server ${user.personal_server_id} in guild ${interaction.guildId}: user is not the owner of the personal server`,
+				`user ${interaction.user.id} failed to add emoji to personal server ${user.personal_server_id} in guild ${interaction.guild.id}: user is not the owner of the personal server`,
 			);
 
 			await interaction.editReply({
@@ -119,17 +115,17 @@ export const addEmojiPersonal: ContextMenuCommand = {
 		let createdEmoji: GuildEmoji;
 
 		try {
-			createdEmoji = await guild.emojis.create({
+			createdEmoji = await interaction.guild.emojis.create({
 				name: name,
 				attachment: emojiAttachment,
 			});
 
 			logger.info(
-				`user ${interaction.user.id} added emoji ${createdEmoji.id} to personal guild ${guild.id}`,
+				`user ${interaction.user.id} added emoji ${createdEmoji.id} to personal guild ${interaction.guild.id}`,
 			);
 		} catch (error) {
 			logger.error(
-				`user ${interaction.user.id} failed to add emoji to personal guild ${user.personal_server_id} in guild ${interaction.guildId}: ${error}`,
+				`user ${interaction.user.id} failed to add emoji to personal guild ${user.personal_server_id} in guild ${interaction.guild.id}: ${error}`,
 			);
 
 			await interaction.editReply({

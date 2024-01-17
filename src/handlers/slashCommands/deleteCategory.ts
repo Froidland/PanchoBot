@@ -43,13 +43,13 @@ export const deleteCategory: SlashCommand = {
 				await channel.delete();
 
 				logger.info(
-					`user ${interaction.user.id} deleted channel ${channel.id} in guild ${interaction.guildId}`,
+					`user ${interaction.user.id} deleted channel ${channel.id} in guild ${interaction.guild.id}`,
 				);
 			} catch (error) {
 				failedDeletionIds.push(channel.id);
 
 				logger.error(
-					`user ${interaction.user.id} failed to delete channel ${channel.id} in guild ${interaction.guildId}: ${error}`,
+					`user ${interaction.user.id} failed to delete channel ${channel.id} in guild ${interaction.guild.id}: ${error}`,
 				);
 
 				continue;
@@ -58,7 +58,7 @@ export const deleteCategory: SlashCommand = {
 
 		if (failedDeletionIds.length === categoryChildrenChannels.size) {
 			logger.info(
-				`user ${interaction.user.id} failed to delete category ${categoryChannel.id} in guild ${interaction.guildId}`,
+				`user ${interaction.user.id} failed to delete category ${categoryChannel.id} in guild ${interaction.guild.id}`,
 			);
 
 			await interaction.editReply({
@@ -77,7 +77,7 @@ export const deleteCategory: SlashCommand = {
 
 		if (failedDeletionIds.length > 0) {
 			logger.info(
-				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} (${categoryChildrenChannels.size - failedDeletionIds.length} channels) in guild ${interaction.guildId}`,
+				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} (${categoryChildrenChannels.size - failedDeletionIds.length} channels) in guild ${interaction.guild.id}`,
 			);
 
 			await interaction.editReply({
@@ -99,11 +99,11 @@ export const deleteCategory: SlashCommand = {
 			await categoryChannel.delete();
 		} catch (error) {
 			logger.error(
-				`failed to delete category ${categoryChannel.id} in guild ${interaction.guildId}: ${error}`,
+				`failed to delete category ${categoryChannel.id} in guild ${interaction.guild.id}: ${error}`,
 			);
 
 			logger.info(
-				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels) in guild ${interaction.guildId}`,
+				`user ${interaction.user.id} partially deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels) in guild ${interaction.guild.id}`,
 			);
 
 			await interaction.editReply({
@@ -121,7 +121,7 @@ export const deleteCategory: SlashCommand = {
 		}
 
 		logger.info(
-			`user ${interaction.user.id} deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels) in guild ${interaction.guildId}`,
+			`user ${interaction.user.id} deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels) in guild ${interaction.guild.id}`,
 		);
 
 		await interaction.editReply({
