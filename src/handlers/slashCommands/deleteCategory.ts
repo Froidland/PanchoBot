@@ -24,6 +24,9 @@ export const deleteCategory: SlashCommand = {
 	execute: async (interaction: ChatInputCommandInteraction) => {
 		await interaction.deferReply();
 
+		// If the command was run in a channel that was deleted, don't send a reply.
+		//? Sending a reply will raise an exception because it will try to send a message to a deleted channel.
+		let isInteractionChannelDeleted = false;
 		const failedDeletionIds: string[] = [];
 
 		const categoryOption = interaction.options.getChannel("category");
@@ -38,7 +41,11 @@ export const deleteCategory: SlashCommand = {
 
 		for (const channel of categoryChildrenChannels.values()) {
 			try {
-				await channel.delete();
+				const deletedChannel = await channel.delete();
+
+				if (deletedChannel.id === interaction.channelId) {
+					isInteractionChannelDeleted = true;
+				}
 
 				logger.info({
 					type: "slash-command",
@@ -85,20 +92,7 @@ export const deleteCategory: SlashCommand = {
 			return;
 		}
 
-		// 1. Check if the interaction channel is a child of the target category.
-		// 2. Check if the interaction channel was deleted.
-		const isInteractionChannelDeleted =
-			categoryChildrenChannels.some(
-				(channel) => channel.id === interaction.channel.id,
-			) && !failedDeletionIds.some((id) => id === interaction.channel.id);
-
-		// If the command was run in a channel that was deleted, don't send a reply.
-		//? Sending a reply will raise an exception because it will try to send a message to a deleted channel.
-		if (isInteractionChannelDeleted) {
-			return;
-		}
-
-		if (failedDeletionIds.length > 0) {
+		if (failedDeletionIds.length > 0 && !isInteractionChannelDeleted) {
 			logger.info({
 				type: "slash-command",
 				commandName: interaction.commandName,
@@ -141,6 +135,10 @@ export const deleteCategory: SlashCommand = {
 				message: `partially deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels)`,
 			});
 
+			if (isInteractionChannelDeleted) {
+				return;
+			}
+
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
@@ -162,6 +160,10 @@ export const deleteCategory: SlashCommand = {
 			guildId: interaction.guild.id,
 			message: `deleted category ${categoryChannel.id} (${categoryChildrenChannels.size} channels)`,
 		});
+
+		if (isInteractionChannelDeleted) {
+			return;
+		}
 
 		await interaction.editReply({
 			embeds: [
