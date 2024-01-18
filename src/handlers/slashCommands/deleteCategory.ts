@@ -85,6 +85,19 @@ export const deleteCategory: SlashCommand = {
 			return;
 		}
 
+		// 1. Check if the interaction channel is a child of the target category.
+		// 2. Check if the interaction channel was deleted.
+		const isInteractionChannelDeleted =
+			categoryChildrenChannels.some(
+				(channel) => channel.id === interaction.channel.id,
+			) && !failedDeletionIds.some((id) => id === interaction.channel.id);
+
+		// If the command was run in a channel that was deleted, don't send a reply.
+		//? Sending a reply will raise an exception because it will try to send a message to a deleted channel.
+		if (isInteractionChannelDeleted) {
+			return;
+		}
+
 		if (failedDeletionIds.length > 0) {
 			logger.info({
 				type: "slash-command",
