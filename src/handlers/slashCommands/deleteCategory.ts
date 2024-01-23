@@ -4,7 +4,6 @@ import {
 	ChatInputCommandInteraction,
 	ComponentType,
 	EmbedBuilder,
-	InteractionCollector,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -60,10 +59,10 @@ export const deleteCategory: SlashCommand = {
 
 					return true;
 				},
-				time: 30000,
+				time: 30_000,
 			});
-		} catch (collected) {
-			await interactionMessage.edit({
+		} catch {
+			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
 						.setColor("Yellow")
@@ -86,7 +85,9 @@ export const deleteCategory: SlashCommand = {
 					new EmbedBuilder()
 						.setColor("Yellow")
 						.setTitle("Cancelled")
-						.setDescription("The operation was cancelled."),
+						.setDescription(
+							"The operation was cancelled. No changes were made.",
+						),
 				],
 				components: [],
 			});
