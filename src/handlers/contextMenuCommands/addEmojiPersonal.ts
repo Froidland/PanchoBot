@@ -7,7 +7,7 @@ import {
 	MessageContextMenuCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
-import db from "../../db";
+import { db } from "../../db";
 import { logger } from "../../utils";
 
 export const addEmojiPersonal: ContextMenuCommand = {

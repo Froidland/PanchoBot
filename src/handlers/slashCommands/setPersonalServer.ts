@@ -1,6 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../interfaces";
-import db from "../../db";
+import { db } from "../../db";
 import { logger } from "../../utils";
 
 export const setPersonalServer: SlashCommand = {

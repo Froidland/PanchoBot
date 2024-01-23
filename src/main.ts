@@ -1,7 +1,7 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { logger } from "./utils/logger";
 import { onInteraction, onMessageCreate, onReady } from "./events";
-import db from "./db";
+import { db } from "./db";
 
 export const discordClient = new Client({
 	intents: [

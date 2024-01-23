@@ -29,6 +29,5 @@ function getPrismaClient() {
 	return new PrismaClient();
 }
 
-const db = getPrismaClient();
+export const db = getPrismaClient();
 
-export default db;
