@@ -1,7 +1,9 @@
 import {
+	ButtonInteraction,
 	ChannelType,
 	ChatInputCommandInteraction,
 	Collection,
+	ComponentType,
 	EmbedBuilder,
 	NonThreadGuildBasedChannel,
 	OverwriteResolvable,
@@ -10,6 +12,7 @@ import {
 } from "discord.js";
 import { SlashCommand } from "../../interfaces";
 import { logger } from "../../utils";
+import { ConfirmationComponent } from "../../components";
 
 export const archiveCategory: SlashCommand = {
 	data: new SlashCommandBuilder()
@@ -56,7 +59,81 @@ export const archiveCategory: SlashCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.setDMPermission(false),
 	execute: async (interaction: ChatInputCommandInteraction) => {
-		await interaction.deferReply();
+		const interactionMessage = await interaction.reply({
+			embeds: [
+				new EmbedBuilder()
+					.setColor("Blue")
+					.setTitle("Confirmation")
+					.setDescription(
+						"Are you sure you want to archive this category and all its channels?",
+					),
+			],
+			components: [ConfirmationComponent],
+		});
+
+		let buttonInteraction: ButtonInteraction;
+
+		try {
+			buttonInteraction = await interactionMessage.awaitMessageComponent({
+				componentType: ComponentType.Button,
+				filter: (buttonInteraction) => {
+					if (buttonInteraction.user.id !== interaction.user.id) {
+						buttonInteraction.reply({
+							embeds: [
+								new EmbedBuilder()
+									.setColor("Red")
+									.setTitle("Error")
+									.setDescription("You are not allowed to use this button."),
+							],
+							ephemeral: true,
+						});
+
+						return false;
+					}
+
+					return true;
+				},
+				time: 30_000,
+			});
+		} catch {
+			await interactionMessage.edit({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Yellow")
+						.setTitle("Timed out")
+						.setDescription(
+							"The operation timed out. Make sure you respond within 30 seconds in order to complete the operation.",
+						),
+				],
+				components: [],
+			});
+
+			return;
+		}
+
+		buttonInteraction.update({});
+
+		if (buttonInteraction.customId === "confirmation-cancel-button") {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Green")
+						.setTitle("Cancelled")
+						.setDescription(
+							"The operation was cancelled. No changes were made.",
+						),
+				],
+				components: [],
+			});
+
+			return;
+		}
+
+		if (buttonInteraction.customId !== "confirmation-confirm-button") {
+			return;
+		}
+
+		interaction.editReply({ components: [] });
 
 		const sourceOption = interaction.options.getChannel("source", true);
 		const targetOption = interaction.options.getChannel("target", true);
