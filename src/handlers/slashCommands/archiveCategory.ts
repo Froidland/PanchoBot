@@ -133,7 +133,7 @@ export const archiveCategory: SlashCommand = {
 			return;
 		}
 
-		interaction.editReply({ components: [] });
+		await interaction.editReply({ components: [] });
 
 		const sourceOption = interaction.options.getChannel("source", true);
 		const targetOption = interaction.options.getChannel("target", true);

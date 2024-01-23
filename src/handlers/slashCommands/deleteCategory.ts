@@ -99,7 +99,7 @@ export const deleteCategory: SlashCommand = {
 			return;
 		}
 
-		interaction.editReply({ components: [] });
+		await interaction.editReply({ components: [] });
 
 		const categoryOption = interaction.options.getChannel("category");
 
