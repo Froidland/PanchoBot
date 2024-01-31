@@ -2,14 +2,16 @@ import * as winston from "winston";
 const { prettyPrint, combine, json, timestamp } = winston.format;
 import { WinstonTransport as AxiomTransport } from "@axiomhq/winston";
 
+const consoleTransport = new winston.transports.Console({
+	format: combine(json(), prettyPrint(), timestamp()),
+});
+
 export const logger = winston.createLogger({
 	level: process.env.NODE_ENV === "development" ? "debug" : "info",
 	format: combine(json(), prettyPrint(), timestamp()),
-	transports: [
-		new winston.transports.Console({
-			format: combine(json(), prettyPrint(), timestamp()),
-		}),
-	],
+	transports: [consoleTransport],
+	exceptionHandlers: [consoleTransport],
+	rejectionHandlers: [consoleTransport],
 });
 
 if (process.env.AXIOM_DATASET && process.env.AXIOM_TOKEN) {
