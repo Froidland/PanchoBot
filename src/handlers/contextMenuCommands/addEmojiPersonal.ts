@@ -60,7 +60,7 @@ export const addEmojiPersonal: ContextMenuCommand = {
 			return;
 		}
 
-		if (interaction.guild.id !== interaction.user.id) {
+		if (interaction.guild.ownerId !== interaction.user.id) {
 			logger.error({
 				type: "context-menu-command",
 				commandName: interaction.commandName,
