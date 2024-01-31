@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import { logger } from "./utils/logger.js";
 import { onInteraction, onMessageCreate, onReady } from "./events/index.js";
 import { db } from "./db/index.js";
@@ -18,6 +18,16 @@ discordClient.once(Events.ClientReady, (client) => {
 		userId: null,
 		guildId: null,
 		message: `logged in as ${client.user.tag}`,
+	});
+
+	client.user.setPresence({
+		status: "online",
+		activities: [
+			{
+				name: ">:3",
+				type: ActivityType.Competing,
+			},
+		],
 	});
 
 	onReady(client);
