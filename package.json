@@ -6,6 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "node --import=tsimp/import --env-file .env src/main.ts",
+		"start:noenv": "node --import=tsimp/import src/main.ts",
 		"dev": "cross-env NODE_ENV=development nodemon -e ts,json --import=tsimp/import --env-file .env src/main.ts",
 		"commands:unregister": "node --import=tsimp/import --env-file .env scripts/unregisterGlobalCommands.js",
 		"lint": "eslint .  --ext .ts",
