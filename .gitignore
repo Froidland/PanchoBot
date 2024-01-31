@@ -1,5 +1,7 @@
 /node_modules
 *.env
 /logs
-/app.js
 /.vscode
+.tsimp
+.idea
+/tsconfig.tsbuildinfo

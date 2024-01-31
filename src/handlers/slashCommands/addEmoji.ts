@@ -1,13 +1,12 @@
 import {
 	ChatInputCommandInteraction,
-	CommandInteraction,
 	EmbedBuilder,
 	GuildEmoji,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import { SlashCommand } from "../../interfaces/slashCommand";
-import { logger } from "../../utils";
+import { SlashCommand } from "../../interfaces/index.js";
+import { logger } from "../../utils/index.js";
 
 export const addEmoji: SlashCommand = {
 	data: new SlashCommandBuilder()

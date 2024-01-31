@@ -10,9 +10,9 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import { SlashCommand } from "../../interfaces";
-import { logger } from "../../utils";
-import { ConfirmationComponent } from "../../components";
+import { SlashCommand } from "../../interfaces/index.js";
+import { logger } from "../../utils/index.js";
+import { ConfirmationComponent } from "../../components/index.js";
 
 export const archiveCategory: SlashCommand = {
 	data: new SlashCommandBuilder()

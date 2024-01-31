@@ -21,12 +21,12 @@ type RestUser = {
 	bio: string;
 };
 
-(async () => {
+async function run() {
 	const rest = new REST().setToken(process.env.BOT_TOKEN);
 	let clientUser: RestUser | null | undefined;
 
 	try {
-		clientUser = (await rest.get(Routes.user())) as RestUser;
+		clientUser = (await rest.get(Routes.user())) as RestUser | null | undefined;
 	} catch (error) {
 		console.error("Unable to fetch client user. Aborting...");
 		return;
@@ -40,4 +40,6 @@ type RestUser = {
 	}
 
 	console.log("Successfully deleted all guild commands.");
-})();
+}
+
+await run();

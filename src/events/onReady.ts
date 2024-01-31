@@ -1,6 +1,6 @@
 import { Client, REST, Routes } from "discord.js";
-import { slashCommandList, contextMenuCommandList } from "../handlers";
-import { logger } from "../utils/logger";
+import { slashCommandList, contextMenuCommandList } from "../handlers/index.js";
+import { logger } from "../utils/index.js";
 
 export const onReady = async (client: Client) => {
 	const rest = new REST().setToken(process.env.BOT_TOKEN);

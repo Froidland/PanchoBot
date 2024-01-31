@@ -1,6 +1,6 @@
-import { ContextMenuCommand } from "../../interfaces";
-import { addEmoji } from "./addEmoji";
-import { addEmojiPersonal } from "./addEmojiPersonal";
+import { ContextMenuCommand } from "../../interfaces/index.js";
+import { addEmoji } from "./addEmoji.js";
+import { addEmojiPersonal } from "./addEmojiPersonal.js";
 
 export const contextMenuCommandList: ContextMenuCommand[] = [
 	addEmoji,

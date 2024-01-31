@@ -1,1 +1,1 @@
-export * from "./ConfirmationComponent";
+export * from "./ConfirmationComponent.js";

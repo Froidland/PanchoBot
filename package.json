@@ -2,11 +2,12 @@
 	"name": "panchobot",
 	"version": "1.0.0",
 	"description": "A peronal bot made by Pancho with special tournament modifications.",
-	"main": "/src/main.ts",
+	"main": "src/main.ts",
+	"type": "module",
 	"scripts": {
-		"start": "ts-node --require dotenv/config src/main.ts",
-		"dev": "cross-env NODE_ENV=development nodemon --require dotenv/config src/main.ts",
-		"commands:unregister": "ts-node --require dotenv/config scripts/unregisterGlobalCommands.ts",
+		"start": "node --import=tsimp/import --env-file .env src/main.ts",
+		"dev": "cross-env NODE_ENV=development nodemon -e ts,json --import=tsimp/import --env-file .env src/main.ts",
+		"commands:unregister": "node --import=tsimp/import --env-file .env scripts/unregisterGlobalCommands.js",
 		"lint": "eslint .  --ext .ts",
 		"lint:fix": "eslint .  --ext .ts --fix"
 	},
@@ -31,9 +32,10 @@
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-n": "^16.6.2",
 		"eslint-plugin-promise": "^6.1.1",
+		"nodemon": "^3.0.3",
 		"prettier": "^3.2.4",
 		"prisma": "^5.8.1",
-		"ts-node": "^10.9.2"
+		"tsimp": "^2.0.10"
 	},
 	"prettier": {
 		"useTabs": true

@@ -9,6 +9,6 @@ export interface ContextMenuCommand {
 	execute: (
 		interaction:
 			| MessageContextMenuCommandInteraction
-			| UserContextMenuCommandInteraction
+			| UserContextMenuCommandInteraction,
 	) => Promise<void>;
 }

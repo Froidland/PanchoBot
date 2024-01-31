@@ -1,2 +1,2 @@
-export * from "./slashCommands";
-export * from "./contextMenuCommands";
+export * from "./slashCommands/index.js";
+export * from "./contextMenuCommands/index.js";

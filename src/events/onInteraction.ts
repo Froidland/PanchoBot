@@ -1,5 +1,5 @@
 import { Interaction } from "discord.js";
-import { contextMenuCommandList, slashCommandList } from "../handlers";
+import { contextMenuCommandList, slashCommandList } from "../handlers/index.js";
 
 export const onInteraction = async (interaction: Interaction) => {
 	if (interaction.isCommand()) {

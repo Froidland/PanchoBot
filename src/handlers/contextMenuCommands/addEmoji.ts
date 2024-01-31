@@ -1,4 +1,4 @@
-import { ContextMenuCommand } from "../../interfaces";
+import { ContextMenuCommand } from "../../interfaces/index.js";
 import {
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
@@ -7,7 +7,7 @@ import {
 	MessageContextMenuCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
-import { logger } from "../../utils";
+import { logger } from "../../utils/index.js";
 
 export const addEmoji: ContextMenuCommand = {
 	data: new ContextMenuCommandBuilder()

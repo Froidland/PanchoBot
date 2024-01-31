@@ -1,3 +1,3 @@
-export * from "./onInteraction";
-export * from "./onReady";
-export * from "./onMessageCreate";
+export * from "./onInteraction.js";
+export * from "./onReady.js";
+export * from "./onMessageCreate.js";
