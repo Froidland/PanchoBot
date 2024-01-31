@@ -2,6 +2,8 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../interfaces/index.js";
 import { db } from "../../db/index.js";
 import { logger } from "../../utils/index.js";
+import { users } from "../../db/schema.js";
+import { eq } from "drizzle-orm";
 
 export const setPersonalServer: SlashCommand = {
 	data: new SlashCommandBuilder()
@@ -36,18 +38,18 @@ export const setPersonalServer: SlashCommand = {
 		}
 
 		try {
-			await db.user.upsert({
-				where: {
-					discord_id: interaction.user.id,
-				},
-				create: {
+			await db
+				.insert(users)
+				.values({
 					discord_id: interaction.user.id,
 					personal_server_id: interaction.guild.id,
-				},
-				update: {
-					personal_server_id: interaction.guild.id,
-				},
-			});
+				})
+				.onDuplicateKeyUpdate({
+					set: {
+						personal_server_id: interaction.guild.id,
+					},
+				})
+				.execute();
 		} catch (error) {
 			logger.error({
 				type: "slash-command",

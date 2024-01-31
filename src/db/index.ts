@@ -1,32 +1,25 @@
-import { PrismaClient } from "@prisma/client";
+import { drizzle } from "drizzle-orm/mysql2";
+import * as schema from "./schema.js";
+import mysql from "mysql2/promise";
+import { Logger } from "drizzle-orm";
+import { logger } from "../utils/logger.js";
 
-function getPrismaClient() {
-	if (process.env.NODE_ENV === "development") {
-		const client = new PrismaClient({
-			log: [
-				{
-					level: "query",
-					emit: "event",
-				},
-				{
-					level: "info",
-					emit: "event",
-				},
-				{
-					level: "warn",
-					emit: "event",
-				},
-				{
-					level: "error",
-					emit: "event",
-				},
-			],
+class DbLogger implements Logger {
+	logQuery(query: string, params: unknown[]): void {
+		logger.debug({
+			type: "query",
+			message: query,
+			params: params,
 		});
-
-		return client;
 	}
-
-	return new PrismaClient();
 }
 
-export const db = getPrismaClient();
+const poolConnection = mysql.createPool({
+	uri: process.env.DATABASE_URL,
+});
+
+export const db = drizzle(poolConnection, {
+	schema,
+	mode: "default",
+	logger: new DbLogger(),
+});

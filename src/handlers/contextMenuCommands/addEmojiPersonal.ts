@@ -9,6 +9,8 @@ import {
 } from "discord.js";
 import { db } from "../../db/index.js";
 import { logger } from "../../utils/index.js";
+import { users } from "../../db/schema.js";
+import { eq } from "drizzle-orm";
 
 export const addEmojiPersonal: ContextMenuCommand = {
 	data: new ContextMenuCommandBuilder()
@@ -31,10 +33,8 @@ export const addEmojiPersonal: ContextMenuCommand = {
 			return;
 		}
 
-		const user = await db.user.findFirst({
-			where: {
-				discord_id: interaction.user.id,
-			},
+		const user = await db.query.users.findFirst({
+			where: eq(users.discord_id, interaction.user.id),
 		});
 
 		if (!user || !user.personal_server_id) {
