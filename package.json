@@ -27,7 +27,7 @@
 		"winston-daily-rotate-file": "^4.7.1"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.13",
+		"@types/node": "^20.11.16",
 		"@types/pg": "^8.11.0",
 		"cross-env": "^7.0.3",
 		"drizzle-kit": "^0.20.13",
