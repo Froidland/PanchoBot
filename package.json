@@ -30,7 +30,7 @@
 		"@types/node": "^20.11.13",
 		"@types/pg": "^8.11.0",
 		"cross-env": "^7.0.3",
-		"drizzle-kit": "^0.20.13",
+		"drizzle-kit": "^0.20.14",
 		"eslint": "^8.56.0",
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-n": "^16.6.2",
