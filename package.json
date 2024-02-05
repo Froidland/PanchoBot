@@ -36,7 +36,7 @@
 		"eslint-plugin-n": "^16.6.2",
 		"eslint-plugin-promise": "^6.1.1",
 		"nodemon": "^3.0.3",
-		"prettier": "^3.2.4",
+		"prettier": "^3.2.5",
 		"tsimp": "^2.0.10"
 	},
 	"prettier": {
