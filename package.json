@@ -16,7 +16,7 @@
 	"author": "Francisco Hauva <phauva@gmail.com>",
 	"license": "MIT",
 	"dependencies": {
-		"@axiomhq/winston": "1.0.0-rc.1",
+		"@axiomhq/winston": "1.0.0-rc.2",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"discord.js": "^14.14.1",
 		"dotenv": "^16.4.1",
