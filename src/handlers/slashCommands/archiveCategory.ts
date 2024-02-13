@@ -59,6 +59,19 @@ export const archiveCategory: SlashCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.setDMPermission(false),
 	execute: async (interaction: ChatInputCommandInteraction) => {
+		if (!interaction.guild) {
+			await interaction.reply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("This command can only be used in servers."),
+				],
+			});
+
+			return;
+		}
+
 		const interactionMessage = await interaction.reply({
 			embeds: [
 				new EmbedBuilder()
@@ -180,7 +193,7 @@ export const archiveCategory: SlashCommand = {
 			return;
 		}
 
-		let guildChannels: Collection<string, NonThreadGuildBasedChannel>;
+		let guildChannels: Collection<string, NonThreadGuildBasedChannel | null>;
 		try {
 			guildChannels = await interaction.guild.channels.fetch();
 		} catch (error) {
@@ -208,11 +221,14 @@ export const archiveCategory: SlashCommand = {
 
 		const sourceChannels = guildChannels.filter(
 			(ch) =>
-				ch.parentId === sourceOption.id && ch.type === ChannelType.GuildText,
-		);
+				ch &&
+				ch.parentId === sourceOption.id &&
+				ch.type === ChannelType.GuildText,
+		) as Collection<string, NonThreadGuildBasedChannel>;
+
 		const targetChannels = guildChannels.filter(
-			(ch) => ch.parentId === targetOption.id,
-		);
+			(ch) => ch && ch.parentId === targetOption.id,
+		) as Collection<string, NonThreadGuildBasedChannel>;
 
 		if (sourceChannels.size < 1) {
 			logger.error({
@@ -324,7 +340,7 @@ export const archiveCategory: SlashCommand = {
 			try {
 				const sourceChannel = guildChannels.get(sourceOption.id);
 
-				await sourceChannel.delete();
+				if (sourceChannel) await sourceChannel.delete();
 			} catch (error) {
 				logger.error({
 					type: "slash-command",

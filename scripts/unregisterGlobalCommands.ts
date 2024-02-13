@@ -22,24 +22,33 @@ type RestUser = {
 };
 
 async function run() {
-	const rest = new REST().setToken(process.env.BOT_TOKEN);
-	let clientUser: RestUser | null | undefined;
+	const rest = new REST().setToken(process.env.BOT_TOKEN!);
+	let clientUser;
 
 	try {
-		clientUser = (await rest.get(Routes.user())) as RestUser | null | undefined;
+		clientUser = await rest.get(Routes.user());
 	} catch (error) {
 		console.error("Unable to fetch client user. Aborting...");
 		return;
 	}
 
-	try {
-		await rest.put(Routes.applicationCommands(clientUser.id), { body: [] });
-	} catch (error) {
-		console.error("Unable to delete global commands. Aborting...");
+	if (!clientUser) {
+		console.error("Client user is null. Aborting...");
 		return;
 	}
 
-	console.log("Successfully deleted all guild commands.");
+	console.log(typeof clientUser);
+
+	// clientUser = clientUser as RestUser;
+
+	// try {
+	// 	await rest.put(Routes.applicationCommands(clientUser.id), { body: [] });
+	// } catch (error) {
+	// 	console.error("Unable to delete global commands. Aborting...");
+	// 	return;
+	// }
+
+	// console.log("Successfully deleted all guild commands.");
 }
 
 await run();

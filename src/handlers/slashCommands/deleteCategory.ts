@@ -6,6 +6,8 @@ import {
 	EmbedBuilder,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
+	type NonThreadGuildBasedChannel,
+	type Collection,
 } from "discord.js";
 import { SlashCommand } from "../../interfaces/index.js";
 import { logger } from "../../utils/index.js";
@@ -25,6 +27,19 @@ export const deleteCategory: SlashCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.setDMPermission(false),
 	execute: async (interaction: ChatInputCommandInteraction) => {
+		if (!interaction.guild) {
+			await interaction.reply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("This command can only be used in servers."),
+				],
+			});
+
+			return;
+		}
+
 		const interactionMessage = await interaction.reply({
 			embeds: [
 				new EmbedBuilder()
@@ -101,7 +116,7 @@ export const deleteCategory: SlashCommand = {
 
 		await interaction.editReply({ components: [] });
 
-		const categoryOption = interaction.options.getChannel("category");
+		const categoryOption = interaction.options.getChannel("category", true);
 
 		// If the command was run in a channel that was deleted, don't send a reply.
 		//? Sending a reply will raise an exception because it will try to send a message to a deleted channel.
@@ -112,9 +127,22 @@ export const deleteCategory: SlashCommand = {
 
 		const categoryChannel = guildChannels.get(categoryOption.id);
 
+		if (!categoryChannel) {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("The category channel could not be found."),
+				],
+			});
+
+			return;
+		}
+
 		const categoryChildrenChannels = guildChannels.filter(
-			(channel) => channel.parentId === categoryChannel.id,
-		);
+			(channel) => channel && channel.parentId === categoryOption.id,
+		) as Collection<string, NonThreadGuildBasedChannel>;
 
 		for (const channel of categoryChildrenChannels.values()) {
 			try {

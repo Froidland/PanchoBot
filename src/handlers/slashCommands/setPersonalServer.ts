@@ -13,6 +13,19 @@ export const setPersonalServer: SlashCommand = {
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
+		if (!interaction.guild) {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("This command can only be used in servers."),
+				],
+			});
+
+			return;
+		}
+
 		if (interaction.guild.ownerId !== interaction.user.id) {
 			logger.error({
 				type: "slash-command",

@@ -3,7 +3,11 @@ import { slashCommandList, contextMenuCommandList } from "../handlers/index.js";
 import { logger } from "../utils/index.js";
 
 export const onReady = async (client: Client) => {
-	const rest = new REST().setToken(process.env.BOT_TOKEN);
+	if (!client.user) {
+		throw new Error("client.user is null");
+	}
+
+	const rest = new REST().setToken(process.env.BOT_TOKEN!);
 	const slashCommandsData = slashCommandList.map((command) =>
 		command.data.toJSON(),
 	);

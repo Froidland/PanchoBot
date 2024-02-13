@@ -10,7 +10,7 @@ export const discordClient = new Client({
 	],
 });
 
-discordClient.once(Events.ClientReady, (client) => {
+discordClient.once(Events.ClientReady, async (client) => {
 	logger.info({
 		type: "system",
 		commandName: null,
@@ -29,13 +29,23 @@ discordClient.once(Events.ClientReady, (client) => {
 		],
 	});
 
-	onReady(client);
+	try {
+		await onReady(client);
+	} catch (error) {
+		logger.error({
+			type: "system",
+			commandName: null,
+			userId: null,
+			guildId: null,
+			message: `error while trying to register commands: ${error}`,
+		});
+
+		process.exit(1);
+	}
 });
 
-discordClient.on(Events.InteractionCreate, async (interaction) => {
-	try {
-		await onInteraction(interaction);
-	} catch (error) {
+discordClient.on(Events.InteractionCreate, (interaction) => {
+	onInteraction(interaction).catch((error) => {
 		logger.error({
 			type: "system",
 			commandName: null,
@@ -43,10 +53,10 @@ discordClient.on(Events.InteractionCreate, async (interaction) => {
 			guildId: interaction.guild?.id || null,
 			message: `InteractionError: ${error}`,
 		});
-	}
+	});
 });
 
-discordClient.on(Events.Error, async (error) => {
+discordClient.on(Events.Error, (error) => {
 	logger.error({
 		type: "system",
 		commandName: null,

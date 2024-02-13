@@ -7,6 +7,6 @@ export default {
 	out: "./drizzle/migrations",
 	driver: "mysql2",
 	dbCredentials: {
-		uri: process.env.DATABASE_URL,
+		uri: process.env.DATABASE_URL || "mysql://localhost:3306/panchobot",
 	},
 } satisfies Config;

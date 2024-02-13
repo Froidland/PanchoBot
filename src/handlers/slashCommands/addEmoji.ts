@@ -32,7 +32,20 @@ export const addEmoji: SlashCommand = {
 	execute: async (interaction: ChatInputCommandInteraction) => {
 		await interaction.deferReply();
 
-		const emoji = interaction.options.getString("emoji");
+		if (!interaction.guild) {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription("This command can only be used in servers."),
+				],
+			});
+
+			return;
+		}
+
+		const emoji = interaction.options.getString("emoji", true);
 
 		const emojiName = interaction.options.getString("name", false);
 
