@@ -53,7 +53,6 @@ export const deleteCategory: SlashCommand = {
 		});
 
 		let buttonInteraction: ButtonInteraction;
-
 		try {
 			buttonInteraction = await interactionMessage.awaitMessageComponent({
 				componentType: ComponentType.Button,
@@ -92,7 +91,7 @@ export const deleteCategory: SlashCommand = {
 			return;
 		}
 
-		buttonInteraction.update({});
+		await buttonInteraction.update({});
 
 		if (buttonInteraction.customId === "confirmation-cancel-button") {
 			await interaction.editReply({
