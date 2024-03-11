@@ -27,7 +27,7 @@
 		"winston-daily-rotate-file": "^5.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.20",
+		"@types/node": "^20.11.25",
 		"cross-env": "^7.0.3",
 		"drizzle-kit": "^0.20.14",
 		"eslint": "^8.57.0",
