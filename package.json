@@ -22,7 +22,7 @@
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.29.4",
 		"mysql2": "^3.9.2",
-		"typescript": "^5.3.3",
+		"typescript": "^5.4.2",
 		"winston": "^3.11.0",
 		"winston-daily-rotate-file": "^5.0.0"
 	},
