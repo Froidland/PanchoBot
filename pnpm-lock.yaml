@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@axiomhq/winston':
-    specifier: 1.0.0-rc.2
-    version: 1.0.0-rc.2
+    specifier: 1.0.0-rc.3
+    version: 1.0.0-rc.3
   '@paralleldrive/cuid2':
     specifier: ^2.2.2
     version: 2.2.2
@@ -75,19 +75,19 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@axiomhq/js@1.0.0-rc.2:
-    resolution: {integrity: sha512-BQJQNkumdKZgbLGhf3DZb6A8w/31jtX3hWtdv0mMiSE3O5PioeIZNxRTMoWRChxt8TylZrJoVezqrw/ooWPoyQ==}
+  /@axiomhq/js@1.0.0-rc.3:
+    resolution: {integrity: sha512-Zm10TczcMLounWqC42nMkXQ7XKLqjzLrd5ia022oBKDUZqAFVg2y9d1quQVNV4FlXyg9MKDdfMjpKQRmzEGaog==}
     engines: {node: '>=16'}
     dependencies:
-      fetch-retry: 5.0.6
+      fetch-retry: 6.0.0
       uuid: 8.3.2
     dev: false
 
-  /@axiomhq/winston@1.0.0-rc.2:
-    resolution: {integrity: sha512-cadBoUXDYIswKqchAY/738Iq07dGRLTDLJyMx8TNZ/v0XdHKwVIHinAo6uJt2MTvU0qUv4I7oZqdg2kJgGUpaA==}
+  /@axiomhq/winston@1.0.0-rc.3:
+    resolution: {integrity: sha512-YNjOKsjfVeYDJRfDWYPpxxTDnDpTTLglwXuwb3oWjIgwX/bPq+KXHMmlIjdjHj1K465CuqotAyz7zRvpAXeYcw==}
     engines: {node: '>=16'}
     dependencies:
-      '@axiomhq/js': 1.0.0-rc.2
+      '@axiomhq/js': 1.0.0-rc.3
       winston-transport: 4.7.0
     dev: false
 
@@ -2024,8 +2024,8 @@ packages:
     resolution: {integrity: sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==}
     dev: false
 
-  /fetch-retry@5.0.6:
-    resolution: {integrity: sha512-3yurQZ2hD9VISAhJJP9bpYFNQrHHBXE2JxxjY5aLEcDi46RmAzJE2OC9FAde0yis5ElW0jTTzs0zfg/Cca4XqQ==}
+  /fetch-retry@6.0.0:
+    resolution: {integrity: sha512-BUFj1aMubgib37I3v4q78fYo63Po7t4HUPTpQ6/QE6yK6cIQrP+W43FYToeTEyg5m2Y7eFUtijUuAv/PDlWuag==}
     dev: false
 
   /file-entry-cache@6.0.1:
