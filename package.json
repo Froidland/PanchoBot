@@ -28,7 +28,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.30",
-		"@typescript-eslint/eslint-plugin": "^7.3.1",
+		"@typescript-eslint/eslint-plugin": "^7.4.0",
 		"cross-env": "^7.0.3",
 		"drizzle-kit": "^0.20.14",
 		"eslint": "^8.57.0",
