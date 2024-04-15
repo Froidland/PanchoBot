@@ -16,24 +16,24 @@
 	"author": "Francisco Hauva <phauva@gmail.com>",
 	"license": "MIT",
 	"dependencies": {
-		"@axiomhq/winston": "1.0.0-rc.2",
+		"@axiomhq/winston": "1.0.0-rc.3",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"discord.js": "^14.14.1",
 		"dotenv": "^16.4.5",
-		"drizzle-orm": "^0.30.3",
-		"mysql2": "^3.9.2",
-		"typescript": "^5.4.2",
-		"winston": "^3.12.0",
+		"drizzle-orm": "^0.30.8",
+		"mysql2": "^3.9.4",
+		"typescript": "^5.4.5",
+		"winston": "^3.13.0",
 		"winston-daily-rotate-file": "^5.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.30",
-		"@typescript-eslint/eslint-plugin": "^7.3.1",
+		"@types/node": "^20.12.7",
+		"@typescript-eslint/eslint-plugin": "^7.6.0",
 		"cross-env": "^7.0.3",
 		"drizzle-kit": "^0.20.14",
-		"eslint": "^8.57.0",
+		"eslint": "^9.0.0",
 		"eslint-plugin-import": "^2.29.1",
-		"eslint-plugin-n": "^16.6.2",
+		"eslint-plugin-n": "^17.2.0",
 		"eslint-plugin-promise": "^6.1.1",
 		"nodemon": "^3.1.0",
 		"prettier": "^3.2.5",
@@ -62,5 +62,8 @@
 				"smart-tabs"
 			]
 		}
-	}
+	},
+	"trustedDependencies": [
+		"es5-ext"
+	]
 }
