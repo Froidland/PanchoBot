@@ -4,6 +4,7 @@
 	"description": "A peronal bot made by Pancho with special tournament modifications.",
 	"main": "src/main.ts",
 	"type": "module",
+	"private": true,
 	"scripts": {
 		"start": "node --import=tsimp/import --env-file .env src/main.ts",
 		"start:noenv": "node --import=tsimp/import src/main.ts",
