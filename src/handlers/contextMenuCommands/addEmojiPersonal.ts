@@ -155,7 +155,7 @@ export const addEmojiPersonal: ContextMenuCommand = {
 		let createdEmoji: GuildEmoji;
 
 		try {
-			createdEmoji = await interaction.guild.emojis.create({
+			createdEmoji = await userGuild.emojis.create({
 				name: name,
 				attachment: emojiAttachment,
 			});
@@ -187,7 +187,7 @@ export const addEmojiPersonal: ContextMenuCommand = {
 			commandName: interaction.commandName,
 			userId: interaction.user.id,
 			guildId: interaction.guild.id,
-			message: `added emoji ${createdEmoji.id} to personal guild ${interaction.guild.id}`,
+			message: `added emoji ${createdEmoji.id} to personal guild ${userGuild.id}`,
 		});
 
 		await interaction.editReply({

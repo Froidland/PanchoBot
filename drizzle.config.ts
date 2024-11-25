@@ -7,7 +7,7 @@ export default {
 	out: "./src/db/migrations",
 	dialect: "postgresql",
 	dbCredentials: {
-		url: process.env.DATABASE_URL || "mysql://localhost:3306/panchobot",
+		url: process.env.DATABASE_URL || "postgres://localhost:5432/panchobot",
 	},
 	casing: "snake_case",
 } satisfies Config;
