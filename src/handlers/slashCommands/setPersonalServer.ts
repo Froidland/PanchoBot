@@ -1,15 +1,18 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+	EmbedBuilder,
+	InteractionContextType,
+	SlashCommandBuilder,
+} from "discord.js";
 import { SlashCommand } from "../../interfaces/index.js";
 import { db } from "../../db/index.js";
 import { logger } from "../../utils/index.js";
 import { users } from "../../db/schema.js";
-import { eq } from "drizzle-orm";
 
 export const setPersonalServer: SlashCommand = {
 	data: new SlashCommandBuilder()
 		.setName("set-personal-server")
 		.setDescription("Set the current server as your personal server.")
-		.setDMPermission(false),
+		.setContexts([InteractionContextType.Guild]),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
@@ -57,12 +60,12 @@ export const setPersonalServer: SlashCommand = {
 					discord_id: interaction.user.id,
 					personal_server_id: interaction.guild.id,
 				})
-				.onDuplicateKeyUpdate({
+				.onConflictDoUpdate({
+					target: [users.discord_id],
 					set: {
 						personal_server_id: interaction.guild.id,
 					},
-				})
-				.execute();
+				});
 		} catch (error) {
 			logger.error({
 				type: "slash-command",

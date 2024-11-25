@@ -2,6 +2,7 @@ import {
 	ChatInputCommandInteraction,
 	EmbedBuilder,
 	GuildEmoji,
+	InteractionContextType,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -28,7 +29,7 @@ export const addEmoji: SlashCommand = {
 				.setRequired(false),
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions)
-		.setDMPermission(false),
+		.setContexts([InteractionContextType.Guild]),
 	execute: async (interaction: ChatInputCommandInteraction) => {
 		await interaction.deferReply();
 

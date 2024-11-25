@@ -1,22 +1,22 @@
 import { ContextMenuCommand } from "../../interfaces/index.js";
 import {
-	ApplicationCommandType,
 	ContextMenuCommandBuilder,
 	EmbedBuilder,
 	GuildEmoji,
+	InteractionContextType,
 	MessageContextMenuCommandInteraction,
-	PermissionFlagsBits,
 } from "discord.js";
 import { db } from "../../db/index.js";
 import { logger } from "../../utils/index.js";
 import { users } from "../../db/schema.js";
 import { eq } from "drizzle-orm";
+import { discordClient } from "../../main.js";
 
 export const addEmojiPersonal: ContextMenuCommand = {
 	data: new ContextMenuCommandBuilder()
 		.setName("Add emoji (personal)")
-		.setType(ApplicationCommandType.Message)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions),
+		.setType(3) // ApplicationCommandType.Message
+		.setContexts([InteractionContextType.Guild]),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 
@@ -73,7 +73,26 @@ export const addEmojiPersonal: ContextMenuCommand = {
 			return;
 		}
 
-		if (interaction.guild.ownerId !== interaction.user.id) {
+		const userGuild =
+			discordClient.guilds.cache.get(user.personal_server_id) ||
+			(await discordClient.guilds.fetch(user.personal_server_id));
+
+		if (!userGuild) {
+			await interaction.editReply({
+				embeds: [
+					new EmbedBuilder()
+						.setColor("Red")
+						.setTitle("Error")
+						.setDescription(
+							"An error ocurred while trying to get your personal server. Make sure the bot is present in your personal server.",
+						),
+				],
+			});
+
+			return;
+		}
+
+		if (userGuild.ownerId !== interaction.user.id) {
 			logger.error({
 				type: "context-menu-command",
 				commandName: interaction.commandName,

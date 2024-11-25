@@ -1,6 +1,6 @@
 import { REST, Routes } from "discord.js";
 
-type RestUser = {
+/* type RestUser = {
 	id: string;
 	username: string;
 	avatar: string;
@@ -19,7 +19,7 @@ type RestUser = {
 	email: string | null;
 	verified: boolean;
 	bio: string;
-};
+}; */
 
 async function run() {
 	const rest = new REST().setToken(process.env.BOT_TOKEN!);
@@ -27,8 +27,8 @@ async function run() {
 
 	try {
 		clientUser = await rest.get(Routes.user());
-	} catch (error) {
-		console.error("Unable to fetch client user. Aborting...");
+	} catch (err) {
+		console.error("Unable to fetch client user. Aborting...", err);
 		return;
 	}
 

@@ -1,9 +1,9 @@
 import { ContextMenuCommand } from "../../interfaces/index.js";
 import {
-	ApplicationCommandType,
 	ContextMenuCommandBuilder,
 	EmbedBuilder,
 	GuildEmoji,
+	InteractionContextType,
 	MessageContextMenuCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
@@ -12,9 +12,9 @@ import { logger } from "../../utils/index.js";
 export const addEmoji: ContextMenuCommand = {
 	data: new ContextMenuCommandBuilder()
 		.setName("Add emoji")
-		.setType(ApplicationCommandType.Message)
+		.setType(3) // ApplicationCommandType.Message
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions)
-		.setDMPermission(false),
+		.setContexts([InteractionContextType.Guild]),
 	execute: async (interaction) => {
 		await interaction.deferReply();
 

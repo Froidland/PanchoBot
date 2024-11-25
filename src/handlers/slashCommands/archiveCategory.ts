@@ -5,6 +5,7 @@ import {
 	Collection,
 	ComponentType,
 	EmbedBuilder,
+	InteractionContextType,
 	NonThreadGuildBasedChannel,
 	OverwriteResolvable,
 	PermissionFlagsBits,
@@ -57,7 +58,7 @@ export const archiveCategory: SlashCommand = {
 				.setRequired(false),
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.setDMPermission(false),
+		.setContexts([InteractionContextType.Guild]),
 	execute: async (interaction: ChatInputCommandInteraction) => {
 		if (!interaction.guild) {
 			await interaction.reply({

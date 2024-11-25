@@ -4,9 +4,10 @@ dotenv.config();
 
 export default {
 	schema: "./src/db/schema.ts",
-	out: "./drizzle/migrations",
-	driver: "mysql2",
+	out: "./src/db/migrations",
+	dialect: "postgresql",
 	dbCredentials: {
-		uri: process.env.DATABASE_URL || "mysql://localhost:3306/panchobot",
+		url: process.env.DATABASE_URL || "mysql://localhost:3306/panchobot",
 	},
+	casing: "snake_case",
 } satisfies Config;

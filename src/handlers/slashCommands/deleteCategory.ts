@@ -8,6 +8,7 @@ import {
 	SlashCommandBuilder,
 	type NonThreadGuildBasedChannel,
 	type Collection,
+	InteractionContextType,
 } from "discord.js";
 import { SlashCommand } from "../../interfaces/index.js";
 import { logger } from "../../utils/index.js";
@@ -25,7 +26,7 @@ export const deleteCategory: SlashCommand = {
 				.setRequired(true),
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.setDMPermission(false),
+		.setContexts([InteractionContextType.Guild]),
 	execute: async (interaction: ChatInputCommandInteraction) => {
 		if (!interaction.guild) {
 			await interaction.reply({

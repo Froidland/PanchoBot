@@ -1,7 +1,6 @@
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
 import * as schema from "./schema.js";
-import mysql from "mysql2/promise";
-import { Logger } from "drizzle-orm";
+import { type Logger } from "drizzle-orm";
 import { logger } from "../utils/logger.js";
 
 class DbLogger implements Logger {
@@ -14,12 +13,15 @@ class DbLogger implements Logger {
 	}
 }
 
-const poolConnection = mysql.createPool({
-	uri: process.env.DATABASE_URL,
-});
+const connectionUrl = process.env.DB_URL;
 
-export const db = drizzle(poolConnection, {
+if (!connectionUrl) {
+	throw new Error("DB_URL must be provided");
+}
+
+export const db = drizzle({
+	connection: { url: connectionUrl },
 	schema,
-	mode: "default",
+	casing: "snake_case",
 	logger: new DbLogger(),
 });
